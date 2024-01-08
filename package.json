@@ -1,0 +1,14 @@
+{
+  "name": "twitch-ts",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}
