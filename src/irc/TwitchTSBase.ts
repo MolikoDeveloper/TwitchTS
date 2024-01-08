@@ -7,6 +7,7 @@ const EventEmitter = require('events');
 export interface Options {
     idendity: sesion
     channel: string,
+    debug?:boolean
 }
 
 export interface sesion {
@@ -20,6 +21,7 @@ export class TwitchTSBase extends EventEmitter {
     constructor(opts: Options) {
         super();
         this.ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+        //this.ws = new WebSocket('wss://pubsub-edge.twitch.tv');
         this.opts = opts;
 
         // Definir la estructura de eventos y validaciones
@@ -70,6 +72,7 @@ export class TwitchTSBase extends EventEmitter {
     on(event: 'join', listener: (channel: string, userState: UserState, self: () => boolean) => void): this;
 
     on(event: EventName, listener: Function): this {
+        this.log(event, listener);
         return super.on(event, listener);
     }
 
@@ -81,14 +84,16 @@ export class TwitchTSBase extends EventEmitter {
     }
 
     onMessage(data: any) {
-        let _userstate = parseMessage(data.toString()) || {};
-        if (_userstate.command?.command === 'PING') {
+        let message = parseMessage(data.toString()) || {};
+        this.log(message);
+
+        if (message.command?.command === 'PING') {
             this.ws.send('PONG :tmi.twitch.tv');
         } else {
             for (let eventName in this.events) {
                 let event = this.events[eventName];
-                if (event.validate(_userstate)) {
-                    this.emit(eventName, ...event.parameters(_userstate));
+                if (event.validate(message)) {
+                    this.emit(eventName, ...event.parameters(message));
                 }
                 else {
                     return;
@@ -122,15 +127,21 @@ export class TwitchTSBase extends EventEmitter {
         });
     }
 
+    log(...args:any){
+        if(this.opts.debug){
+            console.log(args);
+        }
+    }
+
     isConnected() {
         return this.ws !== null && this.ws.readyState === 1;
     }
 
     onClose() {
-        console.log('disconnected');
+        this.log('disconnected');
     }
 
     onError(error: any) {
-        console.log('Error: ', error);
+        this.log('Error: ', error);
     }
 }
