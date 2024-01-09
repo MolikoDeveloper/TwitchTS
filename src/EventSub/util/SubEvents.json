@@ -4,7 +4,8 @@
         "param": {
             "event": "channel.ban",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -12,7 +13,8 @@
         "param": {
             "event": "channel.unban",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -20,7 +22,8 @@
         "param": {
             "event": "channel.cheer",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -28,7 +31,8 @@
         "param": {
             "event": "channel.raid",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -36,7 +40,7 @@
         "param": {
             "event": "channel.follow",
             "method": "GET",
-            "version": 2
+            "version": 2, "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -44,7 +48,7 @@
         "param": {
             "event": "channel.update",
             "method": "GET",
-            "version": 2
+            "version": 2, "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -52,7 +56,8 @@
         "param": {
             "event": "channel.subscribe",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -60,7 +65,8 @@
         "param": {
             "event": "channel.subscription.end",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -68,7 +74,8 @@
         "param": {
             "event": "channel.subscription.gift",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -76,7 +83,8 @@
         "param": {
             "event": "channel.subscription.message",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -84,7 +92,8 @@
         "param": {
             "event": "channel.moderator.add",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -92,7 +101,8 @@
         "param": {
             "event": "channel.moderator.remove",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -100,7 +110,8 @@
         "param": {
             "event": "channel.channel_points_custom_reward.add",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -108,7 +119,8 @@
         "param": {
             "event": "channel.channel_points_custom_reward.update",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -116,7 +128,8 @@
         "param": {
             "event": "channel.channel_points_custom_reward.remove",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -124,7 +137,8 @@
         "param": {
             "event": "channel.channel_points_custom_reward_redemption.add",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -132,7 +146,8 @@
         "param": {
             "event": "channel.channel_points_custom_reward_redemption.update",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -140,7 +155,8 @@
         "param": {
             "event": "channel.poll.begin",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -148,7 +164,8 @@
         "param": {
             "event": "channel.poll.progress",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -156,7 +173,8 @@
         "param": {
             "event": "channel.poll.end",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -164,7 +182,8 @@
         "param": {
             "event": "channel.prediction.begin",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -172,7 +191,8 @@
         "param": {
             "event": "channel.prediction.progress",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -180,7 +200,8 @@
         "param": {
             "event": "channel.prediction.lock",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -188,7 +209,8 @@
         "param": {
             "event": "channel.prediction.end",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -196,7 +218,8 @@
         "param": {
             "event": "drop.entitlement.grant",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -204,7 +227,8 @@
         "param": {
             "event": "extension.bits_transaction.create",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -212,7 +236,7 @@
         "param": {
             "event": "channel.goal.begin",
             "method": "GET",
-            "version": 2
+            "version": 2, "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -220,7 +244,8 @@
         "param": {
             "event": "channel.goal.progress",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -228,7 +253,8 @@
         "param": {
             "event": "channel.goal.end",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -236,7 +262,8 @@
         "param": {
             "event": "channel.hype_train.begin",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -244,7 +271,8 @@
         "param": {
             "event": "channel.hype_train.progress",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -252,7 +280,8 @@
         "param": {
             "event": "channel.hype_train.end",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -260,7 +289,8 @@
         "param": {
             "event": "stream.online",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -268,7 +298,8 @@
         "param": {
             "event": "stream.offline",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -276,7 +307,8 @@
         "param": {
             "event": "user.authorization.grant",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -284,7 +316,8 @@
         "param": {
             "event": "user.authorization.revoke",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {
@@ -292,7 +325,8 @@
         "param": {
             "event": "user.update",
             "method": "GET",
-            "version": 1
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions/"
         }
     },
     {

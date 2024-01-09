@@ -3,6 +3,7 @@ import {RequestPaths, RequestHosts, substype} from './util/Data'
 import type { Options } from "../Session";
 import {request} from 'http'
 import fs from 'fs'
+import { parseMessage } from '../irc/parser';
 
 
 interface ConstructorOptions {
@@ -25,23 +26,21 @@ export class Subscription{
                 moderator_user_id: options.broadcasterId
             },
             transport:{
-                method: "websocket",
+                method: 'websocket',
                 session_id: ''
             }
         };
-        
-    }
-
-    
+    }    
 
     public subscribe(options: Options){
         if(!this.data?.condition.broadcaster_user_id) throw new Error("define a broadcaster");
         if (!this.data?.type.length) throw new Error("No event was defined");
         this.data.transport.session_id = options.idendity.sessionId;
+        
         const _postData = JSON.stringify(this.data);
         const _options = {
             host: RequestHosts.BaseAPI,
-            path: RequestPaths.Subscription,
+            path: this.subs_type?.param?.Suscription,
             port: 443,
             method: this.subs_type?.param?.method,
             headers:{
@@ -51,7 +50,8 @@ export class Subscription{
             }
         };
         
-
+        
+        console.time('Connect Request')
         const req = request(_options, (res)=>{
             let body = '';
             res.setEncoding('utf8');
@@ -59,15 +59,19 @@ export class Subscription{
                 body += chunk
             });
             res.on('end',()=>{
-                if(res.statusCode == 200){
-                    console.log(body);
-                }                    
+                if(res.statusCode === 200 || res.statusCode === 202){
+                    console.log([`connected to ${RequestHosts.BaseAPI}`]);
+                }
+                else{
+                    console.log('ERROR ',res.statusCode, body)
+                }              
             })
         });
 
         req.on('error', e => console.error('Error REQ ',e))
         req.write(_postData);
         req.end();
-    }
+        console.timeEnd('Connect Request');
 
+    }
 }

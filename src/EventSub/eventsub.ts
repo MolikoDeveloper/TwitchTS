@@ -34,20 +34,20 @@ export enum MessageTypes {
 }
 
 export class EventSubClient extends EventEmitter {
-    public ws?:any;
+    public ws?: any;
     public opts?: Options;
     public subscriptions?: Collection<string, Subscription>;
     public userToken?: ClientOptions['userToken'];
     public id?: ClientOptions['clientId'];
 
     constructor(opts: Options, Subscriptions: Subscription[]) {
-        super({captureRejections:true});
+        super({ captureRejections: true });
         if (!Subscriptions.length) throw new Error("No subscriptions were defined");
         this.opts = opts;
         this.ws = new WebSocket(WebSocketPaths.EventSub);
-        
+
         this.userToken = this.opts?.idendity.ClientToken;
-        this.id = this.opts?.idendity.ClientID;    
+        this.id = this.opts?.idendity.ClientID;
         this.subscriptions = new Collection();
 
         for (const subscription of subscriptions) {
@@ -68,32 +68,39 @@ export class EventSubClient extends EventEmitter {
 
     onMessage(rawMessage: any) {
         let message: any = JSON.parse(rawMessage.toString());
-        console.log(message.metadata.message_type);
         switch (message.metadata?.message_type) {
             case MessageTypes.SessionWelcome:
+                console.time("Welcome WS")
                 this.opts!.idendity.sessionId = message.payload?.session?.id!;
-                this.subscriptions?.each((element: Subscription) => element.subscribe({idendity:{
-                    'sessionId': message.payload?.session?.id!,
-                    'ClientID': this.id,
-                    ClientToken: this.userToken
-                }}));
-                this.emit('ready', this);
+                if (this.subscriptions) {
+                    for (const [key, element] of this.subscriptions) {
+                        element.subscribe({
+                            idendity: {
+                                'sessionId': message.payload?.session?.id!,
+                                'ClientID': this.id,
+                                ClientToken: this.userToken
+                            },
+                        });
+                    }
+                    this.emit('ready', this);
+                }
+                console.timeEnd("Welcome WS")
                 break;
-                
 
             case MessageTypes.Notification:
-                console.log(message);
+                this.log('Notification WS')
                 const broadcasterId = message.payload.subscription.condition.broadcaster_user_id;
                 const eventName = message.payload.subscription.type;
                 const susbscription = this.subscriptions?.get(formatKey(eventName, broadcasterId));
-
-                if (susbscription) this.emit('event', message.payload.event, eventName, broadcasterId);
-                console.log(eventName, message.payload.event)
+                
+                if (!susbscription){
+                     this.emit('event', message.payload.event, eventName, broadcasterId)
+                };
                 break;
 
             case MessageTypes.SessionKeepAlive:
+                console.log('keep alive')
                 console.log(message);
-                this.ws.send("PONG :api.twitch.tv")
                 break;
             case MessageTypes.Reconect:
                 console.log(message);
@@ -108,7 +115,7 @@ export class EventSubClient extends EventEmitter {
     }
 
     onClose(code: number, reason: string) {
-        this.log(code, reason);
+        this.log('OnClose:',code, reason);
     }
     onError(error: any) {
         this.log('Error: ', error);
@@ -128,15 +135,19 @@ export function parseKey(key: string) {
     return key.split('*');
 }
 
-
-
 //---------------------------------
-
-
 
 const subscriptions = [
     new Subscription({
         broadcasterId: "67396993",
+        event: 'ChannelBan'
+    }),
+    new Subscription({
+        'broadcasterId': "67396993",
+        event: 'ChannelSubscribe'
+    }),
+    new Subscription({
+        'broadcasterId': "67396993",
         event: 'ChannelFollow'
     })
 ]
@@ -146,23 +157,27 @@ let client = new EventSubClient({
         'ClientID': 'nff72q9w67bld0g336mibjs8gn4juu',
         'ClientToken': 'fgqz3hi9lu6uf3y3vob6ddrrsk5e2p'
     },
-    debug: true}, subscriptions)
+    debug: true
+}, subscriptions)
 
 
-client.on('ready', ()=> {
+client.on('ready', () => {
     client.log(`Ready! Listening to ${client.subscriptions?.size} subscriptions...`)
 })
 
 client.on('event', (event, eventName, broadcasterId) => {
-    console.error(broadcasterId);
     switch (eventName) {
-        case substype('StreamOnline').param?.event:
-            //a.log(`${event.broadcaster_user_name} is now online!`);
+        case substype('ChannelBan').param?.event:
+            client.log(`${broadcasterId}`);
             break;
 
-        case substype('StreamOffline').param?.event:
-            //a.log(`${event.broadcaster_user_name} is now offline!`);
+        case substype('ChannelSubscribe').param?.event:
+            client.log(event)
             break;
+        
+        case substype('ChannelFollow').param?.event:
+            client.log(event)
+            break
 
         default:
             break;

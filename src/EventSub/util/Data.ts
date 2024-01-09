@@ -73,7 +73,8 @@ export type APINotification = {
 }
 
 export enum WebSocketPaths {
-    EventSub = "wss://eventsub.wss.twitch.tv/ws?keepalive_timeout_seconds=600"
+    //EventSub = "wss://eventsub.wss.twitch.tv/ws"
+    EventSub = "ws://127.0.0.1:8080/ws"
 };
 
 export enum RequestHosts {
@@ -133,6 +134,7 @@ export interface SubcriptionType {
         event?: string;
         method?: string;
         version?: string | number;
+        Suscription?: string;
     }
 }
 
@@ -144,7 +146,8 @@ export function substype(event: EventType) : SubcriptionType{
         'param': {
             'event': data?.param.event,
             'method': data?.param.method,
-            'version': data?.param.version
+            'version': data?.param.version,
+            'Suscription': data?.param.Suscription,
         }
     }
 
