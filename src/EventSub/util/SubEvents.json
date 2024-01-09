@@ -1,0 +1,330 @@
+[
+    {
+        "event": "ChannelBan",
+        "param": {
+            "event": "channel.ban",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelUnban",
+        "param": {
+            "event": "channel.unban",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelCheer",
+        "param": {
+            "event": "channel.cheer",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelRaid",
+        "param": {
+            "event": "channel.raid",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelFollow",
+        "param": {
+            "event": "channel.follow",
+            "method": "GET",
+            "version": 2
+        }
+    },
+    {
+        "event": "ChannelUpdate",
+        "param": {
+            "event": "channel.update",
+            "method": "GET",
+            "version": 2
+        }
+    },
+    {
+        "event": "ChannelSubscribe",
+        "param": {
+            "event": "channel.subscribe",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelSubscriptionEnd",
+        "param": {
+            "event": "channel.subscription.end",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelSubscriptionGift",
+        "param": {
+            "event": "channel.subscription.gift",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelSubscriptionMessage",
+        "param": {
+            "event": "channel.subscription.message",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelModeratorAdd",
+        "param": {
+            "event": "channel.moderator.add",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelModeratorRemove",
+        "param": {
+            "event": "channel.moderator.remove",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPointsCustomRewardAdd",
+        "param": {
+            "event": "channel.channel_points_custom_reward.add",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPointsCustomRewardUpdate",
+        "param": {
+            "event": "channel.channel_points_custom_reward.update",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPointsCustomRewardRemove",
+        "param": {
+            "event": "channel.channel_points_custom_reward.remove",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPointsCustomRewardRedemptionAdd",
+        "param": {
+            "event": "channel.channel_points_custom_reward_redemption.add",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPointsCustomRewardRedemptionUpdate",
+        "param": {
+            "event": "channel.channel_points_custom_reward_redemption.update",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPollBegin",
+        "param": {
+            "event": "channel.poll.begin",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPollProgress",
+        "param": {
+            "event": "channel.poll.progress",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPollEnd",
+        "param": {
+            "event": "channel.poll.end",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPredictionBegin",
+        "param": {
+            "event": "channel.prediction.begin",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPredictionProgress",
+        "param": {
+            "event": "channel.prediction.progress",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPredictionLock",
+        "param": {
+            "event": "channel.prediction.lock",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelPredictionEnd",
+        "param": {
+            "event": "channel.prediction.end",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "DropEntitlementGrant",
+        "param": {
+            "event": "drop.entitlement.grant",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ExtensionBitsTransactionCreate",
+        "param": {
+            "event": "extension.bits_transaction.create",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "GoalBegin",
+        "param": {
+            "event": "channel.goal.begin",
+            "method": "GET",
+            "version": 2
+        }
+    },
+    {
+        "event": "GoalProgress",
+        "param": {
+            "event": "channel.goal.progress",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "GoalEnd",
+        "param": {
+            "event": "channel.goal.end",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "HypeTrainBegin",
+        "param": {
+            "event": "channel.hype_train.begin",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "HypeTrainProgress",
+        "param": {
+            "event": "channel.hype_train.progress",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "HypeTrainEnd",
+        "param": {
+            "event": "channel.hype_train.end",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "StreamOnline",
+        "param": {
+            "event": "stream.online",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "StreamOffline",
+        "param": {
+            "event": "stream.offline",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "UserAuthorizationGrant",
+        "param": {
+            "event": "user.authorization.grant",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "UserAuthorizationRevoke",
+        "param": {
+            "event": "user.authorization.revoke",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "UserUpdate",
+        "param": {
+            "event": "user.update",
+            "method": "GET",
+            "version": 1
+        }
+    },
+    {
+        "event": "ChannelGuestStarSessionBegin",
+        "param": {
+            "event": "channel.guest_star_session.begin",
+            "method": "GET",
+            "version": "beta"
+        }
+    },
+    {
+        "event": "ChannelGuestStarSessionEnd",
+        "param": {
+            "event": "channel.guest_star_session.end",
+            "method": "GET",
+            "version": "beta"
+        }
+    },
+    {
+        "event": "ChannelGuestStarSessionUpdate",
+        "param": {
+            "event": "channel.guest_star_guest.update",
+            "method": "GET",
+            "version": "beta"
+        }
+    },
+    {
+        "event": "ChannelGuestStarSettingsUpdate",
+        "param": {
+            "event": "channel.guest_star_settings.update",
+            "method": "GET",
+            "version": "beta"
+        }
+    }
+]

@@ -3,28 +3,15 @@ import type { Tag, UserState } from './parserInterface';
 import { parseMessage } from './parser';
 import type {EventName} from './irc'
 const EventEmitter = require('events');
+import type { Options } from '../Session';
 
-export interface Options {
-    idendity: sesion
-    channel: string,
-    debug?:boolean
-}
-
-export interface sesion {
-    username?: string,
-    ClientID?: string,
-    UserToken?: string,
-    ClientToken?: string
-}
 
 export class TwitchTSBase extends EventEmitter {
     constructor(opts: Options) {
         super();
         this.ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
-        //this.ws = new WebSocket('wss://pubsub-edge.twitch.tv');
         this.opts = opts;
 
-        // Definir la estructura de eventos y validaciones
         this.events = {
             'message': {
                 validate: (data: UserState) => {

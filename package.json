@@ -9,6 +9,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@discordjs/collection": "^2.0.0",
     "ws": "^8.16.0"
   }
 }
