@@ -4,6 +4,9 @@
 
 ## IRC
 
+```ts
+
+```
 
 
 ## EventSub (websocket)
@@ -17,15 +20,15 @@
     - [x] Command Recognition (!command parameters split by space)
 
 - [x] WebSocket Connection
-    - [] Baurer Oauth
-    - [] Get Events
-    - [] Post Events
+    - [ ] Baurer Oauth
+    - [ ] Get Events
+    - [ ] Post Events
     - [X] Local Enviroment testing with Twitch CLI
     
-- [] Webhook Connection
-    - [] Baurer Oauth
-    - [] Get Events
-    - [] Post Events
+- [ ] Webhook Connection
+    - [ ] Baurer Oauth
+    - [ ] Get Events
+    - [ ] Post Events
 
 
 # To install dependencies:
@@ -57,9 +60,7 @@ twitch event trigger channel.ban --transport=websocket
 ```
 
 
-# huge thanks to these people for their projects:
+# huge thanks these projects:
 
-[@ppauel](https://github.com/ppauel) ([twitch-eventsub](https://github.com/ppauel/twitch-eventsub)) (used as base for suscriptions and websocket connection to eventsub.)
-
-[tmijs](https://github.com/tmijs) ([tmi.js](https://github.com/tmijs/tmi.js)) (used for local events examples.)
-
+[@ppauel](https://github.com/ppauel) ([twitch-eventsub](https://github.com/ppauel/twitch-eventsub)) and 
+[tmijs](https://github.com/tmijs) ([tmi.js](https://github.com/tmijs/tmi.js))
