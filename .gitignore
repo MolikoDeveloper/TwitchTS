@@ -73,6 +73,9 @@ web_modules/
 
 .npm
 
+# optional bun chache
+bun.lockb
+
 # Optional eslint cache
 
 .eslintcache
