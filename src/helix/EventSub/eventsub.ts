@@ -2,7 +2,7 @@
 import { EventEmitter } from 'events'
 import { Collection } from '@discordjs/collection';
 import { WebSocketPaths, substype } from './util/Data'
-import type { Options } from '../Session';
+import type { Options } from '../../Session';
 import { Subscription } from './Subscription';
 import eventsjson from './util/SubEvents.json'
 
@@ -155,7 +155,9 @@ const subscriptions = [
 let client = new EventSubClient({
     'idendity': {
         'ClientID': 'nff72q9w67bld0g336mibjs8gn4juu',
-        'ClientToken': 'fgqz3hi9lu6uf3y3vob6ddrrsk5e2p'
+        //'ClientToken': 'oorlzugzd0aj1j3ofuaahv0a46fv8a' //twitch app token
+        'ClientToken': 'ig8k8aloochtik55rotnl1d3kulxg3' //albertosaurus_ac token
+        //'ClientToken': 'amkdawdchzc4dfdgjytoyfq9xiz1gh' //albertoidesaurus
     },
     debug: true
 }, subscriptions)

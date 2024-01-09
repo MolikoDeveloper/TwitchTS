@@ -1,9 +1,9 @@
 import type { EventType, SubcriptionType } from "./util/Data";
 import {RequestPaths, RequestHosts, substype} from './util/Data'
-import type { Options } from "../Session";
+import type { Options } from "../../Session";
 import {request} from 'http'
 import fs from 'fs'
-import { parseMessage } from '../irc/parser';
+import { parseMessage } from '../../irc/parser';
 
 
 interface ConstructorOptions {
@@ -22,8 +22,8 @@ export class Subscription{
             type: this.subs_type?.param?.event,
             version: this.subs_type?.param?.version,
             condition:{
-                broadcaster_user_id: options.broadcasterId,
-                moderator_user_id: options.broadcasterId
+                broadcaster_user_id: options?.broadcasterId!,
+                moderator_user_id: options?.broadcasterId!
             },
             transport:{
                 method: 'websocket',
