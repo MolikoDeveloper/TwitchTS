@@ -3,7 +3,7 @@
 // Expects the caller to pass a single message. (Remember, the Twitch 
 // IRC server may send one or more IRC messages in a single message.)
 
-import type { UserState, Tag, Command, Source } from "./parserInterface";
+import type { UserState, Tag, Command, Source, RoomState } from "./util/Data";
 
 export function parseMessage(message: string) : UserState | undefined {
 
@@ -77,7 +77,7 @@ export function parseMessage(message: string) : UserState | undefined {
         parsedMessage.source = parseSource(rawSourceComponent);
         parsedMessage.command.isBotCommand = false;
 
-        parsedMessage.parameters = rawParametersComponent;
+        parsedMessage.parameters = rawParametersComponent.trim();
         if (rawParametersComponent && rawParametersComponent[0] === '!') {  
             // The user entered a bot command in the chat window.            
             parsedMessage.command = parseParameters(rawParametersComponent, parsedMessage.command);
@@ -88,7 +88,7 @@ export function parseMessage(message: string) : UserState | undefined {
 }
 
 // Parses the tags component of the IRC message.
-export function parseTags(tags: string) {
+function parseTags(tags: string):Tag {
     // badge-info=;badges=broadcaster/1;color=#0000FF;...
 
     const tagsToIgnore = {  // List of tags to ignore.
@@ -177,7 +177,7 @@ export function parseTags(tags: string) {
 }
 
 // Parses the command component of the IRC message.
-export function parseCommand(rawCommandComponent: string): Command|undefined {
+function parseCommand(rawCommandComponent: string): Command|undefined {
     let parsedCommand = null;
     let commandParts = rawCommandComponent.split(' ');
 
@@ -217,20 +217,18 @@ export function parseCommand(rawCommandComponent: string): Command|undefined {
         case 'ROOMSTATE':   // But it has no meaning without also including the /tags capabilities.
             parsedCommand = {
                 command: commandParts[0],
-                channel: commandParts[1]
+                channel: parseChannelFromRoomState(commandParts[1]),
+                roomstate: parseRoomState(commandParts[1])
             }
             break;
         case 'RECONNECT':  
-            console.log('The Twitch IRC server is about to terminate the connection for maintenance.')
+            //console.log('The Twitch IRC server is about to terminate the connection for maintenance.')
             parsedCommand = {
                 command: commandParts[0]
             }
             break;
         case '421':
-            console.log(`Unsupported IRC command: ${commandParts[2]}`)
-            return;
         case '001':  // Logged in (successfully authenticated). 
-            console.log("login success.")
             parsedCommand = {
                 command: commandParts[0],
                 channel: commandParts[1]
@@ -244,10 +242,10 @@ export function parseCommand(rawCommandComponent: string): Command|undefined {
         case '372':
         case '375':
         case '376':
-            console.log(`connected to server`)
+            //console.log(`connected to server`)
             return;
         default:
-            console.log(`\nUnexpected command: ${commandParts[0]}\n`);
+            //console.log(`\nUnexpected command: ${commandParts[0]}\n`);
             return;
     }
 
@@ -255,7 +253,7 @@ export function parseCommand(rawCommandComponent: string): Command|undefined {
 }
 
 // Parses the source (nick and host) components of the IRC message.
-export function parseSource(rawSourceComponent: string): Source|undefined{
+function parseSource(rawSourceComponent: string): Source|undefined{
     if (!rawSourceComponent) {  // Not all messages contain a source
         return;
     }
@@ -269,7 +267,7 @@ export function parseSource(rawSourceComponent: string): Source|undefined{
 }
 
 // Parsing the IRC parameters component if it contains a command (e.g., !dice).
-export function parseParameters(rawParametersComponent: string, command:Command): Command {
+function parseParameters(rawParametersComponent: string, command:Command): Command {
     let idx = 0
     let commandParts = rawParametersComponent.slice(idx + 1); 
     let paramsIdx = commandParts.indexOf(' ');
@@ -284,6 +282,40 @@ export function parseParameters(rawParametersComponent: string, command:Command)
     return command;
 }
 
-export function PaseUserstate(){
+function parseRoomState(rawParametersComponent:string):RoomState{
+    const [prefix, keyValuePairs] = rawParametersComponent.split('@');
 
+    // Dividir los pares clave-valor en un array
+    const pairs = keyValuePairs?.split(';');
+
+    // Crear un objeto vacío
+    const obj: { [key: string]: string } = {};
+
+    // Procesar cada par clave-valor
+    pairs?.forEach((pair:any) => {
+        const [key, value] = pair.split('=');
+
+        // Convertir el valor a número si es posible, de lo contrario dejarlo como cadena
+        obj[key] = isNaN(value) ? value : value;
+    });
+
+    // Agregar el prefijo al objeto si es necesario
+    if (prefix.trim().length > 0) {
+        obj['prefix'] = prefix.trim();
+    }
+
+    return {
+        'emote-only': obj['emote-only']!,
+        'followers-only': obj['followers-only']!,
+        'r9k': obj['r9k']!,
+        'room-id': obj['room-id']!,
+        'slow': obj['slow']!,
+        'subs-only': obj['subs-only']!
+    };
+}
+
+function parseChannelFromRoomState(rawParametersComponent:string):string{
+    const [prefix, keyValuePairs] = rawParametersComponent.split('@');
+
+    return prefix.trim();
 }

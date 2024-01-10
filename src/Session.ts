@@ -6,7 +6,7 @@ export interface Options {
 
 export interface Session {
     username?: string,
-    sessionId?: string,
-    ClientID?: string,
     Token: string
+    ClientID?: string,
+    sessionId?: string,
 }

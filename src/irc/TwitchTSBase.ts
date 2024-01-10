@@ -1,16 +1,22 @@
 const WebSocket = require('ws');
-import type { Tag, UserState } from './parserInterface';
+import type { Tag, UserState } from './util/Data';
 import { parseMessage } from './parser';
-import type {EventName} from './irc'
+import type {EventName} from './util/irc'
 const EventEmitter = require('events');
 import type { Options } from '../Session';
+import { IRCLog } from '../Log/IRCLog';
 
 
 export class TwitchTSBase extends EventEmitter {
+    private ircLog :IRCLog = new IRCLog();
+    private opts: Options;
     constructor(opts: Options) {
         super();
-        this.ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+        this.ircLog.debug = opts.debug!;
+        this.ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443/');
         this.opts = opts;
+        this.ircLog.log('Connecting...')
+        this.ircLog.botname = opts.idendity?.username!;
 
         this.events = {
             'message': {
@@ -20,9 +26,8 @@ export class TwitchTSBase extends EventEmitter {
                 parameters: (data: UserState) => [
                     data.command?.channel,
                     data.tags,
-                    data.parameters?.trim(),
-                    (): boolean => { return data.source?.nick === this.opts.idendity.username }
-                ]
+                    data.parameters?.trim()
+                ],
             },
             'command': {
                 validate: (data: UserState) => {
@@ -33,8 +38,7 @@ export class TwitchTSBase extends EventEmitter {
                     data.tags,
                     data.command?.botCommand,
                     data.command?.botCommandParams,
-                    this.self
-                ]
+                ]                
             },
             'join': {
                 validate: (data: UserState) => {
@@ -42,10 +46,19 @@ export class TwitchTSBase extends EventEmitter {
                 },
                 parameters: (data: UserState) => [
                     data.command?.channel,
-                    data,
-                    this.self
+                    data
                 ]
             },
+            'notice': {
+                validate: (data: UserState) => {
+                    return (data.command?.command === 'NOTICE')
+                },
+                parameters: (data: UserState) => [
+                    data.command?.channel,
+                    data.tags?.['msg-id'],
+                    data.parameters
+                ]
+            }
         };
 
         this.ws.on('open', this.onOpen.bind(this));
@@ -54,25 +67,36 @@ export class TwitchTSBase extends EventEmitter {
         this.ws.on('error', this.onError.bind(this));
     }
 
-    on(event: 'command', listener: (channel: string, tags: Tag, command: string, params: string[], self: () => boolean) => void): this;
-    on(event: 'message', listener: (channel: string, tags: Tag, message: string, self: () => boolean) => void): this;
-    on(event: 'join', listener: (channel: string, userState: UserState, self: () => boolean) => void): this;
+    on(event: 'message', listener: (channel: string, tags: Tag, message: string, self:boolean) => void): this;
+    on(event: 'command', listener: (channel: string, tags: Tag, command: string, params: string[], self:boolean) => void): this;
+    on(event: 'join', listener: (channel: string, userState: UserState, self:boolean) => void): this;
+    on(event: 'notice', listener: (channel: string, msgID: string, message: string) => void): this;
 
-    on(event: EventName, listener: Function): this {
-        this.log(event, listener);
-        return super.on(event, listener);
+
+
+    on(event: EventName, listener: Function, self?: boolean): this {
+        if(event === 'message' || event === 'command' || event === 'join'){
+            return super.on(event, listener, self!);
+        }
+        else{
+            return super.on(event, listener);
+        }
     }
 
     onOpen() {
-        this.ws.send('CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership\r\n');
-        this.ws.send(`PASS ${this.opts.idendity.Token}\r\n`);
+        this.ircLog.log("Connected to Twitch Chat Service")
+        
+        this.ws.send('CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership\r\n');        
+        this.ws.send(`PASS oauth:${this.opts.idendity.Token}\r\n`);
         this.ws.send(`NICK ${this.opts.idendity.username}\r\n`);
         this.ws.send(`JOIN #${this.opts.channel}\r\n`);
+        this.ircLog.log(`Joining to \u001b[31m#${this.opts.channel}\u001b[0m chat as \u001b[35m@${this.opts.idendity.username}\u001b[0m`);
+
     }
 
     onMessage(data: any) {
         let message = parseMessage(data.toString()) || {};
-        this.log(message);
+        this.ircLog.messageLog(message);
 
         if (message.command?.command === 'PING') {
             this.ws.send('PONG :tmi.twitch.tv');
@@ -80,7 +104,7 @@ export class TwitchTSBase extends EventEmitter {
             for (let eventName in this.events) {
                 let event = this.events[eventName];
                 if (event.validate(message)) {
-                    this.emit(eventName, ...event.parameters(message));
+                    this.emit(eventName, ...event.parameters(message), (message.source?.nick === this.opts.idendity.username));
                 }
                 else {
                     return;
@@ -114,21 +138,15 @@ export class TwitchTSBase extends EventEmitter {
         });
     }
 
-    log(...args:any){
-        if(this.opts.debug){
-            console.log(args);
-        }
-    }
-
     isConnected() {
         return this.ws !== null && this.ws.readyState === 1;
     }
 
     onClose() {
-        this.log('disconnected');
+        //console.logg('disconnected');
     }
 
     onError(error: any) {
-        this.log('Error: ', error);
+        //console.logg('Error: ', error);
     }
 }

@@ -328,37 +328,5 @@
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions/"
         }
-    },
-    {
-        "event": "ChannelGuestStarSessionBegin",
-        "param": {
-            "event": "channel.guest_star_session.begin",
-            "method": "GET",
-            "version": "beta"
-        }
-    },
-    {
-        "event": "ChannelGuestStarSessionEnd",
-        "param": {
-            "event": "channel.guest_star_session.end",
-            "method": "GET",
-            "version": "beta"
-        }
-    },
-    {
-        "event": "ChannelGuestStarSessionUpdate",
-        "param": {
-            "event": "channel.guest_star_guest.update",
-            "method": "GET",
-            "version": "beta"
-        }
-    },
-    {
-        "event": "ChannelGuestStarSettingsUpdate",
-        "param": {
-            "event": "channel.guest_star_settings.update",
-            "method": "GET",
-            "version": "beta"
-        }
     }
 ]

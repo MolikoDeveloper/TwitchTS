@@ -9,6 +9,7 @@ export interface Command {
     command?: string;
     isCapRequestEnabled?: boolean;
     channel?: string;
+    roomstate?: RoomState;
     isBotCommand?: boolean;
     botCommand?: string;
     botCommandParams?: string[];
@@ -29,6 +30,7 @@ export interface Tag {
     'user-type'?: string;
     emotes?: Emote;
     'first-msg'?: string;
+    'msg-id': string;
     id?: string;
     'returning-chatter'?: string;
     'room-id'?: string;
@@ -44,8 +46,17 @@ export interface Badges {
 interface Position {
     startPosition: string;
     endPosition: string;
-  }
-  
-  interface Emote {
+}
+
+interface Emote {
     [key: string]: Position[];
-  }
+}
+
+export interface RoomState{
+    "emote-only"?: string|undefined,
+    "followers-only"?: string|undefined,
+    r9k?: string|undefined,
+    "room-id"?: string|undefined,
+    slow?: string|undefined,
+    "subs-only"?: string|undefined,
+}

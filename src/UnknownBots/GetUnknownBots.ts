@@ -25,9 +25,9 @@ export async function autoban(name: string): Promise<Boolean>{
 }
 
 
-/*ejemplos de uso
-autoban("markzynk").then(element => {
+/*use example
+autoban("username here").then(element => {
     console.log(element)
 })
 
-console.log(await autoban("markzynk"))*/
+console.log(await autoban("username here"))*/

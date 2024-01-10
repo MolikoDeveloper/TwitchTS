@@ -54,4 +54,4 @@ export type TokenScopes =
 	| 'user:read:follows'
 	| 'user:read:subscriptions'
 	| 'whispers:read'
-	| 'whispers:edit';
+	| 'whispers:edit'
