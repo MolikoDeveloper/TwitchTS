@@ -84,7 +84,7 @@ export class IRCLog {
                     this.log(`\u001b[31m${message?.command?.channel}\u001b[0m \u001b[32m@${message.source?.nick}\u001b[0m: ${message.parameters}`)
                 break;
                 case 'CLEARCHAT':
-                    console.log(message)
+                    //console.log(message)
                     break;
             }
         }
