@@ -1,6 +1,6 @@
 export interface Options {
     idendity: Session
-    channel?: string,
+    channels?: string[],
     debug?:boolean
 }
 

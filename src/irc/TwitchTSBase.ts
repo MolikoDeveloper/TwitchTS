@@ -103,9 +103,10 @@ export class TwitchTSBase extends EventEmitter {
         this.ws.send('CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership\r\n');
         this.ws.send(`PASS oauth:${this.opts.idendity.Token}\r\n`);
         this.ws.send(`NICK ${this.opts.idendity.username}\r\n`);
-        this.ws.send(`JOIN #${this.opts.channel}\r\n`);
-        this.ircLog.log(`Joining to \u001b[31m#${this.opts.channel}\u001b[0m chat as \u001b[35m@${this.opts.idendity.username}\u001b[0m`);
-
+        this.opts.channels?.forEach(channel => {
+            this.ws.send(`JOIN #${channel}\r\n`);
+            this.ircLog.log(`Joining to \u001b[31m#${channel}\u001b[0m chat as \u001b[35m@${this.opts.idendity.username}\u001b[0m`);
+        })
     }
 
     onMessage(data: any) {
@@ -124,7 +125,7 @@ export class TwitchTSBase extends EventEmitter {
         }
     }
 
-    say({ channel, message }: { channel: string, message: string }) {
+    say( channel: string, message:string) {
         return new Promise((resolve, reject) => {
             if (!this.isConnected()) return;
 
@@ -140,7 +141,7 @@ export class TwitchTSBase extends EventEmitter {
                 message = msg.slice(0, lastSpace);
 
                 setTimeout(() =>
-                    this.say({ channel, message: msg.slice(lastSpace) })
+                    this.say( channel, msg.slice(lastSpace) )
                     , 350);
             }
 

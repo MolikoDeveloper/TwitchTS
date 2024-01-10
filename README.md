@@ -1,11 +1,28 @@
 `this project was created with [bun](https://bun.sh).`
 
-# TwitchTS
+# TwitchTS (bun)
 
 ## IRC
 
 ```ts
+import {IrcClient} from 'twitchts';
 
+const chat = new IrcClient({
+    channels: ['CHANNEL'],
+    'idendity': {
+        'username': 'YOUR_USERNAME',
+        'Token': 'YOUR_TOKEN_WITHOUT_OAUTH'
+    },
+    debug:true
+});
+
+chat.on('message', (channel, tags, message, self) => {
+    if (self) return; //if self == channel.idendity return.
+    
+    if(message.toLocaleLowerCase().includes("hello")){
+        chat.say(channel, `hi @${tags['display-name']}`);
+    }
+})
 ```
 
 
@@ -37,10 +54,6 @@ with bun
 bun install
 ```
 
-or with npm
-```bash
-npm install
-```
 # IRC (production)
 to connect with IRC:
 

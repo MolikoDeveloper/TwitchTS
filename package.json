@@ -1,5 +1,5 @@
 {
-  "name": "twitch-ts",
+  "name": "twitchts",
   "module": "index.ts",
   "devDependencies": {
     "@types/bun": "latest"
