@@ -65,7 +65,7 @@ export class TwitchTSBase extends EventEmitter {
 
     onOpen() {
         this.ws.send('CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership\r\n');
-        this.ws.send(`PASS ${this.opts.idendity.UserToken}\r\n`);
+        this.ws.send(`PASS ${this.opts.idendity.Token}\r\n`);
         this.ws.send(`NICK ${this.opts.idendity.username}\r\n`);
         this.ws.send(`JOIN #${this.opts.channel}\r\n`);
     }
@@ -89,7 +89,7 @@ export class TwitchTSBase extends EventEmitter {
         }
     }
 
-    _sendMessage({ channel, message }: { channel: string, message: string }) {
+    say({ channel, message }: { channel: string, message: string }) {
         return new Promise((resolve, reject) => {
             if (!this.isConnected()) return;
 
@@ -105,7 +105,7 @@ export class TwitchTSBase extends EventEmitter {
                 message = msg.slice(0, lastSpace);
 
                 setTimeout(() =>
-                    this._sendMessage({ channel, message: msg.slice(lastSpace) })
+                    this.say({ channel, message: msg.slice(lastSpace) })
                     , 350);
             }
 

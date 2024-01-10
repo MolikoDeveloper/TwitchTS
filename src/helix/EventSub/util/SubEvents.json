@@ -55,7 +55,7 @@
         "event": "ChannelSubscribe",
         "param": {
             "event": "channel.subscribe",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions/"
         }

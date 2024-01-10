@@ -35,6 +35,7 @@ export class Subscription{
     public subscribe(options: Options){
         if(!this.data?.condition.broadcaster_user_id) throw new Error("define a broadcaster");
         if (!this.data?.type.length) throw new Error("No event was defined");
+
         this.data.transport.session_id = options.idendity.sessionId;
         
         const _postData = JSON.stringify(this.data);
@@ -46,12 +47,12 @@ export class Subscription{
             headers:{
                 'Content-Type': 'application/json',
                 'Client-Id': `${options.idendity.ClientID}`,
-                'Authorization': `Bearer ${options.idendity.ClientToken}`
+                'Authorization': `Bearer ${options.idendity.Token}`
             }
         };
         
         
-        console.time('Connect Request')
+        console.time(`Connected to ${RequestHosts.BaseAPI}, ${options.channel}`)
         const req = request(_options, (res)=>{
             let body = '';
             res.setEncoding('utf8');
@@ -60,7 +61,7 @@ export class Subscription{
             });
             res.on('end',()=>{
                 if(res.statusCode === 200 || res.statusCode === 202){
-                    console.log([`connected to ${RequestHosts.BaseAPI}`]);
+                    console.log(res.statusCode,[`connected to ${RequestHosts.BaseAPI}`]);
                 }
                 else{
                     console.log('ERROR ',res.statusCode, body)
@@ -71,7 +72,7 @@ export class Subscription{
         req.on('error', e => console.error('Error REQ ',e))
         req.write(_postData);
         req.end();
-        console.timeEnd('Connect Request');
+        console.timeEnd(`Connected to ${RequestHosts.BaseAPI}, ${options.channel}`);
 
     }
 }

@@ -46,7 +46,7 @@ export class EventSubClient extends EventEmitter {
         this.opts = opts;
         this.ws = new WebSocket(WebSocketPaths.EventSub);
 
-        this.userToken = this.opts?.idendity.ClientToken;
+        this.userToken = this.opts?.idendity.Token;
         this.id = this.opts?.idendity.ClientID;
         this.subscriptions = new Collection();
 
@@ -78,7 +78,7 @@ export class EventSubClient extends EventEmitter {
                             idendity: {
                                 'sessionId': message.payload?.session?.id!,
                                 'ClientID': this.id,
-                                ClientToken: this.userToken
+                                'Token': this.userToken!
                             },
                         });
                     }
@@ -99,14 +99,13 @@ export class EventSubClient extends EventEmitter {
                 break;
 
             case MessageTypes.SessionKeepAlive:
-                console.log('keep alive')
-                console.log(message);
+                this.log(message);
                 break;
             case MessageTypes.Reconect:
-                console.log(message);
+                this.log(message);
                 break
             case MessageTypes.Revocation:
-                console.log(message)
+                this.log(message);
                 break
 
             default:
@@ -155,9 +154,9 @@ const subscriptions = [
 let client = new EventSubClient({
     'idendity': {
         'ClientID': 'nff72q9w67bld0g336mibjs8gn4juu',
-        //'ClientToken': 'oorlzugzd0aj1j3ofuaahv0a46fv8a' //twitch app token
-        'ClientToken': 'ig8k8aloochtik55rotnl1d3kulxg3' //albertosaurus_ac token
-        //'ClientToken': 'amkdawdchzc4dfdgjytoyfq9xiz1gh' //albertoidesaurus
+        //'Token': 'oorlzugzd0aj1j3ofuaahv0a46fv8a' //twitch app token
+        'Token': 'ig8k8aloochtik55rotnl1d3kulxg3' //albertosaurus_ac token
+        //'Token': 'amkdawdchzc4dfdgjytoyfq9xiz1gh' //albertoidesaurus
     },
     debug: true
 }, subscriptions)

@@ -73,8 +73,8 @@ export type APINotification = {
 }
 
 export enum WebSocketPaths {
-    //EventSub = "wss://eventsub.wss.twitch.tv/ws"
-    EventSub = "ws://127.0.0.1:8080/ws"
+    EventSub = "wss://eventsub.wss.twitch.tv/ws"
+    //EventSub = "ws://127.0.0.1:8080/ws"
 };
 
 export enum RequestHosts {
