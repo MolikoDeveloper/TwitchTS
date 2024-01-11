@@ -1,5 +1,6 @@
 import { isCommaListExpression } from "typescript";
 import type { UserState } from "../irc/util/Data";
+import {clean} from 'profanity-cleaner';
 
 
 export class IRCLog {
@@ -23,7 +24,7 @@ export class IRCLog {
                     this.log("Request CAP Correct.");
                     break;
                 case "001":
-                    this.log(`connected to \u001b[31m#${message?.command?.channel}\u001b[0m chat as \u001b[35m@${this.botname}`);
+                    this.log(`connected to \u001b[31m#${message?.command?.channel}\u001b[0m chat as \u001b[35m@${this.botname}.`);
                     break;
                 case "421":
                     this.log(`\u001b[31mUnsupported IRC command: \u001b[33;1m${message?.command[2]}`);
@@ -36,7 +37,7 @@ export class IRCLog {
                         break;
                     }
                     else {
-                        this.log(`\u001b[32m@${message?.source?.nick}\u001b[0m joined to \u001b[31m#${message?.command?.channel}\u001b[0m chat`)
+                        this.log(`\u001b[32m@${message?.source?.nick}\u001b[0m joined to \u001b[31m${message?.command?.channel}\u001b[0m chat. ${(message.tags['ban-duration']) ? 'recognized as a bot.':''}`)
                     }
                     break;
                 case "396":
@@ -60,7 +61,6 @@ export class IRCLog {
                 case '004': break;
                 case '421': break; //unknown command
                 case 'ROOMSTATE':
-                    console.log(message);
                     for (let key in message.command.roomstate) {
                         if (message.command.roomstate.hasOwnProperty(key)) {
                             const value = message?.command?.roomstate[key] || message.tags[key];
@@ -76,11 +76,13 @@ export class IRCLog {
                     }
                     break;
                 case 'PRIVMSG':
-                    this.log(`\u001b[31m${message?.command?.channel}\u001b[0m \u001b[32m@${message.source?.nick}\u001b[0m: ${message.parameters}`)
+                    this.log(`\u001b[31m${message?.command?.channel}\u001b[0m \u001b[32m@${message.source?.nick}\u001b[0m: ${ (message.profanity == false) ? message.parameters?.trim() : clean(message.parameters?.trim())}`)
                     break;
                 case 'CLEARCHAT':
                     if(!message.parameters) this.log(`${message.command.channel} Console Cleared.`)
-                    else this.log(`user \u001b[32m@${message.parameters}\u001b[0m banned from \u001b[31m${message?.command?.channel}\u001b[0m channel.`)
+                    else this.log(`user \u001b[32m@${message.parameters}\u001b[0m banned from \u001b[31m${message?.command?.channel}\u001b[0m channel${(message.tags['ban-duration']) ? ' for '+message.tags['ban-duration']+' seconds':'.'}`)
+                    break;
+                default:
                     break;
             }
         }

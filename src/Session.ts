@@ -1,7 +1,8 @@
 export interface Options {
     idendity: Session
     channels?: string[],
-    debug?:boolean
+    debug?:boolean,
+    profaneFilter?: boolean
 }
 
 export interface Session {

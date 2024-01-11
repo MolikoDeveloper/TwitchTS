@@ -1,14 +1,15 @@
 const WebSocket = require('ws');
-import type { Tag, UserState } from './util/Data';
+import type { RoomState, Source, Tag, UserState } from './util/Data';
 import { parseMessage } from './parser';
 import type { EventName } from './util/irc'
 const EventEmitter = require('events');
+import {clean} from 'profanity-cleaner';
 import type { Options } from '../Session';
 import { IRCLog } from '../Log/IRCLog';
-import { CompletionInfoFlags } from 'typescript';
+import { server } from 'typescript';
 
 
-export class TwitchTSBase extends EventEmitter {
+export class IrcBase extends EventEmitter {
     private ircLog: IRCLog = new IRCLog();
     private opts: Options;
     private events: any;
@@ -31,7 +32,7 @@ export class TwitchTSBase extends EventEmitter {
                 parameters: (data: UserState) => [
                     data.command?.channel,
                     data.tags,
-                    data.parameters?.trim()
+                    (this.opts.profaneFilter == false) ? data.parameters?.trim() : clean(data.parameters?.trim())
                 ],
             },
             {
@@ -53,7 +54,7 @@ export class TwitchTSBase extends EventEmitter {
                 },
                 parameters: (data: UserState) => [
                     data.command?.channel,
-                    data.source?.nick
+                    data.source
                 ]
             },
             {
@@ -70,11 +71,20 @@ export class TwitchTSBase extends EventEmitter {
             {
                 type: 'ban',
                 validate: (data: UserState) => {
-                    return data.command?.command?.includes('CLEARCHAT')
+                    return data.command?.command === 'CLEARCHAT' && data.parameters!;
                 },
                 parameters: (data: UserState) => [
                     data.command?.channel,
                     data.parameters
+                ]
+            },
+            {
+                type: 'clear',
+                validate: (data: UserState) => {
+                    return data.command?.command === 'CLEARCHAT';
+                },
+                parameters: (data: UserState) => [
+                    data.command?.channel
                 ]
             },
         ];
@@ -85,12 +95,15 @@ export class TwitchTSBase extends EventEmitter {
         this.ws.on('error', this.onError.bind(this));
     }
 
-    on(event: 'ban', listener: (channel: string, username: string) => void): this;
+    //@types
     on(event: 'message', listener: (channel: string, tags: Tag, message: string, self: boolean) => void): this;
     on(event: 'command', listener: (channel: string, tags: Tag, command: string, params: string[], self: boolean) => void): this;
-    on(event: 'join', listener: (channel: string, username: string, self: boolean) => void): this;
+    on(event: 'join', listener: (channel: string, user: Source, self: boolean) => void): this;
     on(event: 'notice', listener: (channel: string, type: string, message: string) => void): this;
-
+    on(event: 'ban', listener: (channel: string, username: string) => void): this;
+    on(event: 'clear', listener:(channel:string)=>void): this;
+    on(event: 'reconnect', listener:(server:string) => void): this;//pending.
+    on(event: 'roomstate', listener:(channel:string, roomstate: RoomState)=>void): this;//pending.
 
 
     on(event: EventName, listener: Function, self?: boolean): this {
@@ -104,14 +117,21 @@ export class TwitchTSBase extends EventEmitter {
         this.ws.send(`PASS oauth:${this.opts.idendity.Token}\r\n`);
         this.ws.send(`NICK ${this.opts.idendity.username}\r\n`);
         this.opts.channels?.forEach(channel => {
-            this.ws.send(`JOIN #${channel}\r\n`);
-            this.ircLog.log(`Joining to \u001b[31m#${channel}\u001b[0m chat as \u001b[35m@${this.opts.idendity.username}\u001b[0m`);
-        })
+            setTimeout(()=>{
+                this.ws.send(`JOIN #${channel}\r\n`);
+                this.ircLog.log(`Joining to \u001b[31m#${channel}\u001b[0m chat as \u001b[35m@${this.opts.idendity.username}\u001b[0m`);
+            }, 2000)
+        });
     }
 
     onMessage(data: any) {
         let message = parseMessage(data.toString()) || {};
-        this.ircLog.messageLog(message);
+        message.profanity = this.opts.profaneFilter;
+        
+        setTimeout(()=>{
+            this.ircLog.messageLog(message);
+
+        }, 100)
 
         if (message.command?.command === 'PING') {
             this.ws.send('PONG :tmi.twitch.tv');
@@ -129,7 +149,6 @@ export class TwitchTSBase extends EventEmitter {
         return new Promise((resolve, reject) => {
             if (!this.isConnected()) return;
 
-
             if (message.length > 500) {
                 const maxLength = 500;
                 const msg = message;
@@ -140,12 +159,10 @@ export class TwitchTSBase extends EventEmitter {
                 }
                 message = msg.slice(0, lastSpace);
 
-                setTimeout(() =>
-                    this.say( channel, msg.slice(lastSpace) )
-                    , 350);
+                setTimeout(() => this.say( channel, msg.slice(lastSpace) ), 350);
             }
 
-            this.ws.send(`PRIVMSG #${channel} :${message}`);
+            this.ws.send(`PRIVMSG ${channel} :${message}`);
 
         });
     }

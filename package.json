@@ -10,6 +10,7 @@
   "type": "module",
   "dependencies": {
     "@discordjs/collection": "^2.0.0",
+    "profanity-cleaner": "^0.0.3",
     "ws": "^8.16.0"
   }
 }

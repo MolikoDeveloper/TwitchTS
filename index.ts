@@ -1,8 +1,7 @@
-import {TwitchTSBase} from './src/irc/TwitchTSBase';
+import {IrcBase} from './src/irc/IrcBase';
 import { autoban } from './src/UnknownBots/GetUnknownBots';
 
 
 export {
-    TwitchTSBase as IrcClient,
-    autoban as IsBot
+    IrcBase as IrcClient
 }

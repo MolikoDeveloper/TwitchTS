@@ -3,6 +3,7 @@
 // Expects the caller to pass a single message. (Remember, the Twitch 
 // IRC server may send one or more IRC messages in a single message.)
 
+import { autoban, isBotSync } from "../UnknownBots/GetUnknownBots";
 import type { UserState, Tag, Command, Source, RoomState } from "./util/Data";
 
 export function parseMessage(message: string) : UserState | undefined {
@@ -261,7 +262,8 @@ function parseSource(rawSourceComponent: string): Source|undefined{
         let sourceParts = rawSourceComponent.split('!');
         return {
             nick :(sourceParts.length == 2) ? sourceParts[0] : undefined,
-            host :(sourceParts.length == 2) ? sourceParts[1] : sourceParts[0]
+            host :(sourceParts.length == 2) ? sourceParts[1] : sourceParts[0],
+            isbot: (sourceParts.length == 2) ? isBotSync(sourceParts[0]) : undefined
         };
     }
 }

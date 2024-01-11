@@ -35,6 +35,7 @@ chat.on('message', (channel, tags, message, self) => {
     - [x] Oauth
     - [x] Events
     - [x] Command Recognition (!command parameters split by space)
+    - [ ] Predictions
 
 - [x] WebSocket Connection
     - [ ] Baurer Oauth

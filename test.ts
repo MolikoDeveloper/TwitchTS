@@ -1,18 +1,16 @@
 import {IrcClient} from './index'
+import auth from './secrets.json'
 
-const chat = new IrcClient({
-    channels: ['albertosaurus_ac', 'agustabell212'],
-    'idendity': {
-        'username': 'albertoidesaurus',
-        'Token': 'ig8k8aloochtik55rotnl1d3kulxg3'
-    },
-    debug:true
-});
+const chat = new IrcClient(auth);
 
 chat.on('message', (channel, tags, message, self) => {
     if (self) return;
     
-    if(message.toLocaleLowerCase().includes("hello")){
-        chat.say(channel, `hi @${tags['display-name']}`);
+    if(message.includes("hello")){
+        //chat.say(channel, `/me hi @${tags['display-name']}`);
     }
+})
+
+chat.on('join', (channel, user, self)=>{
+//    console.log(user);
 })

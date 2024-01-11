@@ -4,6 +4,7 @@ export interface UserState {
     source?: Source;
     command?: Command;
     parameters?: string;
+    profanity?: boolean;
 }
 export interface Command {
     command?: string;
@@ -18,10 +19,12 @@ export interface Command {
 export interface Source {
     nick?: string;
     host?: string;
+    isbot?: boolean;
 }
 export interface Tag {
     'badge-info'?: any;
     badges?: Badges;
+    'ban-duration':string;
     color?: string;
     'display-name'?: string;
     'emote-sets'?: string[];
