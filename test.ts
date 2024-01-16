@@ -1,16 +1,18 @@
-import {IrcClient} from './index'
+import {IrcClient, EventSub} from './index'
 import auth from './secrets.json'
 
-const chat = new IrcClient(auth);
 
-chat.on('message', (channel, tags, message, self) => {
-    if (self) return;
-    
-    if(message.includes("hello")){
-        //chat.say(channel, `/me hi @${tags['display-name']}`);
-    }
+const chat = new IrcClient({
+    channels: ['albertosaurus_ac'],
+    identity: auth.identity,
+    debug: true,
+    profaneFilter: true
+});
+
+chat.on('message', async (channel, user, message, self) => {
+
 })
 
 chat.on('join', (channel, user, self)=>{
-//    console.log(user);
+    console.log(user.isbot, user.nick)
 })

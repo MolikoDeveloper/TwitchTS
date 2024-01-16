@@ -1,7 +1,7 @@
-import {IrcBase} from './src/irc/IrcBase';
-import { autoban } from './src/UnknownBots/GetUnknownBots';
-
+import {IRC} from './src/irc/irc';
+import { EventSubClient } from './src/helix/EventSub/eventsubBase';
 
 export {
-    IrcBase as IrcClient
+    IRC as IrcClient,
+    EventSubClient as EventSub
 }

@@ -19,7 +19,7 @@ export interface Command {
 export interface Source {
     nick?: string;
     host?: string;
-    isbot?: boolean;
+    isbot?: Boolean;
 }
 export interface Tag {
     'badge-info'?: any;

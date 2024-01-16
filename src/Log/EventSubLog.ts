@@ -1,11 +1,11 @@
-
+import color from './Colors.json'
 
 export class EventSubLog{
     public debug = false;
 
     log(...data: any[]): void {
         if (this.debug) {
-            console.log(`\u001b[32mTwitch EventSub: \u001b[0m${data}\u001b[0m`)
+            console.log(`${color.color.Green}Twitch EventSub: ${color.Reset}${data}${color.Reset}`)
         }
     }
     

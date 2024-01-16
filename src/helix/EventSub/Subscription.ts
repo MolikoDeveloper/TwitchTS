@@ -1,9 +1,8 @@
 import type { EventType, SubcriptionType } from "./util/Data";
 import {RequestPaths, RequestHosts, substype} from './util/Data'
-import type { Options } from "../../Session";
+import type { Options } from "../../session";
 import {request} from 'http'
-import fs from 'fs'
-import { parseMessage } from '../../irc/parser';
+import { EventSubLog } from "../../Log/EventSubLog";
 
 
 interface ConstructorOptions {
@@ -23,7 +22,9 @@ export class Subscription{
             version: this.subs_type?.param?.version,
             condition:{
                 broadcaster_user_id: options?.broadcasterId!,
-                moderator_user_id: options?.broadcasterId!
+                //user_id: options?.broadcasterId!
+                //"broadcaster_user_id": "1011151691",
+                "moderator_user_id": "1011151691"
             },
             transport:{
                 method: 'websocket',
@@ -36,7 +37,7 @@ export class Subscription{
         if(!this.data?.condition.broadcaster_user_id) throw new Error("define a broadcaster");
         if (!this.data?.type.length) throw new Error("No event was defined");
 
-        this.data.transport.session_id = options.idendity.sessionId;
+        this.data.transport.session_id = options.identity.app?.sessionId!;
         
         const _postData = JSON.stringify(this.data);
         const _options = {
@@ -46,16 +47,16 @@ export class Subscription{
             method: this.subs_type?.param?.method,
             headers:{
                 'Content-Type': 'application/json',
-                'Client-Id': `${options.idendity.ClientID}`,
-                'Authorization': `Bearer ${options.idendity.Token}`
+                'Client-Id': `${options.identity.app?.ClientID}`,
+                'Authorization': `Bearer ${options.identity.user.token}`
             }
         };
         
         
-        console.time(`Connected to ${RequestHosts.BaseAPI}, ${options.channel}`)
+        console.time(`Connected to ${RequestHosts.BaseAPI}, ${options.channels}`)
         const req = request(_options, (res)=>{
             let body = '';
-            res.setEncoding('utf8');
+            res.setEncoding('utf-8');
             res.on('data', (chunk)=> {
                 body += chunk
             });
@@ -64,15 +65,15 @@ export class Subscription{
                     console.log(res.statusCode,[`connected to ${RequestHosts.BaseAPI}`]);
                 }
                 else{
-                    console.log('ERROR ',res.statusCode, body)
+                    console.log(`ERROR `,res.statusCode, body)
                 }              
             })
         });
 
-        req.on('error', e => console.error('Error REQ ',e))
+        req.on('error', e => console.error('Error REQ ',e));
         req.write(_postData);
         req.end();
-        console.timeEnd(`Connected to ${RequestHosts.BaseAPI}, ${options.channel}`);
+        console.timeEnd(`Connected to ${RequestHosts.BaseAPI}, ${options.channels}`);
 
     }
 }

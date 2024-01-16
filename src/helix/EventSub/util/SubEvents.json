@@ -3,52 +3,52 @@
         "event": "ChannelBan",
         "param": {
             "event": "channel.ban",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelUnban",
         "param": {
             "event": "channel.unban",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelCheer",
         "param": {
             "event": "channel.cheer",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelRaid",
         "param": {
             "event": "channel.raid",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelFollow",
         "param": {
             "event": "channel.follow",
-            "method": "GET",
-            "version": 2, "Suscription": "/helix/eventsub/subscriptions/"
+            "method": "POST",
+            "version": 2, "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelUpdate",
         "param": {
             "event": "channel.update",
-            "method": "GET",
-            "version": 2, "Suscription": "/helix/eventsub/subscriptions/"
+            "method": "POST",
+            "version": 2, "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
@@ -57,276 +57,276 @@
             "event": "channel.subscribe",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelSubscriptionEnd",
         "param": {
             "event": "channel.subscription.end",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelSubscriptionGift",
         "param": {
             "event": "channel.subscription.gift",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelSubscriptionMessage",
         "param": {
             "event": "channel.subscription.message",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelModeratorAdd",
         "param": {
             "event": "channel.moderator.add",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelModeratorRemove",
         "param": {
             "event": "channel.moderator.remove",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPointsCustomRewardAdd",
         "param": {
             "event": "channel.channel_points_custom_reward.add",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPointsCustomRewardUpdate",
         "param": {
             "event": "channel.channel_points_custom_reward.update",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPointsCustomRewardRemove",
         "param": {
             "event": "channel.channel_points_custom_reward.remove",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPointsCustomRewardRedemptionAdd",
         "param": {
             "event": "channel.channel_points_custom_reward_redemption.add",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPointsCustomRewardRedemptionUpdate",
         "param": {
             "event": "channel.channel_points_custom_reward_redemption.update",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPollBegin",
         "param": {
             "event": "channel.poll.begin",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPollProgress",
         "param": {
             "event": "channel.poll.progress",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPollEnd",
         "param": {
             "event": "channel.poll.end",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPredictionBegin",
         "param": {
             "event": "channel.prediction.begin",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPredictionProgress",
         "param": {
             "event": "channel.prediction.progress",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPredictionLock",
         "param": {
             "event": "channel.prediction.lock",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ChannelPredictionEnd",
         "param": {
             "event": "channel.prediction.end",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "DropEntitlementGrant",
         "param": {
             "event": "drop.entitlement.grant",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "ExtensionBitsTransactionCreate",
         "param": {
             "event": "extension.bits_transaction.create",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "GoalBegin",
         "param": {
             "event": "channel.goal.begin",
-            "method": "GET",
-            "version": 2, "Suscription": "/helix/eventsub/subscriptions/"
+            "method": "POST",
+            "version": 2, "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "GoalProgress",
         "param": {
             "event": "channel.goal.progress",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "GoalEnd",
         "param": {
             "event": "channel.goal.end",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "HypeTrainBegin",
         "param": {
             "event": "channel.hype_train.begin",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "HypeTrainProgress",
         "param": {
             "event": "channel.hype_train.progress",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "HypeTrainEnd",
         "param": {
             "event": "channel.hype_train.end",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "StreamOnline",
         "param": {
             "event": "stream.online",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "StreamOffline",
         "param": {
             "event": "stream.offline",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "UserAuthorizationGrant",
         "param": {
             "event": "user.authorization.grant",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "UserAuthorizationRevoke",
         "param": {
             "event": "user.authorization.revoke",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     },
     {
         "event": "UserUpdate",
         "param": {
             "event": "user.update",
-            "method": "GET",
+            "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions/"
+            "Suscription": "/helix/eventsub/subscriptions"
         }
     }
 ]

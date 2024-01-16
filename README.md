@@ -2,7 +2,10 @@
 
 # TwitchTS (bun)
 
-## IRC
+## Connect to Chat IRC
+
+you can connect to the chat as anonymous, or with your username and [twitch Oauth Token](https://dev.twitch.tv/docs/cli/token-command/#get-an-access-token) 
+
 
 ```ts
 import {IrcClient} from 'twitchts';
@@ -26,10 +29,10 @@ chat.on('message', (channel, tags, message, self) => {
 ```
 
 
-## EventSub (websocket)
+# EventSub (websocket)
 
 
-# TO-DO
+## TO-DO
 
 - [x] IRC Connection
     - [x] Oauth
@@ -49,21 +52,42 @@ chat.on('message', (channel, tags, message, self) => {
     - [ ] Post Events
 
 
-# To install dependencies:
-with bun
+## To install dependencies:
 ```bash
 bun install
 ```
 
-# IRC (production)
-to connect with IRC:
+## Generate Token
 
+# PENDIENTE
+```ts
+/*
+    pendiente, crear servicio para obtener el token facilmente con ClientID y Secret.
+    Generar Code
+    Generar Token
+    Definir Scopes
+*/
 
+    function ObtenerCode(ClientID, Secret, RedirectUri, scopes: TokenScopes[], ForceVerify:boolean){
+        //response_type=code
+        let _scopes = scopes.foreach(d => d.replace(":", "%30A"))
+
+        console.log("enlace twitch");
+    }
+
+    //POST
+    function ObtenerTokens(client_id, secret, code, redirect_uri){
+        console.log(Token)
+        console.log(RefreshToken)
+    }
+```
+#
 
 # Twitch CLI (WebSocket EventSub)
 ### [install Twitch CLI](https://dev.twitch.tv/docs/cli/)
 
 start server with:
+
 ```bash
 twitch event websocket start-server
 ```

@@ -1,7 +1,7 @@
 import { isCommaListExpression } from "typescript";
 import type { UserState } from "../irc/util/Data";
-import {clean} from 'profanity-cleaner';
-
+import { clean } from 'profanity-cleaner';
+import color from './Colors.json'
 
 export class IRCLog {
     public debug = false;
@@ -9,12 +9,12 @@ export class IRCLog {
 
     log(...data: any[]): void {
         if (this.debug) {
-            console.log(`\u001b[35mTwitch Chat: \u001b[0m${data}\u001b[0m`)
+            console.log(`${color.color.Magenta}Twitch Chat: ${color.Reset}${data}${color.Reset}`)
         }
     }
 
     LogOffDebug(...data: []): void {
-        console.log(`\u001b[35mTwitchTS: \u001b[0m${data}\u001b[0m`)
+        console.log(`${color.color.Magenta}TwitchTS: ${color.Reset}${data}${color.Reset}`)
     }
     //pendientes anuncio, clear, goal
     messageLog(message: UserState | any) {
@@ -24,20 +24,20 @@ export class IRCLog {
                     this.log("Request CAP Correct.");
                     break;
                 case "001":
-                    this.log(`connected to \u001b[31m#${message?.command?.channel}\u001b[0m chat as \u001b[35m@${this.botname}.`);
+                    this.log(`connected to ${color.color.Red}#${message?.command?.channel}${color.Reset} chat as ${color.color.Magenta}@${this.botname}.`);
                     break;
                 case "421":
-                    this.log(`\u001b[31mUnsupported IRC command: \u001b[33;1m${message?.command[2]}`);
+                    this.log(`${color.color.Red}Unsupported IRC command: ${color.BrightColor.Yellow}${message?.command[2]}`);
                     break;
                 case "RECONNECT":
-                    this.log(`\u001b[31mThe Twitch IRC server is about to terminate the connection for maintenance.`);
+                    this.log(`${color.color.Red}The Twitch IRC server is about to terminate the connection for maintenance.`);
                     break;
                 case "JOIN":
                     if (message?.source?.nick?.toLocaleLowerCase() == this.botname.toLocaleLowerCase()) {
                         break;
                     }
                     else {
-                        this.log(`\u001b[32m@${message?.source?.nick}\u001b[0m joined to \u001b[31m${message?.command?.channel}\u001b[0m chat. ${(message.tags['ban-duration']) ? 'recognized as a bot.':''}`)
+                        this.log(`${color.color.Green}@${message?.source?.nick}${color.Reset} joined to ${color.color.Red}${message?.command?.channel}${color.Reset} chat. ${(message.tags['ban-duration']) ? 'recognized as a bot.':''}`)
                     }
                     break;
                 case "396":
@@ -48,7 +48,7 @@ export class IRCLog {
                     break;
                 case "NOTICE": //tells you any change made in the chat or any error.
                     //console.log(message);
-                    this.log(`\u001b[31m${message.parameters}`);
+                    this.log(`${color.color.Red}${message.parameters}`);
                     break;
                 case "PING":
                     this.log(`PING`);
@@ -66,21 +66,21 @@ export class IRCLog {
                             const value = message?.command?.roomstate[key] || message.tags[key];
                             if(key != 'room-id'){
                                 let boolValue = (key === "followers-only") ? Boolean(1+Number(value)) : Boolean(Number(value));
-                                let color = boolValue ? '\u001b[32m' : '\u001b[31m'; // Verde si es verdadero, rojo si es falso
-                                this.log(`\u001b[33m${key}\u001b[0m: ${color}${boolValue}\u001b[0m`);
+                                let Color = boolValue ? '${color.color.Green}' : '${color.color.Red}'; // Verde si es verdadero, rojo si es falso
+                                this.log(`${color.color.Yellow}${key}${color.Reset}: ${Color}${boolValue}${color.Reset}`);
                             }
                             else{
-                                this.log(`\u001b[33m${key}\u001b[0m: \u001b[34m${value}\u001b[0m`);
+                                this.log(`${color.color.Yellow}${key}${color.Reset}: ${color.color.Blue}${value}${color.Reset}`);
                             }
                         }
                     }
                     break;
                 case 'PRIVMSG':
-                    this.log(`\u001b[31m${message?.command?.channel}\u001b[0m \u001b[32m@${message.source?.nick}\u001b[0m: ${ (message.profanity == false) ? message.parameters?.trim() : clean(message.parameters?.trim())}`)
+                    this.log(`${color.color.Red}${message?.command?.channel}${color.Reset} ${color.color.Green}@${message.source?.nick}${color.Reset}: ${ (message.profanity == false) ? message.parameters?.trim() : clean(message.parameters?.trim())}`)
                     break;
                 case 'CLEARCHAT':
                     if(!message.parameters) this.log(`${message.command.channel} Console Cleared.`)
-                    else this.log(`user \u001b[32m@${message.parameters}\u001b[0m banned from \u001b[31m${message?.command?.channel}\u001b[0m channel${(message.tags['ban-duration']) ? ' for '+message.tags['ban-duration']+' seconds':'.'}`)
+                    else this.log(`user ${color.color.Green}@${message.parameters}${color.Reset} banned from ${color.color.Red}${message?.command?.channel}${color.Reset} channel${(message.tags['ban-duration']) ? ' for '+message.tags['ban-duration']+' seconds':'.'}`)
                     break;
                 default:
                     break;

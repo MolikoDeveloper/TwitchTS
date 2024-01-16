@@ -3,10 +3,10 @@
 // Expects the caller to pass a single message. (Remember, the Twitch 
 // IRC server may send one or more IRC messages in a single message.)
 
-import { autoban, isBotSync } from "../UnknownBots/GetUnknownBots";
+import { isBot } from "../UnknownBots/GetUnknownBots";
 import type { UserState, Tag, Command, Source, RoomState } from "./util/Data";
 
-export function parseMessage(message: string) : UserState | undefined {
+export async function parseMessage(message: string) : Promise<UserState> {
 
     let parsedMessage: UserState = {  // Contains the component parts.
         tags: undefined,
@@ -62,34 +62,34 @@ export function parseMessage(message: string) : UserState | undefined {
 
     // Parse the command component of the IRC message.
 
-    parsedMessage.command = parseCommand(rawCommandComponent);
+    parsedMessage.command = await parseCommand(rawCommandComponent);
 
     // Only parse the rest of the components if it's a command
     // we care about; we ignore some messages.
 
     if (!parsedMessage.command) {  // Is null if it's a message we don't care about.
-        return; 
+        return parsedMessage; 
     }
     else {
-        if (null != rawTagsComponent) {  // The IRC message contains tags.
-            parsedMessage.tags = parseTags(rawTagsComponent);
+        if (rawTagsComponent!=null) {  // The IRC message contains tags.
+            parsedMessage.tags = await parseTags(rawTagsComponent);
         }
 
-        parsedMessage.source = parseSource(rawSourceComponent);
+        parsedMessage.source = await parseSource(rawSourceComponent);
         parsedMessage.command.isBotCommand = false;
 
         parsedMessage.parameters = rawParametersComponent.trim();
         if (rawParametersComponent && rawParametersComponent[0] === '!') {  
             // The user entered a bot command in the chat window.            
-            parsedMessage.command = parseParameters(rawParametersComponent, parsedMessage.command);
+            parsedMessage.command = await parseParameters(rawParametersComponent, parsedMessage.command);
         }
     }
 
     return parsedMessage;
 }
 
-// Parses the tags component of the IRC message.
-function parseTags(tags: string):Tag {
+// Parses the tags component of the IRC message.async 
+async function parseTags(tags: string):Promise<Tag> {
     // badge-info=;badges=broadcaster/1;color=#0000FF;...
 
     const tagsToIgnore = {  // List of tags to ignore.
@@ -178,8 +178,8 @@ function parseTags(tags: string):Tag {
 }
 
 // Parses the command component of the IRC message.
-function parseCommand(rawCommandComponent: string): Command|undefined {
-    let parsedCommand = null;
+async function parseCommand(rawCommandComponent: string): Promise<Command|undefined> {
+    let parsedCommand:Command|undefined = undefined;
     let commandParts = rawCommandComponent.split(' ');
 
     switch (commandParts[0]) {
@@ -218,8 +218,8 @@ function parseCommand(rawCommandComponent: string): Command|undefined {
         case 'ROOMSTATE':   // But it has no meaning without also including the /tags capabilities.
             parsedCommand = {
                 command: commandParts[0],
-                channel: parseChannelFromRoomState(commandParts[1]),
-                roomstate: parseRoomState(commandParts[1])
+                channel: await parseChannelFromRoomState(commandParts[1]),
+                roomstate: await parseRoomState(commandParts[1])
             }
             break;
         case 'RECONNECT':  
@@ -254,7 +254,7 @@ function parseCommand(rawCommandComponent: string): Command|undefined {
 }
 
 // Parses the source (nick and host) components of the IRC message.
-function parseSource(rawSourceComponent: string): Source|undefined{
+async function parseSource(rawSourceComponent: string): Promise<Source|undefined>{
     if (!rawSourceComponent) {  // Not all messages contain a source
         return;
     }
@@ -263,13 +263,13 @@ function parseSource(rawSourceComponent: string): Source|undefined{
         return {
             nick :(sourceParts.length == 2) ? sourceParts[0] : undefined,
             host :(sourceParts.length == 2) ? sourceParts[1] : sourceParts[0],
-            isbot: (sourceParts.length == 2) ? isBotSync(sourceParts[0]) : undefined
+            isbot: (sourceParts.length == 2) ? (await isBot(sourceParts[0])) : undefined
         };
     }
 }
 
 // Parsing the IRC parameters component if it contains a command (e.g., !dice).
-function parseParameters(rawParametersComponent: string, command:Command): Command {
+async function parseParameters(rawParametersComponent: string, command:Command): Promise<Command> {
     let idx = 0
     let commandParts = rawParametersComponent.slice(idx + 1); 
     let paramsIdx = commandParts.indexOf(' ');
@@ -284,7 +284,7 @@ function parseParameters(rawParametersComponent: string, command:Command): Comma
     return command;
 }
 
-function parseRoomState(rawParametersComponent:string):RoomState{
+async function parseRoomState(rawParametersComponent:string):Promise<RoomState>{
     const [prefix, keyValuePairs] = rawParametersComponent.split('@');
 
     // Dividir los pares clave-valor en un array
@@ -316,7 +316,7 @@ function parseRoomState(rawParametersComponent:string):RoomState{
     };
 }
 
-function parseChannelFromRoomState(rawParametersComponent:string):string{
+async function parseChannelFromRoomState(rawParametersComponent:string):Promise<string>{
     const [prefix, keyValuePairs] = rawParametersComponent.split('@');
 
     return prefix.trim();

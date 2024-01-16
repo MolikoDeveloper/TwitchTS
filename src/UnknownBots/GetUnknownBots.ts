@@ -19,20 +19,9 @@ async function GetTwitchBotList(): Promise<TwitchBotsResponse> {
     return { bots };
 }
 
-export async function autoban(name: string): Promise<Boolean>{
+export async function isBot(name: string): Promise<Boolean>{
     const data = await GetTwitchBotList();
     return data.bots.some(d=> d.name === name)
-}
-
-let preloadedBotList: TwitchBot[] = [];
-
-async function preloadBotList() {
-    const data = await GetTwitchBotList();
-    preloadedBotList = data.bots;
-}
-
-export function isBotSync(name: string): boolean {
-    return preloadedBotList.some(bot => bot.name === name);
 }
 
 
