@@ -21,6 +21,7 @@ export interface Source {
     host?: string;
     isbot?: Boolean;
 }
+
 export interface Tag {
     'badge-info'?: any;
     badges?: Badges;
@@ -41,11 +42,13 @@ export interface Tag {
     turbo?: string;
     'user-id'?: string;
 }
+
 export interface Badges {
     moderator?: string;
     broadcaster?: string;
     turbo?: string;
 }
+
 interface Position {
     startPosition: string;
     endPosition: string;

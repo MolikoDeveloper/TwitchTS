@@ -4,7 +4,7 @@ import secret from './secrets.json'
 
 function RefreshToken() {
     return new Promise((resolve, reject)=>{
-        const _postData = `client_id=${encodeURIComponent(secret.identity.app.ClientID)}&client_secret=${encodeURIComponent(secret.identity.app.Secret)}&refresh_token=${encodeURIComponent(secret.identity.user.refreshToken)}&grant_type=refresh_token`;;
+        const _postData = `client_id=${encodeURIComponent(secret.identity.app.clientId)}&client_secret=${encodeURIComponent(secret.identity.app.secret)}&refresh_token=${encodeURIComponent(secret.identity.user.refreshToken)}&grant_type=refresh_token`;;
 
         const _options = {
             host: 'id.twitch.tv',

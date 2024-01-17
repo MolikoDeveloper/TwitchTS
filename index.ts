@@ -1,7 +1,7 @@
-import {IRC} from './src/irc/irc';
+import {IrcBase} from './src/irc/IrcBase';
 import { EventSubClient } from './src/helix/EventSub/eventsubBase';
 
 export {
-    IRC as IrcClient,
+    IrcBase as IrcClient,
     EventSubClient as EventSub
 }

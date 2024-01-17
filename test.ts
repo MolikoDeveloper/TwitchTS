@@ -4,15 +4,15 @@ import auth from './secrets.json'
 
 const chat = new IrcClient({
     channels: ['albertosaurus_ac'],
-    identity: auth.identity,
+    identity: auth,
     debug: true,
     profaneFilter: true
 });
 
 chat.on('message', async (channel, user, message, self) => {
 
-})
+});
 
 chat.on('join', (channel, user, self)=>{
     console.log(user.isbot, user.nick)
-})
+});
