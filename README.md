@@ -1,4 +1,4 @@
-`this project was created with [bun](https://bun.sh).`
+this project was created with [bun](https://bun.sh).
 
 # TwitchTS (bun)
 
