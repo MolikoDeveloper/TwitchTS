@@ -14,9 +14,11 @@ import {IrcClient} from 'twitchts';
 
 const chat = new IrcClient({
     channels: ['CHANNEL'],
-    'idendity': {
-        'username': 'YOUR_USERNAME',
-        'Token': 'YOUR_TOKEN_WITHOUT_OAUTH'
+     "irc":{
+        "username": "YOUR_USERNAME",
+        "token": "YOUR TOKEN",
+        "refreshToken": "YOUR REFRESH TOKEN IF YOU GENERATE A CODE."//this can be optional, but recommended. (W.I.P.)
+    },
     },
     debug:true
 });
@@ -40,13 +42,14 @@ chat.on('message', (channel, tags, message, self) => {
     - [x] Oauth
     - [x] Events
     - [x] Command Recognition (!command parameters split by space)
-    - [ ] Predictions
+    
 
-- [x] WebSocket Connection
+- [x] WebSocket EventSub Connection
     - [ ] Baurer Oauth
     - [ ] Get Events
     - [ ] Post Events
     - [X] Local Enviroment testing with Twitch CLI
+    - [ ] Predictions
     
 - [ ] Webhook Connection
     - [ ] Baurer Oauth
