@@ -48,7 +48,7 @@ chat.on('message', (channel, tags, message, self) => {
     - [ ] Baurer Oauth
     - [ ] Get Events
     - [ ] Post Events
-    - [X] Local Enviroment testing with Twitch CLI
+    - [x] Local Enviroment testing with Twitch CLI
     - [ ] Predictions
     
 - [ ] Webhook Connection
