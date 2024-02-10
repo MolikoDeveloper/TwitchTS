@@ -11,6 +11,7 @@ export async function getEmojiByName(channel: string,name: string){
     const Emote = 
     {
         name: result?.name,
+        owner: result?.data.owner.display_name,
         avif:{
             '1x': `${result?.data.host.url}/${result?.data.host.files[0].name}`,
             '2x': `${result?.data.host.url}/${result?.data.host.files[2].name}`,
@@ -22,7 +23,7 @@ export async function getEmojiByName(channel: string,name: string){
             '2x': `${result?.data.host.url}/${result?.data.host.files[3].name}`,
             '3x': `${result?.data.host.url}/${result?.data.host.files[5].name}`,
             '4x': `${result?.data.host.url}/${result?.data.host.files[7].name}`,
-        }
+        },
     }
 
     return Emote
