@@ -5,7 +5,13 @@
             "event": "channel.ban",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:moderate"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -14,7 +20,13 @@
             "event": "channel.unban",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:moderate"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -23,16 +35,39 @@
             "event": "channel.cheer",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "bits:read"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
-        "event": "ChannelRaid",
+        "event": "ChannelRaidTo",
         "param": {
             "event": "channel.raid",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [],
+            "conditions": [
+                "to_broadcaster_user_id"
+            ]
+        }
+    },
+    {
+        "event": "ChannelRaidFrom",
+        "param": {
+            "event": "channel.raid",
+            "method": "POST",
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [],
+            "conditions": [
+                "from_broadcaster_user_id"
+            ]
         }
     },
     {
@@ -40,7 +75,15 @@
         "param": {
             "event": "channel.follow",
             "method": "POST",
-            "version": 2, "Suscription": "/helix/eventsub/subscriptions"
+            "version": 2,
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "moderator:read:followers"
+            ],
+            "conditions": [
+                "broadcaster_user_id",
+                "moderator_user_id"
+            ]
         }
     },
     {
@@ -48,7 +91,12 @@
         "param": {
             "event": "channel.update",
             "method": "POST",
-            "version": 2, "Suscription": "/helix/eventsub/subscriptions"
+            "version": 2,
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -57,7 +105,13 @@
             "event": "channel.subscribe",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:subscriptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -66,7 +120,13 @@
             "event": "channel.subscription.end",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:subscriptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -75,7 +135,13 @@
             "event": "channel.subscription.gift",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:subscriptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -84,7 +150,13 @@
             "event": "channel.subscription.message",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:subscriptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -93,7 +165,13 @@
             "event": "channel.moderator.add",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "moderation:read"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -102,16 +180,43 @@
             "event": "channel.moderator.remove",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "moderation:read"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
-        "event": "ChannelPointsCustomRewardAdd",
+        "event": "ChannelPointsCustomRewardAdd_Read",
         "param": {
             "event": "channel.channel_points_custom_reward.add",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:redemptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
+        }
+    },
+    {
+        "event": "ChannelPointsCustomRewardAdd_Manage",
+        "param": {
+            "event": "channel.channel_points_custom_reward.add",
+            "method": "POST",
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:manage:redemptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -120,7 +225,14 @@
             "event": "channel.channel_points_custom_reward.update",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:redemptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id",
+                "reward_id?"
+            ]
         }
     },
     {
@@ -129,7 +241,14 @@
             "event": "channel.channel_points_custom_reward.remove",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:redemptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id",
+                "reward_id?"
+            ]
         }
     },
     {
@@ -138,7 +257,14 @@
             "event": "channel.channel_points_custom_reward_redemption.add",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:redemptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id",
+                "reward_id?"
+            ]
         }
     },
     {
@@ -147,7 +273,14 @@
             "event": "channel.channel_points_custom_reward_redemption.update",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:redemptions"
+            ],
+            "conditions": [
+                "broadcaster_user_id",
+                "reward_id?"
+            ]
         }
     },
     {
@@ -156,7 +289,13 @@
             "event": "channel.poll.begin",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:polls"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -165,7 +304,13 @@
             "event": "channel.poll.progress",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:polls"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -174,7 +319,13 @@
             "event": "channel.poll.end",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:polls"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -183,7 +334,13 @@
             "event": "channel.prediction.begin",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:predictions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -192,7 +349,13 @@
             "event": "channel.prediction.progress",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:predictions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -201,7 +364,13 @@
             "event": "channel.prediction.lock",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:predictions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -210,11 +379,18 @@
             "event": "channel.prediction.end",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:predictions"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
         "event": "DropEntitlementGrant",
+        "only_webhooks": true,
         "param": {
             "event": "drop.entitlement.grant",
             "method": "POST",
@@ -224,6 +400,7 @@
     },
     {
         "event": "ExtensionBitsTransactionCreate",
+        "only_webhooks": true,
         "param": {
             "event": "extension.bits_transaction.create",
             "method": "POST",
@@ -236,7 +413,14 @@
         "param": {
             "event": "channel.goal.begin",
             "method": "POST",
-            "version": 2, "Suscription": "/helix/eventsub/subscriptions"
+            "version": 1,
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:goals"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -245,7 +429,13 @@
             "event": "channel.goal.progress",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:goals"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -254,7 +444,13 @@
             "event": "channel.goal.end",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:goals"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -263,7 +459,13 @@
             "event": "channel.hype_train.begin",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:hype_train"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -272,7 +474,13 @@
             "event": "channel.hype_train.progress",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:hype_train"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -281,7 +489,13 @@
             "event": "channel.hype_train.end",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "channel:read:hype_train"
+            ],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -290,7 +504,11 @@
             "event": "stream.online",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
@@ -299,11 +517,16 @@
             "event": "stream.offline",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [],
+            "conditions": [
+                "broadcaster_user_id"
+            ]
         }
     },
     {
         "event": "UserAuthorizationGrant",
+        "note": "ONLY WEBHOOKS",
         "param": {
             "event": "user.authorization.grant",
             "method": "POST",
@@ -313,6 +536,7 @@
     },
     {
         "event": "UserAuthorizationRevoke",
+        "note": "ONLY WEBHOOKS",
         "param": {
             "event": "user.authorization.revoke",
             "method": "POST",
@@ -326,7 +550,13 @@
             "event": "user.update",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scopes": [
+                "user:read:email?"
+            ],
+            "conditions": [
+                "user_id"
+            ]
         }
     }
 ]
