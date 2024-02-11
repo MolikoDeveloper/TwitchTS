@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 import { Collection } from '@discordjs/collection';
 import { WebSocketPaths, type EventType } from './util/Data'
-import type { Options } from '../../session';
+import type { Options } from '../../util/session';
 import { Subscription } from './Subscription';
 import eventsubjson from './util/SubEvents.json'
 const WebSocket = require('ws');
@@ -39,20 +39,20 @@ export class EventSubClient extends EventEmitter {
     public userToken?: ClientOptions['userToken'];
     public id?: ClientOptions['clientId'];
 
-    constructor(opts: Options, Subscriptions: Subscription[]) {
+    constructor(opts: Options, Subscription: Subscription) {
         super({ captureRejections: true });
-        if (!Subscriptions.length) throw new Error("No subscriptions were defined");
+        if (!Subscription) throw new Error("No subscriptions were defined");
         this.opts = opts;
         this.ws = new WebSocket(WebSocketPaths.EventSub);
 
-        this.userToken = this.opts?.identity.user.token;
-        this.id = this.opts?.identity.app?.sessionId;
-
-        for (const subscription of Subscriptions) {
-            const eventName = subscription.data.type;
-            const broadcasterId = subscription.data?.condition.broadcaster_user_id;
-            this.subscriptions.set(formatKey(eventName!, broadcasterId!), subscription);
-        }
+        this.userToken = this.opts?.identity.user?.token;
+        this.id = this.opts?.identity.user?.sessionID;
+        
+        
+        const eventName = Subscription.data.type;
+        const broadcasterId = Subscription.data?.condition.broadcaster_user_id;
+        this.subscriptions.set(formatKey(eventName!, broadcasterId!), Subscription);
+        
 
         this.ws?.on('open', this.onOpen.bind(this));
         this.ws?.on('message', this.onMessage.bind(this));
@@ -82,20 +82,20 @@ export class EventSubClient extends EventEmitter {
         switch (message.metadata?.message_type) {
             case MessageTypes.SessionWelcome:
                 console.time("Welcome WS")
-                this.opts!.identity.app!.sessionId = message.payload?.session?.id!;
-                console.log(this.opts!.identity.app?.sessionId)
+                this.opts!.identity.user!.sessionID = message.payload?.session?.id!;
+                console.log(this.opts!.identity.user?.sessionID)
                 if (this.subscriptions) {
                     for (const [key, element] of this.subscriptions) {
                         element.subscribe({
                             identity:
                             {
                                 'user': {
-                                    'token': this.userToken!
+                                    'token': this.userToken!,
+                                    'sessionID': message.payload?.session?.id!
                                 },
                                 "app": {
-                                    'sessionId': message.payload?.session?.id!,
-                                    'ClientID': this.opts?.identity.app?.ClientID!,
-                                    'Secret': this.opts?.identity.app?.Secret!
+                                    'clientId': this.opts?.identity.app?.clientId!,
+                                    'secret': this.opts?.identity.app?.secret!
                                 }
                             },
                         });
@@ -105,7 +105,6 @@ export class EventSubClient extends EventEmitter {
                 }
                 console.timeEnd("Welcome WS")
                 break;
-
             case MessageTypes.Notification:
                 this.log('Notification WS')
                 const broadcasterId = message.payload.subscription.condition.broadcaster_user_id;
@@ -117,7 +116,6 @@ export class EventSubClient extends EventEmitter {
                     this.emit(_EventSubType, message.payload.event)
                 };
                 break;
-
             case MessageTypes.SessionKeepAlive:
                 //this.log(message);
                 break;
@@ -128,7 +126,6 @@ export class EventSubClient extends EventEmitter {
             case MessageTypes.Revocation:
                 //this.log(message);
                 break
-
             default:
                 break;
         }

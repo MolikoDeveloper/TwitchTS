@@ -4,7 +4,7 @@ import type { RoomState, Source, UserState } from './util/Data';
 import { parseMessage } from './parser';
 import type { EventName } from './util/irc'
 import { clean } from 'profanity-cleaner';
-import type { Options } from '../session';
+import type { Options } from '../util/session';
 import { IRCLog } from '../Log/IRCLog';
 
 export class IrcBase extends EventEmitter {

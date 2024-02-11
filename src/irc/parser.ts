@@ -3,7 +3,7 @@
 // Expects the caller to pass a single message. (Remember, the Twitch 
 // IRC server may send one or more IRC messages in a single message.)
 
-import { isBot } from "../UnknownBots/GetUnknownBots";
+import { isBot } from "../util/GetUnknownBots";
 import type { UserState, Tag, Command, Source, RoomState } from "./util/Data";
 
 export async function parseMessage(message: string) : Promise<UserState> {

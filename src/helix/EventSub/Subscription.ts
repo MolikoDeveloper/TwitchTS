@@ -1,12 +1,11 @@
 import type { EventType, SubcriptionType } from "./util/Data";
 import {RequestPaths, RequestHosts, substype} from './util/Data'
-import type { Options } from "../../session";
+import type { Options } from "../../util/session";
 import {request} from 'http'
 import { EventSubLog } from "../../Log/EventSubLog";
 
 
 interface ConstructorOptions {
-    broadcasterId: string;
     event: EventType
 }
 
@@ -14,30 +13,34 @@ export class Subscription{
     public data?: any;
     private subs_type?: SubcriptionType;
 
-    constructor(options: ConstructorOptions){
-        this.subs_type = substype(options.event)
+    constructor(broadcaster: string,options: ConstructorOptions[]){
+        if(!options) return;
 
-        this.data = {
-            type: this.subs_type?.param?.event,
-            version: this.subs_type?.param?.version,
-            condition:{
-                broadcaster_user_id: options?.broadcasterId!,
-                //user_id: options?.broadcasterId!
-                //"broadcaster_user_id": "1011151691",
-                "moderator_user_id": "1011151691"
-            },
-            transport:{
-                method: 'websocket',
-                session_id: ''
-            }
-        };
+        options.forEach(option => {
+            this.subs_type = substype(option.event)
+
+            this.data = {
+                type: this.subs_type?.param?.event,
+                version: this.subs_type?.param?.version,
+                condition:{
+                    broadcaster_user_id: broadcaster!,
+                    //user_id: options?.broadcasterId!
+                    //"broadcaster_user_id": "1011151691",
+                    "moderator_user_id": "1011151691"
+                },
+                transport:{
+                    method: 'websocket',
+                    session_id: ''
+                }
+            };
+        })
     }    
 
     public subscribe(options: Options){
         if(!this.data?.condition.broadcaster_user_id) throw new Error("define a broadcaster");
         if (!this.data?.type.length) throw new Error("No event was defined");
 
-        this.data.transport.session_id = options.identity.app?.sessionId!;
+        this.data.transport.session_id = options.identity.user?.sessionID!;
         
         const _postData = JSON.stringify(this.data);
         const _options = {
@@ -47,8 +50,8 @@ export class Subscription{
             method: this.subs_type?.param?.method,
             headers:{
                 'Content-Type': 'application/json',
-                'Client-Id': `${options.identity.app?.ClientID}`,
-                'Authorization': `Bearer ${options.identity.user.token}`
+                'Client-Id': `${options.identity.app?.clientId}`,
+                'Authorization': `Bearer ${options.identity.user?.token}`
             }
         };
         

@@ -7,20 +7,17 @@ export interface Options{
 }
 
 export interface Session{
-    irc?: {
-        username: string,
+    user?: {
+        username?: string,
         token: string,
-        refreshToken?: string
+        refreshToken?: string,
+        sessionID?: ''
     }
     app?:{
         clientId: string,
         secret?: string,
         redirect_uri?: string,
         scopes?: scope[]
-    },
-    eventSub?:{
-        token: string,
-        refreshToken?: string,
     }
 }
 
