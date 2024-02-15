@@ -1,3 +1,6 @@
+import { Actions } from "../helix/EventSub/util/Actions"
+import { SubEvents } from "../helix/EventSub/util/SubEvents"
+
 export interface Options{
     identity: Session
     channels?: string[]
@@ -22,9 +25,8 @@ export interface Session{
     }
 }
 
-export type actionType = 
-| 'SendChatMessage'
-
+export type actionType = typeof Actions[number]['action'];
+export type EventType = typeof SubEvents[number]['event'];
 
 export type scope =
 | 'analytics:read:extensions'
@@ -83,46 +85,3 @@ export type scope =
 | 'user:read:subscriptions'
 | 'whispers:read'
 | 'whispers:edit'
-
-export type EventType =
-    | 'ChannelBan'
-    | 'ChannelUnban'
-    | 'ChannelCheer'
-    | 'ChannelRaid'
-    | 'ChannelFollow'
-    | 'ChannelUpdate'
-    | 'ChannelSubscribe'
-    | 'ChannelSubscriptionEnd'
-    | 'ChannelSubscriptionGift'
-    | 'ChannelSubscriptionMessage'
-    | 'ChannelModeratorAdd'
-    | 'ChannelModeratorRemove'
-    | 'ChannelPointsCustomRewardAdd'
-    | 'ChannelPointsCustomRewardUpdate'
-    | 'ChannelPointsCustomRewardRemove'
-    | 'ChannelPointsCustomRewardRedemptionAdd'
-    | 'ChannelPointsCustomRewardRedemptionUpdate'
-    | 'ChannelPollBegin'
-    | 'ChannelPollProgress'
-    | 'ChannelPollEnd'
-    | 'ChannelPredictionBegin'
-    | 'ChannelPredictionProgress'
-    | 'ChannelPredictionLock'
-    | 'ChannelPredictionEnd'
-    | 'DropEntitlementGrant'
-    | 'ExtensionBitsTransactionCreate'
-    | 'GoalBegin'
-    | 'GoalProgress'
-    | 'GoalEnd'
-    | 'HypeTrainBegin'
-    | 'HypeTrainProgress'
-    | 'HypeTrainEnd'
-    | 'StreamOnline'
-    | 'StreamOffline'
-    | 'UserAuthorizationGrant'
-    | 'UserAuthorizationRevoke'
-    | 'UserUpdate'
-    | 'ChannelGuestStarSessionBegin'
-    | 'ChannelGuestStarSessionEnd'
-    | 'ChannelGuestStarSessionUpdate'
-    | 'ChannelGuestStarSettingsUpdate';

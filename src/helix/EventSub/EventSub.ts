@@ -17,6 +17,6 @@ export class EventSub extends EventSubBase {
     }
 
     public async whisper(from: string, to: string, message: string) {
-
+        
     }
 }

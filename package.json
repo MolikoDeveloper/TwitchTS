@@ -3,9 +3,7 @@
   "module": "index.ts",
   "version": "0.0.1",
   "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
+    "@types/bun": "latest",
     "typescript": "^5.0.0"
   },
   "type": "module",
@@ -13,5 +11,8 @@
     "@discordjs/collection": "^2.0.0",
     "profanity-cleaner": "^0.0.3",
     "ws": "^8.16.0"
+  },
+  "exports":{
+    ".": "./index.ts"
   }
 }

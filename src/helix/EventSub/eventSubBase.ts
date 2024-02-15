@@ -1,11 +1,11 @@
 import { EventEmitter } from "events"
 import { WebSocket } from "ws"
-import { WebSocketPaths, type UserInfo, type subEvent, eventList, RequestHosts } from "./util/Data";
+import { WebSocketPaths, type UserInfo, RequestHosts } from "./util/Data";
 import type { EventType, Options } from "../../util/session"
 import { MessageTypes, type EventMessage } from "./util/message";
 import { request } from 'http'
 
-import SubEventList from './util/SubEvents.json'
+import { SubEvents, type subEvent } from "./util/SubEvents";
 import { EventSubLog } from "../../Log/EventSubLog";
 
 export class EventSubBase extends EventEmitter {
@@ -66,7 +66,7 @@ export class EventSubBase extends EventEmitter {
 
                 break;
             case MessageTypes.Notification:
-                let event = eventList.find(d => d.param.event == message.payload.subscription?.type);
+                let event = SubEvents.find(d => d.param.event == message.payload.subscription?.type);
                 this.emit(event?.event!, message.payload.event);
                 break
             case MessageTypes.Reconect:
@@ -87,8 +87,8 @@ export class EventSubBase extends EventEmitter {
     }
 
     private async subscribe(event: EventType, session_id: string, condition: string[]) {
-        if (eventList.map(d => d.event).indexOf(event) === -1) return;
-        let currentEvent: subEvent = eventList.find(d => d.event == event)!;
+        if (SubEvents.map(d => d.event).indexOf(event) === -1) return;
+        let currentEvent: subEvent = SubEvents.find(d => d.event == event)!;
         let data;
         let conditionobj: { [key: string]: string | null } = {}
 
@@ -209,7 +209,7 @@ export class EventSubBase extends EventEmitter {
         let url: string = '';
 
         this.options.identity.app?.events?.forEach((event) => {
-            let scope = SubEventList.find(data => data.event == event)?.param.scope;
+            let scope = SubEvents.find(data => data.event == event)?.param?.scope;
 
             if (scope != null) {
                 if (permission.indexOf(scope) === -1) {

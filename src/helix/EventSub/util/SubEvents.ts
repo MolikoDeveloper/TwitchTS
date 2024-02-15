@@ -1,4 +1,20 @@
-[
+export interface subEvent {
+    event: string
+    param: Param
+    only_webhooks?: boolean
+    note?: string
+}
+
+export interface Param {
+    event: string
+    method: string
+    version: number
+    Suscription: string
+    scope?: string | null
+    conditions?: string[]
+}
+
+export const SubEvents: subEvent[] = [
     {
         "event": "ChannelBan",
         "param": {
@@ -6,7 +22,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope":  "channel:moderate",
+            "scope": "channel:moderate",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -19,7 +35,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope":  "channel:moderate",
+            "scope": "channel:moderate",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -32,7 +48,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope":  "bits:read",
+            "scope": "bits:read",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -349,7 +365,10 @@
             "event": "drop.entitlement.grant",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scope": null,
+            "conditions": []
+
         }
     },
     {
@@ -359,7 +378,9 @@
             "event": "extension.bits_transaction.create",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scope": null,
+            "conditions": []
         }
     },
     {
@@ -473,7 +494,9 @@
             "event": "user.authorization.grant",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scope": null,
+            "conditions": []
         }
     },
     {
@@ -483,7 +506,9 @@
             "event": "user.authorization.revoke",
             "method": "POST",
             "version": 1,
-            "Suscription": "/helix/eventsub/subscriptions"
+            "Suscription": "/helix/eventsub/subscriptions",
+            "scope": null,
+            "conditions": []
         }
     },
     {
@@ -499,4 +524,4 @@
             ]
         }
     }
-]
+] as const;
