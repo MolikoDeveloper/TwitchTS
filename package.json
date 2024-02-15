@@ -7,12 +7,11 @@
   },
   "type": "module",
   "dependencies": {
-    "@types/bun": "^1.0.5",
     "profanity-cleaner": "^0.0.3",
     "ws": "^8.16.0"
   },
   "Bun": {
-    "@types/bun": "latest"
+    "@types/bun": "^1.0.5"
   },
   "Node": {
     "@types/ws": "^8.5.10",
