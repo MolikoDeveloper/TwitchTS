@@ -4,6 +4,16 @@ this project was created with [bun](https://bun.sh).
 
 # TwitchTS (bun)
 
+## install:
+bun:
+```bash
+bun install MolikoDeveloper/TwitchTS --target=Bun
+```
+NodeJS
+```bash
+npm instal MolikoDeveloper/TwitchTS --target=Node
+```
+
 ## Connect to Chat IRC
 
 you can connect to the chat as anonymous, or with your username and [twitch Oauth Token](https://dev.twitch.tv/docs/cli/token-command/#get-an-access-token) 
@@ -147,11 +157,6 @@ client.on('ChannelFollow', (event) => {
     - [ ] Subscriptions
     - [ ] Actions
 
-
-## To install dependencies:
-```bash
-bun install
-```
 
 ## Generate Token
 
