@@ -4,9 +4,9 @@ import { SubEvents } from "../helix/EventSub/util/SubEvents"
 export interface Options{
     identity: Session
     channels?: string[]
-    debug?:boolean = false,
-    testWebsocket?: boolean = false
-    profaneFilter?: boolean = false
+    debug?:boolean
+    testWebsocket?: boolean
+    profaneFilter?: boolean
 }
 
 export interface Session{
