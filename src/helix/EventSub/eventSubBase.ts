@@ -217,8 +217,8 @@ export class EventSubBase extends EventEmitter {
                 }
             }
         })
-        url += `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=${permission.join("%20").replaceAll("?", "").replaceAll(":", "%3A")}&force_verify=${forceVerify}`
+        url += `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=${permission.join("%20")}&force_verify=${forceVerify}`
 
-        return url;
+        return encodeURI(url);
     }
 }
