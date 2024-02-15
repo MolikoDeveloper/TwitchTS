@@ -1,4 +1,4 @@
-import color from './Colors.json'
+import {color} from './Colors'
 
 export class EventSubLog{
     public debug = false;

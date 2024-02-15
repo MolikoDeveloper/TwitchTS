@@ -1,4 +1,4 @@
-{
+export const color ={
     "Reset": "\u001b[0m",
     "color":{
 
