@@ -1,4 +1,5 @@
 import {color} from './Colors'
+const util = require('util')
 
 export class EventSubLog{
     public debug = false;
@@ -10,13 +11,7 @@ export class EventSubLog{
             data.forEach(d => {
                 switch(typeof d){
                     case "object":
-                        if(process.versions.Bun)
-                            console.log(Bun.inspect(d,{'colors': true}));
-                        else{
-                            const util = require('util')
-                            console.log(util.inspect(d,{'colors': true}));
-                        }
-
+                        console.log(util.inspect(d,{'colors': true}));
                         break;
                     default:
                         console.log(`${color.color.Cyan}Twitch Helix: ${color.Reset}${d}${color.Reset}`)
