@@ -135,7 +135,7 @@ client.on('ChannelFollow', (event) => {
         - [x] [Channel.Guest.Star.Session.Begin](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelguest.star.session.begin)
         - [x] [Channel.Guest.Star.Session.End](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelguest.star.session.end)
         - [x] [Channel.Guest.Star.Session.Update](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelguest.star.session.update)
-        - [x] [Channel.Guest.Star.Settings.Update](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelguest.star.settings.update)'
+        - [x] [Channel.Guest.Star.Settings.Update](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelguest.star.settings.update)
     - [ ] Actions
         - [ ] Predictions
         - [ ] Say
