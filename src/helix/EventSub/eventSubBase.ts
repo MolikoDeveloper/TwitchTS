@@ -2,17 +2,16 @@ import { EventEmitter } from "events"
 import { WebSocket } from "ws"
 import { WebSocketPaths, type UserInfo, type subEvent, eventList, RequestHosts } from "./util/Data";
 import type { EventType, Options } from "../../util/session"
-import { MessageTypes, type EventMessage, type Condition } from "./util/message";
+import { MessageTypes, type EventMessage } from "./util/message";
 import { request } from 'http'
 
 import SubEventList from './util/SubEvents.json'
 import { EventSubLog } from "../../Log/EventSubLog";
 
-
-export class EventSub extends EventEmitter {
-    public options: Options;
+export class EventSubBase extends EventEmitter {
+    protected options: Options;
     private ws: WebSocket;
-    private log: EventSubLog;
+    protected log: EventSubLog;
 
     constructor(opts: Options) {
         super({ captureRejections: true });
@@ -53,14 +52,15 @@ export class EventSub extends EventEmitter {
             case MessageTypes.SessionWelcome:
                 SessionID = message.payload?.session?.id!;
                 Channels = (await this.GetUserByName(this.options.channels!));
-                this.log.log(SessionID)
 
-                Channels.forEach(channel => {
-                    this.options.identity.app?.events.forEach(event => {
-                        this.log.log(`subscribing to${this.log.Color.color.Magenta} #${channel.display_name}[${channel.id}] ${this.log.Color.color.Green}${event}`)
-                        this.subscribe(event, SessionID, [channel.id])
+                if(this.options.identity.app?.events){
+                    Channels.forEach(channel => {
+                        this.options.identity.app?.events!.forEach(event => {
+                            this.log.log(`subscribing to${this.log.Color.color.Magenta} #${channel.display_name}[${channel.id}] ${this.log.Color.color.Green}${event}`)
+                            this.subscribe(event, SessionID, [channel.id])
+                        });
                     });
-                });
+                }
                 break;
             case MessageTypes.SessionKeepAlive:
 

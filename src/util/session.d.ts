@@ -17,9 +17,14 @@ export interface Session{
         clientId: string,
         secret?: string,
         redirect_uri?: string,
-        events: EventType[]
+        events?: EventType[],
+        actions?: actionType[] 
     }
 }
+
+export type actionType = 
+| 'SendChatMessage'
+
 
 export type scope =
 | 'analytics:read:extensions'
