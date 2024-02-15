@@ -1,5 +1,23 @@
 import eventsjson from './SubEvents.json'
 
+export const eventList:subEvent[] = eventsjson;
+
+export interface subEvent {
+    event: string
+    param: Param
+    only_webhooks?: boolean
+    note?: string
+  }
+  
+  export interface Param {
+    event: string
+    method: string
+    version: number
+    Suscription: string
+    scope?: string|null
+    conditions?: string[]
+  }
+
 
 export type SubscriptionData = {
     type: string,
@@ -24,109 +42,20 @@ export type EventSub = {
     broadcaster_user_name?: string
 }
 
-export type APIMessage = {
-    metadata: {
-        message_id: string,
-        message_type: string,
-        message_timestamp: string
-    },
-    payload: {
-        session?: {
-            id: string
-            status: string,
-            connected_at: string,
-            keepalive_timeout_seconds: number,
-            reconnect_url: string | null
-        },
-        subscription?: {
-            type: string,
-            created_at?: string
-        },
-        event?: {
-            broadcaster_user_name: string
-        }
-    }
-}
-
-export type APINotification = {
-    metadata: {
-        message_id: string,
-        message_type: string,
-        message_timestamp: string
-    },
-    payload: {
-        session?: {
-            id: string
-            status: string,
-            connected_at: string,
-            keepalive_timeout_seconds: number,
-            reconnect_url: string | null
-        },
-        subscription?: {
-            type: string,
-            created_at?: string
-        },
-        event?: {
-            broadcaster_user_name: string
-        }
-    }
-}
-
 export enum WebSocketPaths {
-    EventSub = "wss://eventsub.wss.twitch.tv/ws"
-    //EventSub = "ws://127.0.0.1:8080/ws"
+    EventSub = "wss://eventsub.wss.twitch.tv/ws",
+    EventSubLocalTest = "ws://127.0.0.1:8080/ws"
 };
 
 export enum RequestHosts {
-    BaseAPI = "api.twitch.tv"
+    BaseAPI = "api.twitch.tv",
+    BaseAPILocalTest = "127.0.0.1"
 };
+
 export const enum RequestPaths {
-    Subscription = "/helix/eventsub/subscriptions/?keepalive_timeout_seconds=600",
+    Subscription = "/helix/eventsub/subscriptions",
     Clips = "helix/clips/"
 }
-
-export type EventType =
-    | 'ChannelBan'
-    | 'ChannelUnban'
-    | 'ChannelCheer'
-    | 'ChannelRaid'
-    | 'ChannelFollow'
-    | 'ChannelUpdate'
-    | 'ChannelSubscribe'
-    | 'ChannelSubscriptionEnd'
-    | 'ChannelSubscriptionGift'
-    | 'ChannelSubscriptionMessage'
-    | 'ChannelModeratorAdd'
-    | 'ChannelModeratorRemove'
-    | 'ChannelPointsCustomRewardAdd'
-    | 'ChannelPointsCustomRewardUpdate'
-    | 'ChannelPointsCustomRewardRemove'
-    | 'ChannelPointsCustomRewardRedemptionAdd'
-    | 'ChannelPointsCustomRewardRedemptionUpdate'
-    | 'ChannelPollBegin'
-    | 'ChannelPollProgress'
-    | 'ChannelPollEnd'
-    | 'ChannelPredictionBegin'
-    | 'ChannelPredictionProgress'
-    | 'ChannelPredictionLock'
-    | 'ChannelPredictionEnd'
-    | 'DropEntitlementGrant'
-    | 'ExtensionBitsTransactionCreate'
-    | 'GoalBegin'
-    | 'GoalProgress'
-    | 'GoalEnd'
-    | 'HypeTrainBegin'
-    | 'HypeTrainProgress'
-    | 'HypeTrainEnd'
-    | 'StreamOnline'
-    | 'StreamOffline'
-    | 'UserAuthorizationGrant'
-    | 'UserAuthorizationRevoke'
-    | 'UserUpdate'
-    | 'ChannelGuestStarSessionBegin'
-    | 'ChannelGuestStarSessionEnd'
-    | 'ChannelGuestStarSessionUpdate'
-    | 'ChannelGuestStarSettingsUpdate';
 
 export interface SubcriptionType {
     event?: string
@@ -138,6 +67,20 @@ export interface SubcriptionType {
     }
 }
 
+export interface UserInfo {
+    id: string
+    login: string
+    display_name: string
+    type: string
+    broadcaster_type: string
+    description: string
+    profile_image_url: string
+    offline_image_url: string
+    view_count: number
+    created_at: string
+}
+
+/*
 export function substype(event: EventType) : SubcriptionType{
     let data = eventsjson.find(element => element.event === event);
     
@@ -152,5 +95,4 @@ export function substype(event: EventType) : SubcriptionType{
     }
 
     return temp;
-}
-substype('ChannelBan');
+}*/

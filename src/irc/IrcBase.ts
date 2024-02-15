@@ -20,7 +20,7 @@ export class IrcBase extends EventEmitter {
         this.ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443/');
         this.ircLog.log('Connecting...')
         this.opts = opts;
-        this.ircLog.botname = opts.identity?.irc?.username!;
+        this.ircLog.botname = opts.identity?.user?.username!;
 
         this.ws.onopen = this.onOpen.bind(this);
         this.ws.onmessage = this.onMessage.bind(this);
@@ -117,10 +117,10 @@ export class IrcBase extends EventEmitter {
         this.ircLog.log("Connected to Twitch Chat Service")
 
         this.ws.send('CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership\r\n');
-        this.ws.send(`PASS oauth:${this.opts.identity.irc?.token}\r\n`);
-        this.ws.send(`NICK ${this.opts.identity.irc?.username}\r\n`);
+        this.ws.send(`PASS oauth:${this.opts.identity.user?.token}\r\n`);
+        this.ws.send(`NICK ${this.opts.identity.user?.username}\r\n`);
         this.opts.channels?.forEach(channel => {
-            this.ircLog.log(`Joining to \u001b[31m#${channel}\u001b[0m chat as \u001b[35m@${this.opts.identity.irc?.username}\u001b[0m`);
+            this.ircLog.log(`Joining to \u001b[31m#${channel}\u001b[0m chat as \u001b[35m@${this.opts.identity.user?.username}\u001b[0m`);
             setTimeout(() => {
                 this.ws.send(`JOIN #${channel}\r\n`);
             }, 2000)
@@ -145,7 +145,7 @@ export class IrcBase extends EventEmitter {
         else {
             this.events.forEach((event: any) => {
                 if (event.validate(message)) {
-                    this.emit(event.type, ...event.parameters(message), (message.source?.nick === this.opts.identity.irc?.username));
+                    this.emit(event.type, ...event.parameters(message), (message.source?.nick === this.opts.identity.user?.username));
                 }
             });
         }

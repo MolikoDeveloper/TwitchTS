@@ -2,10 +2,9 @@ const EventEmitter = require('events');
 import { Collection } from '@discordjs/collection';
 import { WebSocketPaths, type EventType } from './util/Data'
 import type { Options } from '../../util/session';
-import { Subscription } from './Subscription';
+import { Subscription } from './Subscription.old';
 import eventsubjson from './util/SubEvents.json'
 const WebSocket = require('ws');
-
 
 export declare interface Client {
     on<K extends keyof ClientEvents>(event: K, listener: (...args: ClientEvents[K]) => void): this;
@@ -81,9 +80,7 @@ export class EventSubClient extends EventEmitter {
         let message: any = JSON.parse(rawMessage.toString());
         switch (message.metadata?.message_type) {
             case MessageTypes.SessionWelcome:
-                console.time("Welcome WS")
                 this.opts!.identity.user!.sessionID = message.payload?.session?.id!;
-                console.log(this.opts!.identity.user?.sessionID)
                 if (this.subscriptions) {
                     for (const [key, element] of this.subscriptions) {
                         element.subscribe({
@@ -100,8 +97,7 @@ export class EventSubClient extends EventEmitter {
                             },
                         });
                     }
-                    //this.emit('ready', this);
-                    //print `Ready! Listening to ${client.subscriptions?.size} subscriptions...`
+                    //this.emit('Connected', this);
                 }
                 console.timeEnd("Welcome WS")
                 break;

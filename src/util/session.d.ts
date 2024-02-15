@@ -1,9 +1,9 @@
 export interface Options{
     identity: Session
-    sessionId?: string,
     channels?: string[]
-    debug?:boolean
-    profaneFilter?: boolean
+    debug?:boolean = false,
+    testWebsocket?: boolean = false
+    profaneFilter?: boolean = false
 }
 
 export interface Session{
@@ -11,13 +11,13 @@ export interface Session{
         username?: string,
         token: string,
         refreshToken?: string,
-        sessionID?: ''
+        code: string
     }
     app?:{
         clientId: string,
         secret?: string,
         redirect_uri?: string,
-        scopes?: scope[]
+        events: EventType[]
     }
 }
 
@@ -78,3 +78,46 @@ export type scope =
 | 'user:read:subscriptions'
 | 'whispers:read'
 | 'whispers:edit'
+
+export type EventType =
+    | 'ChannelBan'
+    | 'ChannelUnban'
+    | 'ChannelCheer'
+    | 'ChannelRaid'
+    | 'ChannelFollow'
+    | 'ChannelUpdate'
+    | 'ChannelSubscribe'
+    | 'ChannelSubscriptionEnd'
+    | 'ChannelSubscriptionGift'
+    | 'ChannelSubscriptionMessage'
+    | 'ChannelModeratorAdd'
+    | 'ChannelModeratorRemove'
+    | 'ChannelPointsCustomRewardAdd'
+    | 'ChannelPointsCustomRewardUpdate'
+    | 'ChannelPointsCustomRewardRemove'
+    | 'ChannelPointsCustomRewardRedemptionAdd'
+    | 'ChannelPointsCustomRewardRedemptionUpdate'
+    | 'ChannelPollBegin'
+    | 'ChannelPollProgress'
+    | 'ChannelPollEnd'
+    | 'ChannelPredictionBegin'
+    | 'ChannelPredictionProgress'
+    | 'ChannelPredictionLock'
+    | 'ChannelPredictionEnd'
+    | 'DropEntitlementGrant'
+    | 'ExtensionBitsTransactionCreate'
+    | 'GoalBegin'
+    | 'GoalProgress'
+    | 'GoalEnd'
+    | 'HypeTrainBegin'
+    | 'HypeTrainProgress'
+    | 'HypeTrainEnd'
+    | 'StreamOnline'
+    | 'StreamOffline'
+    | 'UserAuthorizationGrant'
+    | 'UserAuthorizationRevoke'
+    | 'UserUpdate'
+    | 'ChannelGuestStarSessionBegin'
+    | 'ChannelGuestStarSessionEnd'
+    | 'ChannelGuestStarSessionUpdate'
+    | 'ChannelGuestStarSettingsUpdate';

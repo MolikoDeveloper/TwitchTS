@@ -6,9 +6,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:moderate"
-            ],
+            "scope":  "channel:moderate",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -21,9 +19,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:moderate"
-            ],
+            "scope":  "channel:moderate",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -36,9 +32,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "bits:read"
-            ],
+            "scope":  "bits:read",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -51,7 +45,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [],
+            "scope": null,
             "conditions": [
                 "to_broadcaster_user_id"
             ]
@@ -64,7 +58,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [],
+            "scope": null,
             "conditions": [
                 "from_broadcaster_user_id"
             ]
@@ -77,9 +71,7 @@
             "method": "POST",
             "version": 2,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "moderator:read:followers"
-            ],
+            "scope": "moderator:read:followers",
             "conditions": [
                 "broadcaster_user_id",
                 "moderator_user_id"
@@ -93,7 +85,7 @@
             "method": "POST",
             "version": 2,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [],
+            "scope": null,
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -106,9 +98,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:subscriptions"
-            ],
+            "scope": "channel:read:subscriptions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -121,9 +111,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:subscriptions"
-            ],
+            "scope": "channel:read:subscriptions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -136,9 +124,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:subscriptions"
-            ],
+            "scope": "channel:read:subscriptions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -151,9 +137,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:subscriptions"
-            ],
+            "scope": "channel:read:subscriptions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -166,9 +150,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "moderation:read"
-            ],
+            "scope": "moderation:read",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -181,9 +163,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "moderation:read"
-            ],
+            "scope": "moderation:read",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -196,9 +176,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:redemptions"
-            ],
+            "scope": "channel:read:redemptions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -211,9 +189,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:manage:redemptions"
-            ],
+            "scope": "channel:manage:redemptions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -226,9 +202,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:redemptions"
-            ],
+            "scope": "channel:read:redemptions",
             "conditions": [
                 "broadcaster_user_id",
                 "reward_id?"
@@ -242,9 +216,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:redemptions"
-            ],
+            "scope": "channel:read:redemptions",
             "conditions": [
                 "broadcaster_user_id",
                 "reward_id?"
@@ -258,9 +230,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:redemptions"
-            ],
+            "scope": "channel:read:redemptions",
             "conditions": [
                 "broadcaster_user_id",
                 "reward_id?"
@@ -274,9 +244,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:redemptions"
-            ],
+            "scope": "channel:read:redemptions",
             "conditions": [
                 "broadcaster_user_id",
                 "reward_id?"
@@ -290,9 +258,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:polls"
-            ],
+            "scope": "channel:read:polls",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -305,9 +271,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:polls"
-            ],
+            "scope": "channel:read:polls",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -320,9 +284,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:polls"
-            ],
+            "scope": "channel:read:polls",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -335,9 +297,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:predictions"
-            ],
+            "scope": "channel:read:predictions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -350,9 +310,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:predictions"
-            ],
+            "scope": "channel:read:predictions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -365,9 +323,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:predictions"
-            ],
+            "scope": "channel:read:predictions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -380,9 +336,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:predictions"
-            ],
+            "scope": "channel:read:predictions",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -415,9 +369,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:goals"
-            ],
+            "scope": "channel:read:goals",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -430,9 +382,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:goals"
-            ],
+            "scope": "channel:read:goals",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -445,9 +395,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:goals"
-            ],
+            "scope": "channel:read:goals",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -460,9 +408,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:hype_train"
-            ],
+            "scope": "channel:read:hype_train",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -475,9 +421,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:hype_train"
-            ],
+            "scope": "channel:read:hype_train",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -490,9 +434,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "channel:read:hype_train"
-            ],
+            "scope": "channel:read:hype_train",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -505,7 +447,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [],
+            "scope": null,
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -518,7 +460,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [],
+            "scope": null,
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -551,9 +493,7 @@
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scopes": [
-                "user:read:email?"
-            ],
+            "scope": "user:read:email?",
             "conditions": [
                 "user_id"
             ]

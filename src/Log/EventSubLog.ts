@@ -2,10 +2,20 @@ import color from './Colors.json'
 
 export class EventSubLog{
     public debug = false;
+    public Color = color;
 
-    log(...data: any[]): void {
+
+    log(...data:any[]): void {
         if (this.debug) {
-            console.log(`${color.color.Green}Twitch EventSub: ${color.Reset}${data}${color.Reset}`)
+            data.forEach(d => {
+                switch(typeof d){
+                    case "object":
+                        console.log(Bun.inspect(d,{'colors': true}));
+                        break;
+                    default:
+                        console.log(`${color.color.Cyan}Twitch Helix: ${color.Reset}${d}${color.Reset}`)
+                }
+            })
         }
     }
     
