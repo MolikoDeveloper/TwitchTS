@@ -10,7 +10,7 @@ export interface Param {
     method: string
     version: number
     Suscription: string
-    scope?: string | null
+    scope?: string
     conditions?: string[]
 }
 
@@ -61,7 +61,7 @@ export const SubEvents: subEvent[] = [
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope": null,
+            "scope": "",
             "conditions": [
                 "to_broadcaster_user_id"
             ]
@@ -74,7 +74,7 @@ export const SubEvents: subEvent[] = [
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope": null,
+            "scope": "",
             "conditions": [
                 "from_broadcaster_user_id"
             ]
@@ -101,7 +101,7 @@ export const SubEvents: subEvent[] = [
             "method": "POST",
             "version": 2,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope": null,
+            "scope": "",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -366,7 +366,7 @@ export const SubEvents: subEvent[] = [
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope": null,
+            "scope": "",
             "conditions": []
 
         }
@@ -379,7 +379,7 @@ export const SubEvents: subEvent[] = [
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope": null,
+            "scope": "",
             "conditions": []
         }
     },
@@ -468,7 +468,7 @@ export const SubEvents: subEvent[] = [
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope": null,
+            "scope": "",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -481,7 +481,7 @@ export const SubEvents: subEvent[] = [
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope": null,
+            "scope": "",
             "conditions": [
                 "broadcaster_user_id"
             ]
@@ -495,7 +495,7 @@ export const SubEvents: subEvent[] = [
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope": null,
+            "scope": "",
             "conditions": []
         }
     },
@@ -507,7 +507,7 @@ export const SubEvents: subEvent[] = [
             "method": "POST",
             "version": 1,
             "Suscription": "/helix/eventsub/subscriptions",
-            "scope": null,
+            "scope": "",
             "conditions": []
         }
     },
