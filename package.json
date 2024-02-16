@@ -3,6 +3,12 @@
   "type": "module",
   "module": "index.ts",
   "version": "0.0.3",
+  "license": "MIT",
+  "author": {
+    "name": "Alberto Arriagada C.",
+    "url": "https://molikodev.com",
+    "email": "molikodev@gmail.com"
+  },
   "devDependencies": {
     "@types/bun": "^1.0.5",
     "@types/ws": "^8.5.10",
@@ -14,5 +20,15 @@
   },
   "exports": {
     ".": "./index.ts"
+  },
+  "keywords": [
+    "bun"
+  ],
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MolikoDeveloper/TwitchTS.git"
   }
 }

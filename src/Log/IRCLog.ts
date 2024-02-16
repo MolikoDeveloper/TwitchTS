@@ -1,6 +1,6 @@
 import { isCommaListExpression } from "typescript";
 import type { UserState } from "../irc/util/Data";
-import { clean } from 'profanity-cleaner';
+//import { clean } from 'profanity-cleaner';
 import { color } from './Colors'
 
 export class IRCLog {
@@ -76,7 +76,7 @@ export class IRCLog {
                     }
                     break;
                 case 'PRIVMSG':
-                    this.log(`${color.color.Red}${message?.command?.channel}${color.Reset} ${color.color.Green}@${message.source?.nick}${color.Reset}: ${(message.profanity == false) ? message.parameters?.trim() : clean(message.parameters?.trim())}`)
+                    this.log(`${color.color.Red}${message?.command?.channel}${color.Reset} ${color.color.Green}@${message.source?.nick}${color.Reset}: ${(message.profanity == false) ? message.parameters?.trim() : message.parameters?.trim()}`)/*clean(message.parameters?.trim())*/
                     break;
                 case 'CLEARCHAT':
                     if (!message.parameters) this.log(`${message.command.channel} Console Cleared.`)

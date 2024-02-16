@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import type { RoomState, Source, UserState } from './util/Data';
 import { parseMessage } from './parser';
 import type { EventName } from './util/irc'
-import { clean } from 'profanity-cleaner';
+//import { clean } from 'profanity-cleaner';
 import type { Options } from '../util/session';
 import { IRCLog } from '../Log/IRCLog';
 
@@ -36,7 +36,7 @@ export class IrcBase extends EventEmitter {
                 parameters: (data: UserState) => [
                     data.command?.channel,
                     data,
-                    (this.opts.profaneFilter == false) ? data.parameters?.trim() : clean(data.parameters?.trim())
+                    (this.opts.profaneFilter == false) ? data.parameters?.trim() : data.parameters?.trim()/*clean(data.parameters?.trim())*/
                 ],
             },
             {
@@ -210,7 +210,6 @@ export class IrcBase extends EventEmitter {
             }
 
             this.ws.send(`PRIVMSG ${channel} :${message}`);
-
         });
     }
 }
