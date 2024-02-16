@@ -4,11 +4,17 @@
     "lib": [
       "ESNext"
     ],
-    "target": "ES6",
-    "module": "ES6",
+    "target": "ESNext",
+    "module": "ESNext",
     "sourceMap": true,
     "moduleDetection": "force",
     "allowJs": true,
+
+    /* Declarations 
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "./types",
+    */
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -21,5 +27,6 @@
     "strict": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
-  }
+  },
+  
 }
