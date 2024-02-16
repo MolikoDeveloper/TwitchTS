@@ -7,6 +7,7 @@ import { request } from 'http'
 
 import { SubEvents, type subEvent } from "./util/SubEvents";
 import { EventSubLog } from "../../Log/EventSubLog";
+import { Actions } from "./util/Actions";
 
 export class EventSubBase extends EventEmitter {
     protected options: Options;
@@ -160,7 +161,7 @@ export class EventSubBase extends EventEmitter {
         req.end();
     }
 
-    private async GetUserByName(username: string | string[]): Promise<UserInfo[]> {
+    protected async GetUserByName(username: string | string[]): Promise<UserInfo[]> {
 
         const usernames = typeof username === 'string' ? [username] : username;
 
@@ -217,8 +218,22 @@ export class EventSubBase extends EventEmitter {
                 }
             }
         })
-        url += `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=${permission.join("%20")}&force_verify=${forceVerify}`
 
-        return encodeURI(url);
+        this.options.identity.app?.actions?.forEach((action) => {
+            let scope = Actions.find(data => data.action == action)?.param?.scope;
+
+            if (scope != null) {
+                scope.forEach(element =>{
+                    if (permission.indexOf(element) === -1) {
+                        permission.push(element)
+                    }
+                })
+            }
+        })
+        
+        
+        url += `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=${encodeURIComponent(permission.join(" ").trim())}&force_verify=${forceVerify}`
+
+        return url;
     }
 }
