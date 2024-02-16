@@ -7,11 +7,7 @@ this project was created with [bun](https://bun.sh).
 ## install:
 bun:
 ```bash
-bun install MolikoDeveloper/TwitchTS --target=Bun
-```
-NodeJS
-```bash
-npm instal MolikoDeveloper/TwitchTS --target=Node
+bun install MolikoDeveloper/TwitchTS
 ```
 
 ## Connect to Chat IRC
