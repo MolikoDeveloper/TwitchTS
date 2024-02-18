@@ -6,12 +6,12 @@ export const Actions = [
             Suscription: "/helix/chat/messages",
             scope: [
                 "user:write:chat",
-                "user:bot", 
+                "user:bot",
                 "channel:bot"
             ],
             query: [],
-            body:[
-                "broascaster_id",
+            body: [
+                "broadcaster_id",
                 "sender_id",
                 "message"
             ]
@@ -24,10 +24,10 @@ export const Actions = [
             Suscription: "/helix/whispers",
             scope: ["user:manage:whispers"],
             query: [
-                "from_user_id",
-                "to_user_id",
+                "from_user_id=[0]",
+                "to_user_id=[1]",
             ],
-            body:[
+            body: [
                 "message"
             ]
         }
