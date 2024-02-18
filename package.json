@@ -2,7 +2,7 @@
   "name": "twitchts",
   "type": "module",
   "module": "index.ts",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "author": {
     "name": "Alberto Arriagada C.",
@@ -16,7 +16,6 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "profanity-cleaner": "^0.0.3",
     "ws": "^8.16.0"
   },
   "exports": {
