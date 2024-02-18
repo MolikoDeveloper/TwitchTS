@@ -232,7 +232,7 @@ export class EventSubBase extends EventEmitter {
         })
         
         
-        url += `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=${encodeURIComponent(permission.join(" ").trim())}&force_verify=${forceVerify}`
+        url += `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=chat%3Aread%20chat%3Aedit%20${encodeURIComponent(permission.join(" ").trim())}&force_verify=${forceVerify}`
 
         return url;
     }
