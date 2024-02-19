@@ -68,7 +68,8 @@ export class EventSubBase extends EventEmitter {
                 break;
             case MessageTypes.Notification:
                 let event = SubEvents.find(d => d.param.event == message.payload.subscription?.type);
-                this.emit(event?.event!, message.payload.event);
+                if (!event?.only_webhooks)
+                    this.emit(event?.event!, message.payload.event);
                 break
             case MessageTypes.Reconect:
                 this.ws = new WebSocket(message.payload.session?.reconnect_url!);
@@ -103,15 +104,23 @@ export class EventSubBase extends EventEmitter {
 
         if (!conditionobj) return;
 
-        data = {
-            type: currentEvent.param?.event,
-            version: currentEvent.param?.version,
-            condition: conditionobj,
-            transport: {
-                method: 'websocket',
-                session_id: session_id
-            }
-        };
+        if (currentEvent.only_webhooks) {
+            return;
+        }
+
+        if (!currentEvent.only_webhooks) {
+            data = {
+                type: currentEvent.param?.event,
+                version: currentEvent.param?.version,
+                condition: conditionobj,
+                transport: {
+                    method: 'websocket',
+                    session_id: session_id
+                }
+            };
+        }
+
+
 
         const _postData = JSON.stringify(data);
         let _options = {}
@@ -119,7 +128,7 @@ export class EventSubBase extends EventEmitter {
         if (this.options.testWebsocket) {
             _options = {
                 host: RequestHosts.BaseAPILocalTest,
-                path: currentEvent.param.SuscriptionTest,
+                path: currentEvent.param.Subscription.replace('/helix', ''),
                 port: 8080,
                 method: currentEvent.param.method,
                 headers: {
@@ -132,7 +141,7 @@ export class EventSubBase extends EventEmitter {
         else {
             _options = {
                 host: RequestHosts.BaseAPI,
-                path: currentEvent.param.Suscription,
+                path: currentEvent.param.Subscription,
                 port: 443,
                 method: currentEvent.param.method,
                 headers: {
@@ -279,9 +288,713 @@ export class EventSubBase extends EventEmitter {
         content_classification_labels: ("Gambling" | "ProfanityVulgarity" | "DrugsIntoxication" | "SexualThemes" | "ViolentGraphic")[]
     }) => void | Promise<any>): this;
 
-    on(event: 'ChannelCheer', listener: (data:any) => void|Promise<any>): this;
+    on(event: 'ChannelCheer', listener: (event: {
+        bits: number,
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        is_anonymous: boolean,
+        message: string,
+        user_id: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
 
-    on(event: EventType, listener: (...args: any[]) => void | Promise<any>): this {
+    on(event: 'ChannelRaid', listener: (event: {
+        from_broadcaster_user_id: string,
+        from_broadcaster_user_login: string,
+        from_broadcaster_user_name: string,
+        to_broadcaster_user_id: string,
+        to_broadcaster_user_login: string,
+        to_broadcaster_user_name: string,
+        viewers: number,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelFollow', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        followed_at: string,
+        user_id: string,
+        user_login: string,
+        user_name: string
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelSubscribe', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        is_gift: boolean,
+        tier: string,
+        user_id: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelSubscriptionEnd', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        is_gift: boolean,
+        tier: string,
+        user_id: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelSubscriptionGift', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        cumulative_total: number,
+        is_anonymous: boolean,
+        tier: string,
+        total: number,
+        user_id: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelSubscriptionMessage', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        cumulative_months: number,
+        duration_months: number,
+        message: {
+            emotes: [
+                {
+                    begin: number,
+                    end: number,
+                    id: string
+                }
+            ],
+            text: string,
+        },
+        streak_months: number,
+        tier: string,
+        user_id: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelModeratorAdd', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        user_id: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelModeratorRemove', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        user_id: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPointsCustomRewardAdd', listener: (event: {
+        background_color: string,
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        cooldown_expires_at: string,
+        cost: number,
+        default_image: {
+            url_1x: string,
+            url_2x: string,
+            url_4x: string,
+        },
+        global_cooldown: {
+            is_enabled: boolean,
+            seconds: number,
+        },
+        id: string,
+        image: {
+            url_1x: string,
+            url_2x: string,
+            url_4x: string,
+        },
+        is_enabled: boolean,
+        is_in_stock: boolean,
+        is_paused: boolean,
+        is_user_input_required: boolean,
+        max_per_stream: {
+            is_enabled: boolean,
+            value: number,
+        },
+        max_per_user_per_stream: {
+            is_enabled: boolean,
+            value: number,
+        },
+        prompt: string,
+        redemptions_redeemed_current_stream: number,
+        should_redemptions_skip_request_queue: boolean,
+        title: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPointsCustomRewardUpdate', listener: (event: {
+        background_color: string,
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        cooldown_expires_at: string,
+        cost: number,
+        default_image: {
+            url_1x: string,
+            url_2x: string,
+            url_4x: string,
+        },
+        global_cooldown: {
+            is_enabled: boolean,
+            seconds: number,
+        },
+        id: string,
+        image: {
+            url_1x: string,
+            url_2x: string,
+            url_4x: string,
+        },
+        is_enabled: boolean,
+        is_in_stock: boolean,
+        is_paused: boolean,
+        is_user_input_required: boolean,
+        max_per_stream: {
+            is_enabled: boolean,
+            value: number,
+        },
+        max_per_user_per_stream: {
+            is_enabled: boolean,
+            value: number,
+        },
+        prompt: string,
+        redemptions_redeemed_current_stream: number,
+        should_redemptions_skip_request_queue: boolean,
+        title: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPointsCustomRewardRemove', listener: (event: {
+        background_color: string,
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        cooldown_expires_at: string,
+        cost: number,
+        default_image: {
+            url_1x: string,
+            url_2x: string,
+            url_4x: string,
+        },
+        global_cooldown: {
+            is_enabled: boolean,
+            seconds: number,
+        },
+        id: string,
+        image: {
+            url_1x: string,
+            url_2x: string,
+            url_4x: string,
+        },
+        is_enabled: boolean,
+        is_in_stock: boolean,
+        is_paused: boolean,
+        is_user_input_required: boolean,
+        max_per_stream: {
+            is_enabled: boolean,
+            value: number,
+        },
+        max_per_user_per_stream: {
+            is_enabled: boolean,
+            value: number,
+        },
+        prompt: string,
+        redemptions_redeemed_current_stream: number,
+        should_redemptions_skip_request_queue: boolean,
+        title: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPointsCustomRewardRedemptionAdd', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        id: string,
+        redeemed_at: string,
+        reward: {
+            cost: number,
+            id: string,
+            prompt: string,
+            title: string,
+        },
+        status: string,
+        user_id: string,
+        user_input: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPointsCustomRewardRedemptionUpdate', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        id: string,
+        redeemed_at: string,
+        reward: {
+            cost: number,
+            id: string,
+            prompt: string,
+            title: string,
+        },
+        status: string,
+        user_id: string,
+        user_input: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPollBegin', listener: (event: {
+        bits_voting: {
+            amount_per_vote: number,
+            is_enabled: boolean,
+        },
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        channel_points_voting: {
+            amount_per_vote: number,
+            is_enabled: boolean,
+        },
+        choices: [
+            {
+                id: string,
+                title: string,
+            }
+        ],
+        ends_at: string,
+        id: string,
+        started_at: string,
+        title: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPollEnd', listener: (event: {
+        bits_voting: {
+            amount_per_vote: number,
+            is_enabled: boolean,
+        },
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        channel_points_voting: {
+            amount_per_vote: number,
+            is_enabled: boolean,
+        },
+        choices: [
+            {
+                bits_votes: number,
+                channel_points_votes: number,
+                id: string,
+                title: string,
+                votes: number,
+            }
+        ],
+        ends_at: string,
+        id: string,
+        started_at: string,
+        title: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPollProgress', listener: (event: {
+        bits_voting: {
+            amount_per_vote: number,
+            is_enabled: boolean,
+        },
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        channel_points_voting: {
+            amount_per_vote: number,
+            is_enabled: boolean,
+        },
+        choices: [
+            {
+                bits_votes: number,
+                channel_points_votes: number,
+                id: string,
+                title: string,
+                votes: number,
+            }
+        ],
+        ends_at: string,
+        id: string,
+        started_at: string,
+        title: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPredictionBegin', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        id: string,
+        locks_at: string,
+        outcomes: [
+            {
+                color: string,
+                id: string,
+                title: string,
+            }
+        ],
+        started_at: string,
+        title: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPredictionEnd', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        ended_at: string,
+        id: string,
+        outcomes: [
+            {
+                channel_points: 31437,
+                color: string,
+                id: string,
+                title: string,
+                top_predictors: [
+                    {
+                        channel_points_used: 7473,
+                        channel_points_won: 14946,
+                        user_id: string,
+                        user_login: string,
+                        user_name: string,
+                    }
+                ],
+                users: 5,
+            }
+        ],
+        started_at: string,
+        status: string,
+        title: string,
+        winning_outcome_id: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPredictionProgress', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        id: string,
+        locks_at: string,
+        outcomes: [
+            {
+                channel_points: 31437,
+                color: string,
+                id: string,
+                title: string,
+                top_predictors: [
+                    {
+                        channel_points_used: 7473,
+                        channel_points_won: 14946,
+                        user_id: string,
+                        user_login: string,
+                        user_name: string,
+                    }
+                ],
+                users: 5,
+            }
+        ],
+        started_at: string,
+        title: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelPredictionLock', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        id: string,
+        locked_at: string,
+        outcomes: [
+            {
+                channel_points: 31437,
+                color: string,
+                id: string,
+                title: string,
+                top_predictors: [
+                    {
+                        channel_points_used: 7473,
+                        channel_points_won: 14946,
+                        user_id: string,
+                        user_login: string,
+                        user_name: string,
+                    }
+                ],
+                users: 5,
+            }
+        ],
+        started_at: string,
+        title: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'DropEntitlementGrant', listener: (event: [
+        {
+            "id": string,
+            "data": {
+                "organization_id": string,
+                "category_id": string,
+                "category_name": string,
+                "campaign_id": string,
+                "user_id": string,
+                "user_name": string,
+                "user_login": string,
+                "entitlement_id": string,
+                "benefit_id": string,
+                "created_at": string
+            }
+        }
+    ]) => void | Promise<any>): this;
+
+    on(event: 'ExtensionBitsTransactionCreate', listener: (event: {
+        "id": string,
+        "extension_client_id": string,
+        "broadcaster_user_id": string,
+        "broadcaster_user_login": string,
+        "broadcaster_user_name": string,
+        "user_name": string,
+        "user_login": string,
+        "user_id": string,
+        "product": {
+            "name": string,
+            "sku": string,
+            "bits": number,
+            "in_development": boolean
+        }
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelGoalBegin', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        current_amount: number,
+        description: string,
+        id: string,
+        started_at: string,
+        target_amount: number,
+        type: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelGoalEnd', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        current_amount: number,
+        description: string,
+        ended_at: string,
+        id: string,
+        is_achieved: false,
+        started_at: string,
+        target_amount: number,
+        type: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelGoalProgress', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        current_amount: number,
+        description: string,
+        id: string,
+        started_at: string,
+        target_amount: number,
+        type: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelHypeTrainBegin', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        expires_at: string,
+        goal: number,
+        id: string,
+        last_contribution: {
+            total: number,
+            type: string,
+            user_id: string,
+            user_login: string,
+            user_name: string,
+        },
+        level: number,
+        progress: number,
+        started_at: string,
+        top_contributions: [
+            {
+                total: number,
+                type: string,
+                user_id: string,
+                user_login: string,
+                user_name: string,
+            }
+        ],
+        total: number,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelHypeTrainEnd', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        cooldown_ends_at: string,
+        ended_at: string,
+        id: string,
+        last_contribution: {
+            total: number,
+            type: string,
+            user_id: string,
+            user_login: string,
+            user_name: string,
+        },
+        level: 4,
+        started_at: string,
+        top_contributions: [
+            {
+                total: number,
+                type: string,
+                user_id: string,
+                user_login: string,
+                user_name: string,
+            }
+        ],
+        total: number,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelHypeTrainProgress', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        expires_at: string,
+        goal: number,
+        id: string,
+        last_contribution: {
+            total: number,
+            type: string,
+            user_id: string,
+            user_login: string,
+            user_name: string,
+        },
+        level: number,
+        progress: number,
+        started_at: string,
+        top_contributions: [
+            {
+                total: number,
+                type: string,
+                user_id: string,
+                user_login: string,
+                user_name: string,
+            }
+        ],
+        total: number,
+    }) => void | Promise<any>): this;
+
+    on(event: 'StreamOnline', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        id: string,
+        started_at: string,
+        type: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'StreamOffline', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'UserAuthorizationGrant', listener: (event: {
+        "client_id": string,
+        "user_id": string,
+        "user_login": string,
+        "user_name": string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'UserAuthorizationRevoke', listener: (event: {
+        "client_id": string,
+        "user_id": string,
+        "user_login": string,
+        "user_name": string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'UserUpdate', listener: (event: {
+        description: "",
+        email: string,
+        email_verified: boolean,
+        user_id: string,
+        user_login: string,
+        user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelGuestStarSessionBegin', listener: (event: {
+        "broadcaster_user_id": string,
+        "broadcaster_user_name": string,
+        "broadcaster_user_login": string,
+        "moderator_user_id": string,
+        "moderator_user_name": string,
+        "moderator_user_login": string,
+        "session_id": string,
+        "started_at": string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelGuestStarSessionEnd', listener: (event: {
+        "broadcaster_user_id": string,
+        "broadcaster_user_name": string,
+        "broadcaster_user_login": string,
+        "moderator_user_id": string,
+        "moderator_user_name": string,
+        "moderator_user_login": string,
+        "session_id": string,
+        "started_at": string,
+        "ended_at": string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelGuestStarSessionUpdate', listener: (event: {
+        "broadcaster_user_id": string,
+        "broadcaster_user_name": string,
+        "broadcaster_user_login": string,
+        "session_id": string,
+        "moderator_user_id": string,
+        "moderator_user_name": string,
+        "moderator_user_login": string,
+        "guest_user_id": string,
+        "guest_user_name": string,
+        "guest_user_login": string,
+        "slot_id": string,
+        "state": string,
+        "host_video_enabled": boolean,
+        "host_audio_enabled": boolean,
+        "host_volume": number
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelGuestStarSettingsUpdate', listener: (event: {
+        "broadcaster_user_id": string,
+        "broadcaster_user_name": string,
+        "broadcaster_user_login": string,
+        "is_moderator_send_live_enabled": boolean,
+        "slot_count": number,
+        "is_browser_source_audio_enabled": boolean,
+        "group_layout": string,
+    }) => void | Promise<any>): this;
+
+    on(event: EventType, listener: (...args: any[]) => void | Promise<any>): this | undefined {
+        if (!this.options.identity.app?.events?.includes(event)) {
+            return;
+        }
+
         return super.on(event, listener);
     }
 }
+/*
+    on(event: '', listener: (event: {
+
+    }) => void | Promise<any>): this;
+
+    
+*/
