@@ -99,6 +99,7 @@ export class IrcBase extends EventEmitter {
     on(event: 'notice', listener: (channel: string, type: string, message: string) => void | Promise<any>): this;
     on(event: 'ban', listener: (channel: string, username: string) => void | Promise<any>): this;
     on(event: 'clear', listener: (channel: string) => void | Promise<any>): this;
+   
     on(event: 'reconnect', listener: (server: string) => void | Promise<any>): this;//pending.
     on(event: 'roomstate', listener: (channel: string, roomstate: RoomState) => void | Promise<any>): this;//pending.
 

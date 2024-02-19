@@ -5,7 +5,7 @@ import type { EventType, Options } from "../../util/session"
 import { MessageTypes, type EventMessage } from "./util/message";
 import { request } from 'http'
 
-import { SubEvents, type subEvent } from "./util/SubEvents";
+import { SubEvents } from "./util/SubEvents";
 import { EventSubLog } from "../../Log/EventSubLog";
 import { Actions } from "./util/Actions";
 
@@ -24,7 +24,7 @@ export class EventSubBase extends EventEmitter {
         this.log = new EventSubLog();
         this.log.debug = this.options.debug!;
 
-        if(this.options.testWebsocket)
+        if (this.options.testWebsocket)
             this.ws = new WebSocket(WebSocketPaths.EventSubLocalTest);
         else
             this.ws = new WebSocket(WebSocketPaths.EventSub);
@@ -54,7 +54,7 @@ export class EventSubBase extends EventEmitter {
                 SessionID = message.payload?.session?.id!;
                 Channels = (await this.GetUserByName(this.options.channels!));
 
-                if(this.options.identity.app?.events){
+                if (this.options.identity.app?.events) {
                     Channels.forEach(channel => {
                         this.options.identity.app?.events!.forEach(event => {
                             this.log.log(`subscribing to${this.log.Color.color.Magenta} #${channel.display_name}[${channel.id}] ${this.log.Color.color.Green}${event}`)
@@ -89,7 +89,7 @@ export class EventSubBase extends EventEmitter {
 
     private async subscribe(event: EventType, session_id: string, condition: string[]) {
         if (SubEvents.map(d => d.event).indexOf(event) === -1) return;
-        let currentEvent: subEvent = SubEvents.find(d => d.event == event)!;
+        let currentEvent = SubEvents.find(d => d.event == event)!;
         let data;
         let conditionobj: { [key: string]: string | null } = {}
 
@@ -114,23 +114,26 @@ export class EventSubBase extends EventEmitter {
         };
 
         const _postData = JSON.stringify(data);
-        let _options = {
-            host: RequestHosts.BaseAPI,
-            path: currentEvent.param.Suscription,
-            port: 443,
-            method: currentEvent.param.method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Client-Id': `${this.options.identity.app?.clientId}`,
-                'Authorization': `Bearer ${this.options.identity.user?.token}`
-            }
-        }
+        let _options = {}
 
-        if(this.options.testWebsocket){
+        if (this.options.testWebsocket) {
             _options = {
                 host: RequestHosts.BaseAPILocalTest,
-                path: currentEvent.param.Suscription.replace("/helix", ""),
+                path: currentEvent.param.SuscriptionTest,
                 port: 8080,
+                method: currentEvent.param.method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Client-Id': `${this.options.identity.app?.clientId}`,
+                    'Authorization': `Bearer ${this.options.identity.user?.token}`
+                }
+            }
+        }
+        else {
+            _options = {
+                host: RequestHosts.BaseAPI,
+                path: currentEvent.param.Suscription,
+                port: 443,
                 method: currentEvent.param.method,
                 headers: {
                     'Content-Type': 'application/json',
@@ -223,17 +226,62 @@ export class EventSubBase extends EventEmitter {
             let scope = Actions.find(data => data.action == action)?.param?.scope;
 
             if (scope != null) {
-                scope.forEach(element =>{
+                scope.forEach(element => {
                     if (permission.indexOf(element) === -1) {
                         permission.push(element)
                     }
                 })
             }
         })
-        
-        
+
+
         url += `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=chat%3Aread%20chat%3Aedit%20${encodeURIComponent(permission.join(" ").trim())}&force_verify=${forceVerify}`
 
         return url;
+    }
+
+    on(event: 'ChannelBan', listener: (event: {
+        user_id: string,
+        user_login: string,
+        user_name: string,
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        moderator_user_id: string,
+        moderator_user_login: string,
+        moderator_user_name: string,
+        reason: string,
+        banned_at: string,
+        ends_at: string | null,
+        is_permanent: boolean,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelUnban', listener: (event: {
+        user_id: string,
+        user_login: string,
+        user_name: string,
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        moderator_user_id: string,
+        moderator_user_login: string,
+        moderator_user_name: string,
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelUpdate', listener: (event: {
+        broadcaster_user_id: string,
+        broadcaster_user_login: string,
+        broadcaster_user_name: string,
+        title: string,
+        language: string,
+        category_id: string,
+        category_name: string,
+        content_classification_labels: ("Gambling" | "ProfanityVulgarity" | "DrugsIntoxication" | "SexualThemes" | "ViolentGraphic")[]
+    }) => void | Promise<any>): this;
+
+    on(event: 'ChannelCheer', listener: (data:any) => void|Promise<any>): this;
+
+    on(event: EventType, listener: (...args: any[]) => void | Promise<any>): this {
+        return super.on(event, listener);
     }
 }

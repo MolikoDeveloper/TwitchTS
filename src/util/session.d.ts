@@ -28,6 +28,8 @@ export interface Session{
 export type actionType = typeof Actions[number]['action'];
 export type EventType = typeof SubEvents[number]['event'];
 
+let a : EventType = 'ChannelBan';
+
 export type scope =
 | 'analytics:read:extensions'
 | 'analytics:read:games'

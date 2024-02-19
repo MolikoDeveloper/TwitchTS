@@ -24,9 +24,6 @@
   "keywords": [
     "bun"
   ],
-  "files": [
-    "dist"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MolikoDeveloper/TwitchTS.git"
