@@ -224,7 +224,7 @@ export class EventSubBase extends EventEmitter {
         this.options.identity.app?.events?.forEach((event) => {
             let scope = SubEvents.find(data => data.event == event)?.param?.scope;
 
-            if (scope != null) {
+            if (scope) {
                 if (permission.indexOf(scope) === -1) {
                     permission.push(scope)
                 }
@@ -234,7 +234,7 @@ export class EventSubBase extends EventEmitter {
         this.options.identity.app?.actions?.forEach((action) => {
             let scope = Actions.find(data => data.action == action)?.param?.scope;
 
-            if (scope != null) {
+            if (scope) {
                 scope.forEach(element => {
                     if (permission.indexOf(element) === -1) {
                         permission.push(element)
@@ -244,7 +244,7 @@ export class EventSubBase extends EventEmitter {
         })
 
 
-        url += `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=chat%3Aread%20chat%3Aedit%20${encodeURIComponent(permission.join(" ").trim())}&force_verify=${forceVerify}`
+        url = `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=chat%3Aread%20chat%3Aedit%20${encodeURIComponent(permission.join(" ").trim())}&force_verify=${forceVerify}`
 
         return url;
     }
@@ -992,9 +992,7 @@ export class EventSubBase extends EventEmitter {
     }
 }
 /*
-    on(event: '', listener: (event: {
-
-    }) => void | Promise<any>): this;
+    on(event: '', listener: (event: {}) => void | Promise<any>): this;
 
     
 */

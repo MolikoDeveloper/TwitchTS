@@ -23,11 +23,3 @@ export async function isBot(name: string): Promise<Boolean>{
     const data = await GetTwitchBotList();
     return data.bots.some(d=> d.name === name)
 }
-
-
-/*use example
-autoban("username here").then(element => {
-    console.log(element)
-})
-
-console.log(await autoban("username here"))*/

@@ -1,13 +1,10 @@
 export async function getEmojiByName(channel: string,name: string){
-    if(!name)
-        return
+    if(!name) return;
 
     const response = await fetch(`https://7tv.io/v3/users/twitch/${channel}`);
     const result = (await response.json()).emote_set.emotes.find((emote:any) => emote.name == name);
+    if(!result) return;
 
-    if(!result){
-        return;
-    }
     const Emote = 
     {
         name: result?.name,

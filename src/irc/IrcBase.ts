@@ -193,6 +193,7 @@ export class IrcBase extends EventEmitter {
             this.ircLog.log(`Channel Cannot Be Empty`);
             return;
         }
+
         return new Promise((resolve, reject) => {
             if (!this.isConnected()) return;
 
@@ -201,9 +202,9 @@ export class IrcBase extends EventEmitter {
                 const msg = message;
                 let lastSpace = msg.slice(0, maxLength).lastIndexOf(' ');
                 // No spaces found, split at the very end to avoid a loop
-                if (lastSpace === -1) {
-                    lastSpace = maxLength;
-                }
+                
+                lastSpace = lastSpace === -1 ? maxLength : lastSpace;
+
                 message = msg.slice(0, lastSpace);
 
                 setTimeout(() => this.say(channel, msg.slice(lastSpace)), 350);
