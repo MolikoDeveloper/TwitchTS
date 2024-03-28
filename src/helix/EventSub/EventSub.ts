@@ -165,6 +165,8 @@ export class EventSub extends EventSubBase {
         return (await this.post('GetChannelEditors', [], [], 'broadcaster_id', [id]))
     }
 
+    
+    
     private async post(action: actionType, query: string[], body: any[], queryLoopType?: string,queryLoop?: string[]): Promise<any> {
         return new Promise((resolve, reject) => {
             const yellow = this.log.Color.BrightColor.Yellow;
