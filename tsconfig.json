@@ -9,6 +9,7 @@
     "sourceMap": true,
     "moduleDetection": "force",
     "allowJs": true,
+    "experimentalDecorators": true,
 
     /* Declarations 
     "declaration": true,

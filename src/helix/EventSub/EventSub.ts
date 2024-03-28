@@ -1,7 +1,7 @@
 import type { Options, actionType } from "../../util/session";
 import { EventSubBase } from "./eventSubBase";
 import { request } from 'http'
-import { Actions } from "./util/Actions";
+import { Actions, type ChannelInformation, type Cheermotes, type ExtensionTransactions } from "./util/Actions";
 
 export class EventSub extends EventSubBase {
 
@@ -45,7 +45,7 @@ export class EventSub extends EventSubBase {
         ]);
     }
 
-    public async GetUserChatColorByID(...UserID: string[]){
+    public async GetColorUserChat_byID(...UserID: string[]){
         if(!UserID){
             this.log.log(`${this.log.Color.BrightColor.Red}UserID${this.log.Color.Reset} cannot be empty in GetUserChatColorByID().`);
             return;
@@ -54,7 +54,7 @@ export class EventSub extends EventSubBase {
         return await this.post('GetUserChatColor',[],[],'user_id',UserID);
     }
 
-    public async GetUserChatColorByName(...UserName: string[]){
+    public async GetColorUserChat_byName(...UserName: string[]){
         if(!UserName){
             this.log.log(`${this.log.Color.BrightColor.Red}UserName${this.log.Color.Reset} cannot be empty in GetUserChatColorByName().`);
             return;
@@ -99,12 +99,70 @@ export class EventSub extends EventSubBase {
         return await this.post('SnoozeNextAd', [_channel[0].id], []);
     }
 
-    public async GetExtensionAnalytics(){
+    public async GetExtensionAnalytics(): Promise<{extension_id:string, type:string, started_at:string, ended_at:string, first: string, after:string}>{
         return await this.post('GetExtensionAnalytics', [], []);
     }
 
-    public async GetGameAnalytics(game?:string, started_at?: string,ended_at?:string, first?:string,after?:string){
+    public async GetGameAnalytics(game_id:string){
+        return await this.post('GetGameAnalytics', ['5'], []);
+    }
+
+    public async GetBitsLeaderboard(): Promise<{user_id:string, user_login: string, user_name: string, rank: number, score: number}>{
+        return await this.post('GetBitsLeaderboard', [], []);
+    }
+
+    public async GetCheermotes_byID(channel: string){
+        if(channel){
+            return await this.post('GetCheermotes',[channel],[],);
+        }
+        else
+            return await(this.post('GetCheermotes',[],[]));
+    }
+
+    public async GetCheermotes_byName(channel?: string): Promise<Cheermotes[]>{
+        if(channel){
+            const id = (await this.GetUserByName(channel))[0].id;
+            return await this.post('GetCheermotes',[id],[],);
+        }
+        else
+            return await(this.post('GetCheermotes',[],[]));
+    }
+
+    public async GetExtensionTransactions(extension_id:string, first?: number, page?: number): Promise<ExtensionTransactions[]>{
+        const SafeFirst:string = first? first.toString() : '';
+        const SafePage:string = page? page.toString() : '';
+
+        return await(this.post('GetExtensionTransactions',[extension_id,SafeFirst, SafePage],[]));
+    }
+
+    public async GetChannelInformation_byID(... channels:string[]): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, broadcaster_language: string, game_id: string,game_name: string, title: string,delay: number,tags: string[],content_classification_labels: string[],is_branded_content: boolean}>{
+        return await this.post('GetChannelInformation',[],[], 'broadcaster_id', channels);
+    }
+
+    public async GetChannelInformation_byName(... channels:string[]): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, broadcaster_language: string, game_id: string,game_name: string, title: string,delay: number,tags: string[],content_classification_labels: string[],is_branded_content: boolean}>{
+        const promise = Promise.all(channels.map(channel => this.GetUserByName(channel)));
+        let ids = (await promise).map(d => d[0].id);
         
+        return await this.post('GetChannelInformation',[],[], 'broadcaster_id', ids);
+    }
+
+    public async ModifyChannelInformation_byName(channel:string, info: ChannelInformation){
+        const id = (await this.GetUserByName(channel))[0].id;
+
+        return await this.post('ModifyChannelInformation', [], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent],'broadcaster_id', [id]);
+    }
+
+    public async ModifyChannelInformation_byID(channel:string, info: ChannelInformation){
+        return await this.post('ModifyChannelInformation', [], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent],'broadcaster_id', [channel]);
+    }
+    
+    public async GetChannelEditors_byID(channel: string):Promise<{user_id: string, user_name: string, created_at: string}[]>{
+        return (await this.post('GetChannelEditors', [], [], 'broadcaster_id', [channel]))
+    }
+
+    public async GetChannelEditors_byName(channel: string): Promise<{user_id: string, user_name: string, created_at: string}[]>{
+        const id = (await this.GetUserByName(channel))[0].id;
+        return (await this.post('GetChannelEditors', [], [], 'broadcaster_id', [id]))
     }
 
     private async post(action: actionType, query: string[], body: any[], queryLoopType?: string,queryLoop?: string[]): Promise<any> {
@@ -128,7 +186,8 @@ export class EventSub extends EventSubBase {
             }
 
             const postData = JSON.stringify(body.reduce((obj, val, i) => {
-                obj[actionConfig.param.body[i]] = val;
+                if(val)
+                    obj[actionConfig.param.body[i]] = val;
                 return obj;
             }, {}));
 
@@ -151,6 +210,7 @@ export class EventSub extends EventSubBase {
                     data += chunk;
                 });
                 res.on('end', () => {
+                    console.log()
                     switch (res.statusCode) {
                         case 200:
                             this.log.log(`${yellow}${action}${reset} success.`);
@@ -160,8 +220,8 @@ export class EventSub extends EventSubBase {
                             this.log.log(`${yellow}${action}${reset} success.`);
                             break;
                         default:
-                            this.log.log(`Request to ${yellow}${action}${reset} failed with ${res.statusCode}: ${JSON.parse(data).message}`);
-                            resolve(JSON.parse(data));
+                            this.log.log(`Request to ${yellow}${action}${reset} failed with ${res.statusCode}: ${res.statusMessage}`);
+                            resolve(res.statusCode);
                             break;
                     }
                 });

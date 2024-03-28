@@ -117,8 +117,10 @@ export class IrcBase extends EventEmitter {
         this.ircLog.log("Connected to Twitch Chat Service")
 
         this.ws.send('CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership\r\n');
-        this.ws.send(`PASS oauth:${this.opts.identity.user?.token}\r\n`);
-        this.ws.send(`NICK ${this.opts.identity.user?.username}\r\n`);
+        if(this.opts.identity.user?.token && this.opts.identity.user?.username){
+            this.ws.send(`PASS oauth:${this.opts.identity.user?.token}\r\n`);
+            this.ws.send(`NICK ${this.opts.identity.user?.username}\r\n`);
+        }
         this.opts.channels?.forEach(channel => {
             this.ircLog.log(`Joining to \u001b[31m#${channel}\u001b[0m chat as \u001b[35m@${this.opts.identity.user?.username}\u001b[0m`);
             setTimeout(() => {
@@ -135,8 +137,9 @@ export class IrcBase extends EventEmitter {
      */
     private async onMessage(data: any) {
         let message = await parseMessage(data.data.toString());
-        message.profanity = this.opts.profaneFilter;
 
+        message.profanity = this.opts.profaneFilter;
+        
         this.ircLog.messageLog(message);
 
         if (message.command?.command === 'PING') {

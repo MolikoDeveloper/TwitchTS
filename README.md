@@ -191,16 +191,16 @@ subs.on('ChannelFollow', (event) => {
             - [x] [Get Ad Schedule](https://dev.twitch.tv/docs/api/reference/#get-ad-schedule)
             - [x] [Snooze Next Ad](https://dev.twitch.tv/docs/api/reference/#snooze-next-ad)
         - [ ] Analytics
-            - [ ] [Get Extension Analytics](https://dev.twitch.tv/docs/api/reference/#get-extension-analytics)
+            - [ ] [Get Extension Analytics](https://dev.twitch.tv/docs/api/reference/#get-extension-analytics) `> CHECK/REVISAR/IMPORTANTE`
             - [ ] [Get Game Analytics](https://dev.twitch.tv/docs/api/reference/#get-game-analytics)
-        - [ ] Bits
-            - [ ] [Get Bits Leaderboard](https://dev.twitch.tv/docs/api/reference/#get-bits-leaderboard) 
-            - [ ] [Get Cheermotes](https://dev.twitch.tv/docs/api/reference/#get-cheermotes) 
-            - [ ] [Get Extension Transactions](https://dev.twitch.tv/docs/api/reference/#get-extension-transactions) 
+        - [x] Bits
+            - [x] [Get Bits Leaderboard](https://dev.twitch.tv/docs/api/reference/#get-bits-leaderboard) 
+            - [x] [Get Cheermotes](https://dev.twitch.tv/docs/api/reference/#get-cheermotes) 
+            - [x] [Get Extension Transactions](https://dev.twitch.tv/docs/api/reference/#get-extension-transactions) 
         - [ ] Channels
-            - [ ] [Get Channel Information](https://dev.twitch.tv/docs/api/reference/#get-channel-information) 
-            - [ ] [Modify Channel Information](https://dev.twitch.tv/docs/api/reference/#modify-channel-information) 
-            - [ ] [Get Channel Editors](https://dev.twitch.tv/docs/api/reference/#get-channel-editors) 
+            - [x] [Get Channel Information](https://dev.twitch.tv/docs/api/reference/#get-channel-information) 
+            - [x] [Modify Channel Information](https://dev.twitch.tv/docs/api/reference/#modify-channel-information) 
+            - [x] [Get Channel Editors](https://dev.twitch.tv/docs/api/reference/#get-channel-editors) 
             - [ ] [Get Followed Channels](https://dev.twitch.tv/docs/api/reference/#get-followed-channels) 
             - [ ] [Get Channel Followers](https://dev.twitch.tv/docs/api/reference/#get-channel-followers) 
         - [ ] Channel Points
@@ -225,7 +225,7 @@ subs.on('ChannelFollow', (event) => {
             - [ ] [Update Chat Settings](https://dev.twitch.tv/docs/api/reference/#update-chat-settings) 
             - [ ] [Send Chat Announcement](https://dev.twitch.tv/docs/api/reference/#send-chat-announcement) 
             - [ ] [Send a Shoutout](https://dev.twitch.tv/docs/api/reference/#send-a-shoutout) 
-            - [ ] [Send Chat Message](https://dev.twitch.tv/docs/api/reference/#send-chat-message) 
+            - [x] [Send Chat Message](https://dev.twitch.tv/docs/api/reference/#send-chat-message) 
             - [x] [GetColor User Chat ](https://dev.twitch.tv/docs/api/reference/#get-user-chat-color) 
             - [ ] [Update User Chat Color](https://dev.twitch.tv/docs/api/reference/#update-user-chat-color) 
         - [ ] Clips
