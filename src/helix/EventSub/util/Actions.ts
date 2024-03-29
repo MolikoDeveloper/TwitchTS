@@ -25,8 +25,8 @@ export const Actions = [
             Subscription: "/helix/whispers",
             scope: ["user:manage:whispers"],
             query: [
-                "from_user_id=[0]",
-                "to_user_id=[1]",
+                "from_user_id",
+                "to_user_id",
             ],
             queryLoop: null,
             body: [
@@ -165,6 +165,50 @@ export const Actions = [
             scope: ["channel:read:editors"],
             query: ["broadcaster_id"],
             body: []
+        }
+    },
+    {
+        action: "GetFollowedChannels",
+        param: {
+            method: "GET",
+            Subscription: "/helix/channels/followed",
+            scope: ["user:read:follows"],
+            query: ['user_id','first'],
+            body: []
+        }
+    },
+    {
+        action: "GetChannelFollowers",
+        param: {
+            method: "GET",
+            Subscription: "/helix/channels/followers",
+            scope: ["moderator:read:followers"],
+            query: ['broadcaster_id','user_id','first'],
+            body: []
+        }
+    },
+    {
+        action: "CreateCustomRewards",
+        param: {
+            method: "POST",
+            Subscription: "/helix/channel_points/custom_rewards",
+            scope: ["channel:manage:redemptions"],
+            query: ['broadcaster_id'],
+            body: [
+                "title",
+                "cost",
+                "prompt",
+                "is_enabled",
+                "background_color",
+                "is_user_input_required",
+                "is_max_per_stream_enabled",
+                "max_per_stream",
+                "is_max_per_user_per_stream_enabled",
+                "max_per_user_per_stream",
+                "is_global_cooldown_enabled",
+                "global_cooldown_seconds",
+                "should_redemptions_skip_request_queue"
+            ]
         }
     },
 ] as const
