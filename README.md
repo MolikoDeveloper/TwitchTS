@@ -143,7 +143,7 @@ subs.on('ChannelFollow', (event) => {
 - [x] WebSocket EventSub Connection
     - [x] Baurer Oauth
     - [x] Local Enviroment testing with Twitch CLI
-    - [x] [Subscriptions](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/)
+    - [x] [Subscriptions](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/) ` use with EventSub.on('ChannelBan', (event) => {  }) `
         - [x] [Channel.Ban](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelban)
         - [x] [Channel.Unban](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelunban)
         - [x] [Channel.Cheer](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelcheer)
@@ -190,20 +190,20 @@ subs.on('ChannelFollow', (event) => {
             - [x] [Start Commercial](https://dev.twitch.tv/docs/api/reference/#start-commercial)
             - [x] [Get Ad Schedule](https://dev.twitch.tv/docs/api/reference/#get-ad-schedule)
             - [x] [Snooze Next Ad](https://dev.twitch.tv/docs/api/reference/#snooze-next-ad)
-        - [ ] Analytics
-            - [ ] [Get Extension Analytics](https://dev.twitch.tv/docs/api/reference/#get-extension-analytics) `> CHECK/REVISAR/IMPORTANTE`
+        - [ ] Analytics `> CHECK/REVISAR/IMPORTANTE`
+            - [ ] [Get Extension Analytics](https://dev.twitch.tv/docs/api/reference/#get-extension-analytics)
             - [ ] [Get Game Analytics](https://dev.twitch.tv/docs/api/reference/#get-game-analytics)
         - [x] Bits
             - [x] [Get Bits Leaderboard](https://dev.twitch.tv/docs/api/reference/#get-bits-leaderboard) 
             - [x] [Get Cheermotes](https://dev.twitch.tv/docs/api/reference/#get-cheermotes) 
             - [x] [Get Extension Transactions](https://dev.twitch.tv/docs/api/reference/#get-extension-transactions) 
-        - [ ] Channels
+        - [x] Channels
             - [x] [Get Channel Information](https://dev.twitch.tv/docs/api/reference/#get-channel-information) 
             - [x] [Modify Channel Information](https://dev.twitch.tv/docs/api/reference/#modify-channel-information) 
             - [x] [Get Channel Editors](https://dev.twitch.tv/docs/api/reference/#get-channel-editors) 
-            - [ ] [Get Followed Channels](https://dev.twitch.tv/docs/api/reference/#get-followed-channels) 
-            - [ ] [Get Channel Followers](https://dev.twitch.tv/docs/api/reference/#get-channel-followers) 
-        - [ ] Channel Points
+            - [x] [Get Followed Channels](https://dev.twitch.tv/docs/api/reference/#get-followed-channels) 
+            - [x] [Get Channel Followers](https://dev.twitch.tv/docs/api/reference/#get-channel-followers) 
+        - [ ] Channel Points `> Revision Pending`
             - [ ] [Create Custom Rewards](https://dev.twitch.tv/docs/api/reference/#create-custom-rewards) 
             - [ ] [Delete Custom Reward](https://dev.twitch.tv/docs/api/reference/#delete-custom-reward) 
             - [ ] [Get Custom Reward](https://dev.twitch.tv/docs/api/reference/#get-custom-reward) 
@@ -226,7 +226,7 @@ subs.on('ChannelFollow', (event) => {
             - [ ] [Send Chat Announcement](https://dev.twitch.tv/docs/api/reference/#send-chat-announcement) 
             - [ ] [Send a Shoutout](https://dev.twitch.tv/docs/api/reference/#send-a-shoutout) 
             - [x] [Send Chat Message](https://dev.twitch.tv/docs/api/reference/#send-chat-message) 
-            - [x] [GetColor User Chat ](https://dev.twitch.tv/docs/api/reference/#get-user-chat-color) 
+            - [x] [GetColor User Chat](https://dev.twitch.tv/docs/api/reference/#get-user-chat-color) 
             - [ ] [Update User Chat Color](https://dev.twitch.tv/docs/api/reference/#update-user-chat-color) 
         - [ ] Clips
             - [ ] [Create Clip](https://dev.twitch.tv/docs/api/reference/#create-clip) 
