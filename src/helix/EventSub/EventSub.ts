@@ -157,17 +157,47 @@ export class EventSub extends EventSubBase {
     }
     
     public async GetChannelEditors_byID(channel: string):Promise<{user_id: string, user_name: string, created_at: string}[]>{
-        return (await this.post('GetChannelEditors', [], [], 'broadcaster_id', [channel]))
+        return (await this.post('GetChannelEditors', [channel], []))
     }
 
     public async GetChannelEditors_byName(channel: string): Promise<{user_id: string, user_name: string, created_at: string}[]>{
         const id = (await this.GetUserByName(channel))[0].id;
-        return (await this.post('GetChannelEditors', [], [], 'broadcaster_id', [id]))
+        return (await this.post('GetChannelEditors', [id], []))
     }
 
+    public async GetFollowedChannels(user: string, count?: number): Promise<{broadcaster_id:string, broadcaster_login:string, broadcaster_name:string, followed_at:string}[]>{
+        const _user = (await this.GetUserByName((user? user: this.options.identity.user?.username!)))[0].id;
+        return await this.post('GetFollowedChannels', [_user, count], [])
+    }
+
+    public async GetChannelFollowers_byName(channel: string,user?:string, count?: number): Promise<{broadcaster_id:string, broadcaster_login:string, broadcaster_name:string, followed_at:string}[]>{
+        let _user:string = '';
+        if(user)
+            _user = (await this.GetUserByName((user)))[0].id;
+        const _channel = (await this.GetUserByName(channel))[0].id;
+
+        return await this.post('GetChannelFollowers', [_channel, _user, count], [])
+    }
     
-    
-    private async post(action: actionType, query: string[], body: any[], queryLoopType?: string,queryLoop?: string[]): Promise<any> {
+    public async GetChannelFollowers_byID(channel: string,user?:string, count?: number): Promise<{broadcaster_id:string, broadcaster_login:string, broadcaster_name:string, followed_at:string}[]>{
+        return await this.post('GetChannelFollowers', [channel, user, count], [])
+    }
+
+    public async CreateCustomRewards_byName(channel: string, title:string, cost: number, promp?: string, isenabled?: boolean, backgroundColor?: boolean, IsUserInputRequired?:boolean, MaxPerStream?: number, MaxPerUserStream?:number, GlobalCoolDownSeconds?: number, ShouldRedemptionsSkipRequestQueue?: boolean ): Promise<{}[]>{
+        const _channel = (await this.GetUserByName(channel))[0].id;
+            
+        let _MaxPerStreamEnabled:        boolean = false;
+        let _MaxPerUserStreamEnabled:    boolean = false;
+        let _GlobalCooldownEnabled:    boolean = false;
+
+        if(MaxPerStream || MaxPerStream! > 0) _MaxPerStreamEnabled = true;
+        if(MaxPerUserStream || MaxPerUserStream! > 0) _MaxPerUserStreamEnabled = true;
+        if(GlobalCoolDownSeconds || GlobalCoolDownSeconds! > 0) _GlobalCooldownEnabled = true;
+        
+        return await this.post('CreateCustomRewards', [_channel], [title, cost, promp, isenabled, backgroundColor, IsUserInputRequired, _MaxPerStreamEnabled, MaxPerStream, _MaxPerUserStreamEnabled, MaxPerUserStream, _GlobalCooldownEnabled, GlobalCoolDownSeconds, ShouldRedemptionsSkipRequestQueue])
+    }
+
+    private async post(action: actionType, query: any[], body: any[], queryLoopType?: string,queryLoop?: string[]): Promise<any> {
         return new Promise((resolve, reject) => {
             const yellow = this.log.Color.BrightColor.Yellow;
             const reset = this.log.Color.Reset;
@@ -179,8 +209,28 @@ export class EventSub extends EventSubBase {
 
             let fullPath = actionConfig.param.Subscription;
             if (query.length > 0 && actionConfig.param.query.length === query.length) {
-                if(actionConfig.param.query.length > 0)
-                    fullPath += '?' + actionConfig.param.query.map((q, i) => q.replace(`[${i}]`, query[i])).join('&');
+                let querystring = '';
+
+                const postQuery = JSON.stringify(query.reduce((obj, val, i)=> {
+                    if(val)
+                        obj[actionConfig.param.query[i]] = val
+                    return obj
+                }, {}));
+
+                const parsedQuery:  { [key: string]: string } = JSON.parse(postQuery);
+
+                let first = true;
+                for(const key in parsedQuery){
+                    if(parsedQuery.hasOwnProperty(key))
+                        if(first){
+                            querystring += `?${key}=${parsedQuery[key]}`;
+                            first = false;
+                        }
+                        else
+                            querystring += `&${key}=${parsedQuery[key]}`;
+                }
+
+                fullPath += querystring
             }
             
             if(queryLoopType != null && queryLoop != undefined){
