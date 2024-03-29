@@ -19,7 +19,7 @@ function cache(target: Object, propertyName: string, descriptor: PropertyDescrip
     const originalMethod = descriptor.value;
     const ttl = 60 * 1000 * 5;
 
-    descriptor.value = function(...args: any[]) {
+    descriptor.value = function (...args: any[]) {
         const now = Date.now();
         const cacheKey = `${propertyName}(${JSON.stringify(args)})`;
         const entry = __CACHE__[cacheKey];
@@ -215,23 +215,23 @@ export class EventSubBase extends EventEmitter {
     }
 
     @cache
-    protected async GetUserByName(username: string | string[]): Promise<UserInfo[]> {
-        const usernames = typeof username === 'string' ? [username] : username;
-        const _options = {
-            host: 'api.twitch.tv',
-            path: `/helix/users?${usernames.map(data => `login=${data}`).join('&')}`,
-            port: 443,
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Client-Id': this.options.identity.app?.clientId,
-                'Authorization': `Bearer ${this.options.identity.user?.token}`
-            }
-        };
-
+    async GetUserByName(username: string | string[]): Promise<UserInfo[]> {
         return new Promise((resolve, reject) => {
-            const req = request(_options, (res) => {
+            let usernames = typeof username === 'string' ? [username] : username;
+            let _options = {
+                host: 'api.twitch.tv',
+                path: `/helix/users?${usernames.map(data => `login=${data}`).join('&')}`,
+                port: 443,
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Client-Id': this.options.identity.app?.clientId,
+                    'Authorization': `Bearer ${this.options.identity.user?.token}`
+                }
+            };
+            let req = request(_options, (res) => {
                 let body = '';
+
                 res.setEncoding('utf-8');
                 res.on('data', (chunk) => {
                     body += chunk;
@@ -239,6 +239,7 @@ export class EventSubBase extends EventEmitter {
                 res.on('end', () => {
                     if (res.statusCode === 200) {
                         try {
+                            //console.log(JSON.parse(body).data)
                             resolve(JSON.parse(body).data)
                         }
                         catch (e) {
@@ -247,11 +248,11 @@ export class EventSubBase extends EventEmitter {
                     }
                     else {
                         reject(console.error(`${res.statusCode}: ${res.statusMessage}`))
-                        process.exit();
                     }
                 })
             });
             req.on('error', e => console.error('Error REQ ', e));
+            req.write('');
             req.end();
         })
     }
@@ -283,7 +284,7 @@ export class EventSubBase extends EventEmitter {
                 })
             }
         })
-        url = `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=chat%3Aread%20chat%3Aedit${permission.length !== 0 ? '%20'+encodeURIComponent(permission?.join(" ").trim()): ''}&force_verify=${forceVerify}`
+        url = `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${this.options.identity.app?.clientId}&redirect_uri=${this.options.identity.app?.redirect_uri}&scope=chat%3Aread%20chat%3Aedit${permission.length !== 0 ? '%20' + encodeURIComponent(permission?.join(" ").trim()) : ''}&force_verify=${forceVerify}`
         return url;
     }
 

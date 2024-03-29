@@ -24,8 +24,8 @@ export class EventSub extends EventSubBase {
         }
 
         return await this.post('SendChatMessage', [], [
-            (await this.GetUserByName(channel))[0].id,
-            (await this.GetUserByName(this.options.identity.user?.username!))[0].id,
+            (await this.GetUserByName(channel))[0].id,//channel_id
+            (await this.GetUserByName(this.options.identity.user?.username!))[0].id,//sender_id
             message]);
     }
 
@@ -54,7 +54,7 @@ export class EventSub extends EventSubBase {
         return await this.post('GetUserChatColor',[],[],'user_id',UserID);
     }
 
-    public async GetColorUserChat_byName(...UserName: string[]){
+    public async GetColorUserChat(...UserName: string[]){
         if(!UserName){
             this.log.log(`${this.log.Color.BrightColor.Red}UserName${this.log.Color.Reset} cannot be empty in GetUserChatColorByName().`);
             return;
@@ -119,7 +119,7 @@ export class EventSub extends EventSubBase {
             return await(this.post('GetCheermotes',[],[]));
     }
 
-    public async GetCheermotes_byName(channel?: string): Promise<Cheermotes[]>{
+    public async GetCheermotes(channel?: string): Promise<Cheermotes[]>{
         if(channel){
             const id = (await this.GetUserByName(channel))[0].id;
             return await this.post('GetCheermotes',[id],[],);
@@ -139,28 +139,28 @@ export class EventSub extends EventSubBase {
         return await this.post('GetChannelInformation',[],[], 'broadcaster_id', channels);
     }
 
-    public async GetChannelInformation_byName(... channels:string[]): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, broadcaster_language: string, game_id: string,game_name: string, title: string,delay: number,tags: string[],content_classification_labels: string[],is_branded_content: boolean}>{
+    public async GetChannelInformation(... channels:string[]): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, broadcaster_language: string, game_id: string,game_name: string, title: string,delay: number,tags: string[],content_classification_labels: string[],is_branded_content: boolean}>{
         const promise = Promise.all(channels.map(channel => this.GetUserByName(channel)));
         let ids = (await promise).map(d => d[0].id);
         
         return await this.post('GetChannelInformation',[],[], 'broadcaster_id', ids);
     }
 
-    public async ModifyChannelInformation_byName(channel:string, info: ChannelInformation){
+    public async ModifyChannelInformation(channel:string, info: ChannelInformation){
         const id = (await this.GetUserByName(channel))[0].id;
 
-        return await this.post('ModifyChannelInformation', [], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent],'broadcaster_id', [id]);
+        return await this.post('ModifyChannelInformation', [id], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent]);
     }
 
     public async ModifyChannelInformation_byID(channel:string, info: ChannelInformation){
-        return await this.post('ModifyChannelInformation', [], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent],'broadcaster_id', [channel]);
+        return await this.post('ModifyChannelInformation', [channel], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent]);
     }
     
     public async GetChannelEditors_byID(channel: string):Promise<{user_id: string, user_name: string, created_at: string}[]>{
         return (await this.post('GetChannelEditors', [channel], []))
     }
 
-    public async GetChannelEditors_byName(channel: string): Promise<{user_id: string, user_name: string, created_at: string}[]>{
+    public async GetChannelEditors(channel: string): Promise<{user_id: string, user_name: string, created_at: string}[]>{
         const id = (await this.GetUserByName(channel))[0].id;
         return (await this.post('GetChannelEditors', [id], []))
     }
@@ -170,7 +170,7 @@ export class EventSub extends EventSubBase {
         return await this.post('GetFollowedChannels', [_user, count], [])
     }
 
-    public async GetChannelFollowers_byName(channel: string,user?:string, count?: number): Promise<{broadcaster_id:string, broadcaster_login:string, broadcaster_name:string, followed_at:string}[]>{
+    public async GetChannelFollowers(channel: string,user?:string, count?: number): Promise<{broadcaster_id:string, broadcaster_login:string, broadcaster_name:string, followed_at:string}[]>{
         let _user:string = '';
         if(user)
             _user = (await this.GetUserByName((user)))[0].id;
@@ -183,7 +183,7 @@ export class EventSub extends EventSubBase {
         return await this.post('GetChannelFollowers', [channel, user, count], [])
     }
 
-    public async CreateCustomRewards_byName(channel: string, title:string, cost: number, promp?: string, isenabled?: boolean, backgroundColor?: boolean, IsUserInputRequired?:boolean, MaxPerStream?: number, MaxPerUserStream?:number, GlobalCoolDownSeconds?: number, ShouldRedemptionsSkipRequestQueue?: boolean ): Promise<{}[]>{
+    public async CreateCustomRewards(channel: string, title:string, cost: number, promp?: string, isenabled?: boolean, backgroundColor?: boolean, IsUserInputRequired?:boolean, MaxPerStream?: number, MaxPerUserStream?:number, GlobalCoolDownSeconds?: number, ShouldRedemptionsSkipRequestQueue?: boolean ): Promise<{}[]>{
         const _channel = (await this.GetUserByName(channel))[0].id;
             
         let _MaxPerStreamEnabled:        boolean = false;
@@ -199,6 +199,7 @@ export class EventSub extends EventSubBase {
 
     private async post(action: actionType, query: any[], body: any[], queryLoopType?: string,queryLoop?: string[]): Promise<any> {
         return new Promise((resolve, reject) => {
+
             const yellow = this.log.Color.BrightColor.Yellow;
             const reset = this.log.Color.Reset;
             const actionConfig = Actions.find(a => a.action === action);
@@ -273,7 +274,7 @@ export class EventSub extends EventSubBase {
                             break;
                         default:
                             this.log.log(`Request to ${yellow}${action}${reset} failed with ${res.statusCode}: ${res.statusMessage}`);
-                            resolve(res.statusCode);
+                            reject(res.statusCode);
                             break;
                     }
                 });

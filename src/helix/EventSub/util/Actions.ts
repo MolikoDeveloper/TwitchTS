@@ -313,7 +313,7 @@ export interface ChannelInformation{
     delay?:number,
     tags?:string[],
     //contentClassificationLabels?: contentClassificationLabels[]|'',
-    isBrandedContent?:boolean|''
+    isBrandedContent?:boolean
 }
 
 interface contentClassificationLabels

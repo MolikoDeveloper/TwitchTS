@@ -84,7 +84,7 @@ export async function parseMessage(message: string) : Promise<UserState> {
             parsedMessage.command = await parseParameters(rawParametersComponent, parsedMessage.command);
         }
     }
-
+    
     return parsedMessage;
 }
 
@@ -184,6 +184,11 @@ async function parseCommand(rawCommandComponent: string): Promise<Command|undefi
 
     switch (commandParts[0]) {
         case 'JOIN':// one person join to the chat/channel
+            parsedCommand = {
+                command: commandParts[0],
+                channel: commandParts[1]
+            }
+        break;
         case 'PART':
         case 'NOTICE':
         case 'CLEARCHAT':
@@ -249,7 +254,7 @@ async function parseCommand(rawCommandComponent: string): Promise<Command|undefi
             //console.log(`\nUnexpected command: ${commandParts[0]}\n`);
             return;
     }
-
+    parsedCommand.channel = parsedCommand.channel?.replace('#', '')
     return parsedCommand;
 }
 
