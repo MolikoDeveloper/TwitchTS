@@ -9,47 +9,6 @@ import { SubEvents } from "./util/SubEvents";
 import { EventSubLog } from "../../Log/EventSubLog";
 import { Actions } from "./util/Actions";
 
-interface CacheEntry<T> {
-    expiry: number;
-    data: T;
-}
-const __CACHE__: Record<string, CacheEntry<any>> = {};
-
-function cache(target: Object, propertyName: string, descriptor: PropertyDescriptor) {
-    const originalMethod = descriptor.value;
-    const ttl = 60 * 1000 * 5;
-
-    descriptor.value = function (...args: any[]) {
-        const now = Date.now();
-        const cacheKey = `${propertyName}(${JSON.stringify(args)})`;
-        const entry = __CACHE__[cacheKey];
-
-        if (entry && now < entry.expiry) {
-            return entry.data;
-        }
-
-        const result = originalMethod.apply(this, args);
-        __CACHE__[cacheKey] = {
-            expiry: now + ttl,
-            data: result
-        };
-
-        return result;
-    }
-
-    return descriptor;
-}
-
-function invalidateCache(key?: string): void {
-    if (key) {
-        delete __CACHE__[key];
-    } else {
-        for (const k in __CACHE__) {
-            delete __CACHE__[k];
-        }
-    }
-}
-
 export class EventSubBase extends EventEmitter {
     protected options: Options;
     private ws: WebSocket;
@@ -214,7 +173,6 @@ export class EventSubBase extends EventEmitter {
         req.end();
     }
 
-    @cache
     async GetUserByName(username: string | string[]): Promise<UserInfo[]> {
         return new Promise((resolve, reject) => {
             let usernames = typeof username === 'string' ? [username] : username;
@@ -257,7 +215,6 @@ export class EventSubBase extends EventEmitter {
         })
     }
 
-    @cache
     private GetURL(forceVerify: boolean = true, responseType: "token" | "code" = "token"): string | undefined {
         if (!this.options) return;
         let permission: string[] = [];

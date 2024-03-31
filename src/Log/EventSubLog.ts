@@ -1,5 +1,5 @@
 import {color} from './Colors'
-const util = require('util')
+import util from 'util';
 
 export class EventSubLog{
     public debug = false;
