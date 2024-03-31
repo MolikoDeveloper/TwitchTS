@@ -25,6 +25,7 @@ export class IrcBase extends EventEmitter {
         this.ws.onmessage = this.onMessage.bind(this);
         this.ws.onerror = this.onError.bind(this);
         this.ws.onclose = this.onClose.bind(this);
+        this.ws.close = this.Close.bind(this);
 
         this.events = [
             {
@@ -127,6 +128,10 @@ export class IrcBase extends EventEmitter {
                 this.ws.send(`JOIN #${channel}\r\n`);
             }, 2000)
         });
+    }
+
+    async Close(code?: number | undefined, data?: string | Buffer | undefined) {
+        console.log('closing Connection.')
     }
 
     /**
