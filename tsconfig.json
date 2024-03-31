@@ -4,7 +4,6 @@
     "lib": [
       "ESNext"
     ],
-    "target": "ESNext",
     "module": "ESNext",
     "sourceMap": true,
     "moduleDetection": "force",

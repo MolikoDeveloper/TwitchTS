@@ -2,7 +2,7 @@
   "name": "twitchts",
   "type": "module",
   "module": "index.ts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "author": {
     "name": "Alberto Arriagada C.",
@@ -21,9 +21,6 @@
   "exports": {
     ".": "./index.ts"
   },
-  "keywords": [
-    "bun"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MolikoDeveloper/TwitchTS.git"
