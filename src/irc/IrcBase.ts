@@ -221,4 +221,18 @@ export class IrcBase extends EventEmitter {
             this.ws.send(`PRIVMSG ${channel} :${message}`);
         });
     }
+
+    async JoinChannel(channel:string){
+        this.ircLog.log(`Joining to \u001b[31m#${channel}\u001b[0m chat as \u001b[35m@${this.opts.identity.user?.username ? this.opts.identity.user?.username: 'anonymous'}\u001b[0m`);
+        setTimeout(() => {
+            this.ws.send(`JOIN #${channel}\r\n`);
+        }, 2000)
+    }
+
+    async LeaveChannel(channel:string){
+        this.ircLog.log(`Leaving \u001b[31m#${channel}\u001b[0m`);
+        setTimeout(() => {
+            this.ws.send(`PART #${channel}\r\n`);
+        }, 2000)
+    }
 }
