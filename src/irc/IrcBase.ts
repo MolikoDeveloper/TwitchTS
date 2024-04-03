@@ -1,4 +1,3 @@
-import { WebSocket } from 'ws';
 import { EventEmitter } from 'events';
 import type { RoomState, Source, UserState } from './util/Data';
 import { parseMessage } from './parser';
