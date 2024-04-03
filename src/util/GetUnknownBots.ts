@@ -8,7 +8,7 @@ export interface TwitchBotsResponse {
     bots: TwitchBot[];
 }
 
-async function GetTwitchBotList(): Promise<TwitchBotsResponse> {
+async function GetTwitchBotList(): Promise<TwitchBotsResponse|undefined> {
     const response = await fetch('https://api.twitchinsights.net/v1/bots/all?bots');
     const data = await response.json();
 
@@ -16,10 +16,11 @@ async function GetTwitchBotList(): Promise<TwitchBotsResponse> {
     const bots = data.bots.map((bot: [string, number, number]) => {
         return { name: bot[0], id: bot[1], timestamp: new Date(bot[2]*1000) };
     });
+
     return { bots };
 }
 
 export async function isBot(name: string): Promise<Boolean>{
-    const data = await GetTwitchBotList();
-    return data.bots.some(d=> d.name === name)
+    //const data = await GetTwitchBotList();
+    return false//data.bots.some(d=> d.name === name)
 }

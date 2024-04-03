@@ -24,13 +24,13 @@ export class IRCLog {
                     this.log("Request CAP Correct.");
                     break;
                 case "001":
-                    this.log(`connected to ${color.color.Red}#${message?.command?.channel}${color.Reset} chat as ${color.color.Magenta}@${this.botname}.`);
+                    this.log(`connected to ${color.color.Magenta}Twitch chat service ${color.Reset}as ${color.color.Green}@${this.botname}.`);
                     break;
                 case "421":
                     this.log(`${color.color.Red}Unsupported IRC command: ${color.BrightColor.Yellow}${message?.command[2]}`);
                     break;
                 case "RECONNECT":
-                    this.log(`${color.color.Red}The Twitch IRC server is about to terminate the connection for maintenance.`);
+                    this.log(`${color.color.Red}The Twitch IRC server is about to reconnect the connection.`);
                     break;
                 case "JOIN":
                     if (message?.source?.nick?.toLocaleLowerCase() == this.botname.toLocaleLowerCase()) {

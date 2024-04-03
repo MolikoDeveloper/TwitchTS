@@ -5,12 +5,14 @@ import { parseMessage } from './parser';
 import type { EventName } from './util/irc'
 import type { Options } from '../util/session';
 import { IRCLog } from '../Log/IRCLog';
+import { color } from '../Log/Colors';
 
 export class IrcBase extends EventEmitter {
     private ircLog: IRCLog = new IRCLog();
     private opts: Options;
     private events: any;
     private ws: WebSocket;
+    private ConnectedChannels: string[] = [];
 
     constructor(opts: Options) {
         super();
@@ -123,8 +125,17 @@ export class IrcBase extends EventEmitter {
             this.ws.send(`NICK ${this.opts.identity.user?.username}\r\n`);
         }
         this.opts.channels?.forEach(channel => {
-            this.ircLog.log(`Joining to \u001b[31m#${channel}\u001b[0m chat as \u001b[35m@${this.opts.identity.user?.username}\u001b[0m`);
+            this.ircLog.log(`Joining to ${color.color.Red}#${channel}${color.Reset} chat as ${color.color.Green}@${this.opts.identity.user?.username}${color.Reset}`);
             setTimeout(() => {
+                this.ws.send(`JOIN #${channel}\r\n`);
+            }, 2000)
+        });
+
+        //for reconnect uses.
+        this.ConnectedChannels.forEach(channel => {
+            this.ircLog.log(`Joining to ${color.color.Red}#${channel}${color.Reset} chat as ${color.color.Green}@${this.opts.identity.user?.username}${color.Reset}`);
+            setTimeout(() => {
+                this.ConnectedChannels.push(this.opts.identity.user?.username!);
                 this.ws.send(`JOIN #${channel}\r\n`);
             }, 2000)
         });
@@ -150,6 +161,11 @@ export class IrcBase extends EventEmitter {
         if (message.command?.command === 'PING') {
             this.ws.send('PONG :tmi.twitch.tv');
         }
+
+        if(message.command?.command === 'RECONNECT'){
+            this.reconnect();
+        }
+
         else {
             this.events.forEach((event: any) => {
                 if (event.validate(message)) {
@@ -188,6 +204,17 @@ export class IrcBase extends EventEmitter {
         //console.logg('Error: ', error);
     }
 
+    private async reconnect(){
+        this.ws = new WebSocket('wss://irc-ws.chat.twitch.tv:443/');
+        this.ircLog.log('Reconnecting...')
+
+        this.ws.onopen = this.onOpen.bind(this);
+        this.ws.onmessage = this.onMessage.bind(this);
+        this.ws.onerror = this.onError.bind(this);
+        this.ws.onclose = this.onClose.bind(this);
+        this.ws.close = this.Close.bind(this);
+    }
+
     /**
      * Asynchronously sends a message to a specified channel.
      *
@@ -195,7 +222,7 @@ export class IrcBase extends EventEmitter {
      * @param {string} message - The message to send.
      * @return {Promise} A promise that resolves when the message is sent successfully.
      */
-    async say(channel: string, message: string) {
+    async say(channel: string, message: string): Promise<string|undefined> {
         //twitch new line ——————————————————————————
         if (!channel) {
             this.ircLog.log(`Channel Cannot Be Empty`);
@@ -216,22 +243,25 @@ export class IrcBase extends EventEmitter {
                 message = msg.slice(0, lastSpace);
 
                 setTimeout(() => this.say(channel, msg.slice(lastSpace)), 350);
+                resolve('200')
             }
 
             this.ws.send(`PRIVMSG ${channel} :${message}`);
         });
     }
 
-    async JoinChannel(channel:string){
-        this.ircLog.log(`Joining to \u001b[31m#${channel}\u001b[0m chat as \u001b[35m@${this.opts.identity.user?.username ? this.opts.identity.user?.username: 'anonymous'}\u001b[0m`);
+    public async JoinChannel(channel:string){
+        this.ircLog.log(`Joining to ${color.color.Red}#${channel}${color.Reset} chat as ${color.color.Green}@${this.opts.identity.user?.username ? this.opts.identity.user?.username: 'anonymous'}${color.Reset}`);
         setTimeout(() => {
+            this.ConnectedChannels.push(channel);
             this.ws.send(`JOIN #${channel}\r\n`);
         }, 2000)
     }
 
     async LeaveChannel(channel:string){
-        this.ircLog.log(`Leaving \u001b[31m#${channel}\u001b[0m`);
+        this.ircLog.log(`Leaving ${color.color.Red}#${channel}${color.Reset}`);
         setTimeout(() => {
+            this.ConnectedChannels = this.ConnectedChannels.filter(d => d != channel);
             this.ws.send(`PART #${channel}\r\n`);
         }, 2000)
     }

@@ -9,7 +9,7 @@ export class EventSub extends EventSubBase {
         super(options);
     }
 
-    public async SendChatMessage(channel: string, message: string) {
+    public async SendChatMessage(channel: string, message: string): Promise<{}[]|undefined> {
         if (!this.options.identity.user?.username) {
             this.log.log(`${this.log.Color.BrightColor.Red}Options.identity.user.username${this.log.Color.Reset} cannot be empty in Send().`);
             return;
@@ -29,7 +29,7 @@ export class EventSub extends EventSubBase {
             message]);
     }
 
-    public async SendWhisper(to: string, message: string) {
+    public async SendWhisper(to: string, message: string): Promise<{}[]|undefined> {
         if (!this.options.identity.user?.username) {
             this.log.log(`${this.log.Color.BrightColor.Red}Options.identity.user.username${this.log.Color.Reset} cannot be empty in whisper().`);
             return;
@@ -45,7 +45,7 @@ export class EventSub extends EventSubBase {
         ]);
     }
 
-    public async GetColorUserChat_byID(...UserID: string[]){
+    public async GetColorUserChat_byID(...UserID: string[]): Promise<{}[]|undefined>{
         if(!UserID){
             this.log.log(`${this.log.Color.BrightColor.Red}UserID${this.log.Color.Reset} cannot be empty in GetUserChatColorByID().`);
             return;
@@ -54,7 +54,7 @@ export class EventSub extends EventSubBase {
         return await this.post('GetUserChatColor',[],[],'user_id',UserID);
     }
 
-    public async GetColorUserChat(...UserName: string[]){
+    public async GetColorUserChat(...UserName: string[]): Promise<{}[]|undefined>{
         if(!UserName){
             this.log.log(`${this.log.Color.BrightColor.Red}UserName${this.log.Color.Reset} cannot be empty in GetUserChatColorByName().`);
             return;
@@ -65,7 +65,7 @@ export class EventSub extends EventSubBase {
         return await this.post('GetUserChatColor',[],[],'user_id',ids);
     }
 
-    public async StartCommercial(channel:string, length:number = 30){
+    public async StartCommercial(channel:string, length:number = 30): Promise<{}[]|undefined>{
         if (!channel) {
             this.log.log(`${this.log.Color.BrightColor.Red}channel${this.log.Color.Reset} cannot be empty in StartCommercial().`);
             return;
@@ -79,7 +79,7 @@ export class EventSub extends EventSubBase {
 
     }
 
-    public async GetAdSchedule(channel:string){
+    public async GetAdSchedule(channel:string): Promise<{}[]|undefined>{
         if(!channel){
             this.log.log(`${this.log.Color.BrightColor.Red}channel${this.log.Color.Reset} cannot be empty in GetAdSchedule().`);
             return;
@@ -89,7 +89,7 @@ export class EventSub extends EventSubBase {
         return await this.post('GetAdSchedule', [_channel[0].id], []);
     }
 
-    public async SnoozeNextAd(channel: string){
+    public async SnoozeNextAd(channel: string): Promise<{}[]|undefined>{
         if(!channel){
             this.log.log(`${this.log.Color.BrightColor.Red}channel${this.log.Color.Reset} cannot be empty in SnoozeNextAd().`);
             return;
@@ -103,7 +103,7 @@ export class EventSub extends EventSubBase {
         return await this.post('GetExtensionAnalytics', [], []);
     }
 
-    public async GetGameAnalytics(game_id:string){
+    public async GetGameAnalytics(game_id:string): Promise<{}[]>{
         return await this.post('GetGameAnalytics', ['5'], []);
     }
 
@@ -111,7 +111,7 @@ export class EventSub extends EventSubBase {
         return await this.post('GetBitsLeaderboard', [], []);
     }
 
-    public async GetCheermotes_byID(channel: string){
+    public async GetCheermotes_byID(channel: string): Promise<{}[]>{
         if(channel){
             return await this.post('GetCheermotes',[channel],[],);
         }
@@ -146,13 +146,13 @@ export class EventSub extends EventSubBase {
         return await this.post('GetChannelInformation',[],[], 'broadcaster_id', ids);
     }
 
-    public async ModifyChannelInformation(channel:string, info: ChannelInformation){
+    public async ModifyChannelInformation(channel:string, info: ChannelInformation): Promise<{}[]>{
         const id = (await this.GetUserByName(channel))[0].id;
 
         return await this.post('ModifyChannelInformation', [id], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent]);
     }
 
-    public async ModifyChannelInformation_byID(channel:string, info: ChannelInformation){
+    public async ModifyChannelInformation_byID(channel:string, info: ChannelInformation): Promise<{}[]>{
         return await this.post('ModifyChannelInformation', [channel], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent]);
     }
     
