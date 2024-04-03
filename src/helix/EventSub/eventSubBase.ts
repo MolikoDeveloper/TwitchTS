@@ -1,5 +1,5 @@
 import { EventEmitter } from "events"
-import WebSocket from "ws"
+import ws from 'ws';
 import { WebSocketPaths, type UserInfo, RequestHosts } from "./util/Data";
 import type { EventType, Options } from "../../util/session"
 import { MessageTypes, type EventMessage } from "./util/message";
@@ -11,7 +11,7 @@ import { Actions } from "./util/Actions";
 
 export class EventSubBase extends EventEmitter {
     protected options: Options;
-    private ws: WebSocket;
+    private ws: ws.WebSocket;
     protected log: EventSubLog;
 
     constructor(opts: Options) {
@@ -19,15 +19,14 @@ export class EventSubBase extends EventEmitter {
 
         if (!opts) throw new Error("No Options defined.");
 
-
         this.options = opts;
         this.log = new EventSubLog();
         this.log.debug = this.options.debug!;
 
         if (this.options.testWebsocket)
-            this.ws = new WebSocket(WebSocketPaths.EventSubLocalTest);
+            this.ws = new ws.WebSocket(WebSocketPaths.EventSubLocalTest);
         else
-            this.ws = new WebSocket(WebSocketPaths.EventSub);
+            this.ws = new ws.WebSocket(WebSocketPaths.EventSub);
 
 
         this.ws.onopen = this.OnOpen.bind(this);
@@ -72,7 +71,7 @@ export class EventSubBase extends EventEmitter {
                     this.emit(event?.event!, message.payload.event);
                 break
             case MessageTypes.Reconect:
-                this.ws = new WebSocket(message.payload.session?.reconnect_url!);
+                this.ws = new ws.WebSocket(message.payload.session?.reconnect_url!);
                 break
             case MessageTypes.Revocation:
 
