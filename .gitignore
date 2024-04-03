@@ -3,6 +3,7 @@
 
 test
 *.drawio
+.vscode
 
 # Logs
 
