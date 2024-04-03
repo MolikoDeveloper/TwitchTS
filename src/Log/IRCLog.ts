@@ -1,4 +1,3 @@
-import { isCommaListExpression } from "typescript";
 import type { UserState } from "../irc/util/Data";
 //import { clean } from 'profanity-cleaner';
 import { color } from './Colors'
