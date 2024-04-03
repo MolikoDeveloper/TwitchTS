@@ -1,5 +1,5 @@
 import { EventEmitter } from "events"
-import { WebSocket } from "ws"
+import WebSocket from "ws"
 import { WebSocketPaths, type UserInfo, RequestHosts } from "./util/Data";
 import type { EventType, Options } from "../../util/session"
 import { MessageTypes, type EventMessage } from "./util/message";
