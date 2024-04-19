@@ -9,7 +9,14 @@ export class EventSub extends EventSubBase {
         super(options);
     }
 
-    public async SendChatMessage(channel: string, message: string): Promise<{}[]|undefined> {
+
+    /**
+     * Sends a message to the broadcaster’s chat room.
+     * @param channel Broadcaster UserName 
+     * @param message message content.
+     * @returns sended status
+     */
+    public async SendChatMessage(channel: string, message: string): Promise<{message_id: string, is_sent: boolean}[] | undefined> {
         if (!this.options.identity.user?.username) {
             this.log.log(`${this.log.Color.BrightColor.Red}Options.identity.user.username${this.log.Color.Reset} cannot be empty in Send().`);
             return;
@@ -26,10 +33,15 @@ export class EventSub extends EventSubBase {
         return await this.post('SendChatMessage', [], [
             (await this.GetUserByName(channel))[0].id,//channel_id
             (await this.GetUserByName(this.options.identity.user?.username!))[0].id,//sender_id
-            message]);
+            message]).then(d => {return d.data});
     }
 
-    public async SendWhisper(to: string, message: string): Promise<{}[]|undefined> {
+    /**
+     * Send a whisper message to the specified user
+     * @param to UserName who the whisper is sended
+     * @param message message content.
+     */
+    public async SendWhisper(to: string, message: string): Promise<undefined> {
         if (!this.options.identity.user?.username) {
             this.log.log(`${this.log.Color.BrightColor.Red}Options.identity.user.username${this.log.Color.Reset} cannot be empty in whisper().`);
             return;
@@ -42,30 +54,46 @@ export class EventSub extends EventSubBase {
             (await this.GetUserByName(to))[0].id,
         ], [
             message
-        ]);
+        ]).then(d => {return d.data});
     }
 
-    public async GetColorUserChat_byID(...UserID: string[]): Promise<{}[]|undefined>{
-        if(!UserID){
+    /**
+     * gets the color used for the user's.
+     * @param UserID User ID's 
+     * @returns basic data of the query user.
+     */
+    public async GetUserChatColor_byID(...UserID: string[]): Promise<{user_id: string, user_name: string, user_login: string, color: string}[] | undefined> {
+        if (!UserID) {
             this.log.log(`${this.log.Color.BrightColor.Red}UserID${this.log.Color.Reset} cannot be empty in GetUserChatColorByID().`);
             return;
-        } 
+        }
 
-        return await this.post('GetUserChatColor',[],[],'user_id',UserID);
+        return await this.post('GetUserChatColor', [], [], 'user_id', UserID).then(d => {return d.data});
     }
 
-    public async GetColorUserChat(...UserName: string[]): Promise<{}[]|undefined>{
-        if(!UserName){
+    /**
+     * gets the color used for the user's.
+     * @param UserName list of usernames 
+     * @returns basic data of the query user.
+     */
+    public async GetUserChatColor(...UserName: string[]): Promise<{user_id: string, user_name: string, user_login: string, color: string}[] | undefined> {
+        if (!UserName) {
             this.log.log(`${this.log.Color.BrightColor.Red}UserName${this.log.Color.Reset} cannot be empty in GetUserChatColorByName().`);
             return;
-        } 
-        
+        }
+
         const promise = Promise.all(UserName.map(d => this.GetUserByName(d)));
         let ids = (await promise).map(d => d[0].id);
-        return await this.post('GetUserChatColor',[],[],'user_id',ids);
+        return await this.post('GetUserChatColor', [], [], 'user_id', ids).then(d => {return d.data});
     }
 
-    public async StartCommercial(channel:string, length:number = 30): Promise<{}[]|undefined>{
+    /**
+     * Starts a commercial on the specified channel
+     * @param channel channel ID.
+     * @param length duration of the commercial.
+     * @returns basic data of the commercial.
+     */
+    public async StartCommercial(channel: string, length: number = 30): Promise<{length: number, message: string, retry_after: number}[] | undefined> {
         if (!channel) {
             this.log.log(`${this.log.Color.BrightColor.Red}channel${this.log.Color.Reset} cannot be empty in StartCommercial().`);
             return;
@@ -75,129 +103,192 @@ export class EventSub extends EventSubBase {
             return;
         }
 
-        return await this.post('StartCommercial',[],[channel, length]);
+        return await this.post('StartCommercial', [], [channel, length]).then(d => {return d.data});
 
     }
 
-    public async GetAdSchedule(channel:string): Promise<{}[]|undefined>{
-        if(!channel){
+    /**
+     * returns AD Schedule information, including snooze, when the last ad was run, when the next ad is scheduled and if the channel is currently in pre-roll free time.
+     * 
+     * Note that a new ad cannot be run until 8 minutes after running a previous ad.
+     * @param channel Channel UserName
+     * @returns 
+     */
+    public async GetAdSchedule(channel: string): Promise<{next_ad_at:string,last_ad_at:string, duration: string, preroll_free_time: string, snooze_count: string, snooze_refresh_at:string}[] | undefined> {
+        if (!channel) {
             this.log.log(`${this.log.Color.BrightColor.Red}channel${this.log.Color.Reset} cannot be empty in GetAdSchedule().`);
             return;
-        } 
+        }
         let _channel = await this.GetUserByName(channel);
 
-        return await this.post('GetAdSchedule', [_channel[0].id], []);
+        return await this.post('GetAdSchedule', [_channel[0].id], []).then(d => {return d.data});
     }
 
-    public async SnoozeNextAd(channel: string): Promise<{}[]|undefined>{
-        if(!channel){
+    /**
+     * If available, pushes back the timestamp of the upcoming automatic mid-roll ad by 5 minutes. This endpoint duplicates the snooze functionality in the creator dashboard’s Ads Manager.
+     * @param channel 
+     * [Snooze Next Ad](https://dev.twitch.tv/docs/api/reference/#snooze-next-ad)
+     */
+    public async SnoozeNextAd(channel: string): Promise<{snooze_count: string, snooze_refresh_at: string, next_ad_at: string}[] | undefined> {
+        if (!channel) {
             this.log.log(`${this.log.Color.BrightColor.Red}channel${this.log.Color.Reset} cannot be empty in SnoozeNextAd().`);
             return;
-        } 
+        }
         let _channel = await this.GetUserByName(channel);
 
-        return await this.post('SnoozeNextAd', [_channel[0].id], []);
+        return await this.post('SnoozeNextAd', [_channel[0].id], []).then(d => {return d.data});
     }
 
-    public async GetExtensionAnalytics(): Promise<{extension_id:string, type:string, started_at:string, ended_at:string, first: string, after:string}>{
-        return await this.post('GetExtensionAnalytics', [], []);
+    /**
+     * Gets an analytics report for one or more extensions. The response contains the URLs used to download the reports (CSV files). [Learn More](https://dev.twitch.tv/docs/insights)
+     */
+    public async GetExtensionAnalytics(): Promise<{ extension_id: string, type: string, started_at: string, ended_at: string, first: string, after: string }> {
+        return await this.post('GetExtensionAnalytics', [], []).then(d => {return d.data});
     }
 
-    public async GetGameAnalytics(game_id:string): Promise<{}[]>{
-        return await this.post('GetGameAnalytics', ['5'], []);
+    /**
+     * Gets an analytics report for one or more games. The response contains the URLs used to download the reports (CSV files). [Learn more](https://dev.twitch.tv/docs/insights)
+     * @param game_id the game client ID, if specified, the response contains a report for the specified game.
+     */
+    public async GetGameAnalytics(game_id: string): Promise<{}[]> {
+        return await this.post('GetGameAnalytics', ['5'], []).then(d => {return d.data});
     }
 
-    public async GetBitsLeaderboard(): Promise<{user_id:string, user_login: string, user_name: string, rank: number, score: number}>{
-        return await this.post('GetBitsLeaderboard', [], []);
+    /**
+     * Gets the Bits leaderboard for the authenticated broadcaster.
+     */
+    public async GetBitsLeaderboard(): Promise<{ user_id: string, user_login: string, user_name: string, rank: number, score: number }> {
+        return await this.post('GetBitsLeaderboard', [], []).then(d => {return d.data});
     }
 
-    public async GetCheermotes_byID(channel: string): Promise<{}[]>{
-        if(channel){
-            return await this.post('GetCheermotes',[channel],[],);
+    /**
+     * Gets a list of Cheermotes that users can use to cheer Bits in any Bits-enabled channel’s chat room. Cheermotes are animated emotes that viewers can assign Bits to.
+     * @param channel The ID of the broadcaster whose custom Cheermotes you want to get. Specify the broadcaster’s ID if you want to include the broadcaster’s Cheermotes in the response (not all broadcasters upload Cheermotes). If not specified, the response contains only global Cheermotes. If the broadcaster uploaded Cheermotes, the type field in the response is set to channel_custom.
+     */
+    public async GetCheermotes_byID(channel?: string): Promise<{}[]> {
+        if (channel) {
+            return await this.post('GetCheermotes', [channel], [],).then(d => {return d.data});
         }
         else
-            return await(this.post('GetCheermotes',[],[]));
+            return await (this.post('GetCheermotes', [], [])).then(d => {return d.data});
     }
 
-    public async GetCheermotes(channel?: string): Promise<Cheermotes[]>{
-        if(channel){
+    /**
+     * Gets a list of Cheermotes that users can use to cheer Bits in any Bits-enabled channel’s chat room. Cheermotes are animated emotes that viewers can assign Bits to.
+     * @param channel The UserName of the broadcaster whose custom Cheermotes you want to get. Specify the broadcaster’s ID if you want to include the broadcaster’s Cheermotes in the response (not all broadcasters upload Cheermotes). If not specified, the response contains only global Cheermotes. If the broadcaster uploaded Cheermotes, the type field in the response is set to channel_custom.
+     */
+    public async GetCheermotes(channel?: string): Promise<Cheermotes[]> {
+        if (channel) {
             const id = (await this.GetUserByName(channel))[0].id;
-            return await this.post('GetCheermotes',[id],[],);
+            return await this.post('GetCheermotes', [id], [],).then(d => {return d.data});
         }
         else
-            return await(this.post('GetCheermotes',[],[]));
+            return await (this.post('GetCheermotes', [], [])).then(d => {return d.data});
     }
 
-    public async GetExtensionTransactions(extension_id:string, first?: number, page?: number): Promise<ExtensionTransactions[]>{
-        const SafeFirst:string = first? first.toString() : '';
-        const SafePage:string = page? page.toString() : '';
 
-        return await(this.post('GetExtensionTransactions',[extension_id,SafeFirst, SafePage],[]));
+    public async GetExtensionTransactions(extension_id: string, first?: number, page?: number): Promise<ExtensionTransactions[]> {
+        const SafeFirst: string = first ? first.toString() : '';
+        const SafePage: string = page ? page.toString() : '';
+
+        return await (this.post('GetExtensionTransactions', [extension_id, SafeFirst, SafePage], [])).then(d => {return d.data});
     }
 
-    public async GetChannelInformation_byID(... channels:string[]): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, broadcaster_language: string, game_id: string,game_name: string, title: string,delay: number,tags: string[],content_classification_labels: string[],is_branded_content: boolean}>{
-        return await this.post('GetChannelInformation',[],[], 'broadcaster_id', channels);
+    /**
+     * Gets information about one or more channels.
+     * @param channels Broadcaster ID's
+     */
+    public async GetChannelInformation_byID(...channels: string[]): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, broadcaster_language: string, game_id: string, game_name: string, title: string, delay: number, tags: string[], content_classification_labels: string[], is_branded_content: boolean }> {
+        return await this.post('GetChannelInformation', [], [], 'broadcaster_id', channels).then(d => {return d.data});
     }
 
-    public async GetChannelInformation(... channels:string[]): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, broadcaster_language: string, game_id: string,game_name: string, title: string,delay: number,tags: string[],content_classification_labels: string[],is_branded_content: boolean}>{
+    /**
+     * Gets information about one or more channels.
+     * @param channels Broadcaster UserName
+     */
+    public async GetChannelInformation(...channels: string[]): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, broadcaster_language: string, game_id: string, game_name: string, title: string, delay: number, tags: string[], content_classification_labels: string[], is_branded_content: boolean }> {
         const promise = Promise.all(channels.map(channel => this.GetUserByName(channel)));
         let ids = (await promise).map(d => d[0].id);
-        
-        return await this.post('GetChannelInformation',[],[], 'broadcaster_id', ids);
+
+        return await this.post('GetChannelInformation', [], [], 'broadcaster_id', ids).then(d => {return d.data})
     }
 
-    public async ModifyChannelInformation(channel:string, info: ChannelInformation): Promise<{}[]>{
+    public async ModifyChannelInformation(channel: string, info: ChannelInformation): Promise<{}[]> {
         const id = (await this.GetUserByName(channel))[0].id;
 
-        return await this.post('ModifyChannelInformation', [id], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent]);
+        return await this.post('ModifyChannelInformation', [id], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent])
+        .then(d => {return d.data})
     }
 
-    public async ModifyChannelInformation_byID(channel:string, info: ChannelInformation): Promise<{}[]>{
-        return await this.post('ModifyChannelInformation', [channel], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent]);
-    }
-    
-    public async GetChannelEditors_byID(channel: string):Promise<{user_id: string, user_name: string, created_at: string}[]>{
-        return (await this.post('GetChannelEditors', [channel], []))
+    public async ModifyChannelInformation_byID(channel: string, info: ChannelInformation): Promise<{}[]> {
+        return await this.post('ModifyChannelInformation', [channel], [info.game_id, info.broadcasterLanguage, info.title, info.delay, info.tags, /*info.contentClassificationLabels,*/ info.isBrandedContent])
+        .then(d => {return d.data})
     }
 
-    public async GetChannelEditors(channel: string): Promise<{user_id: string, user_name: string, created_at: string}[]>{
+    public async GetChannelEditors_byID(channel: string): Promise<{ user_id: string, user_name: string, created_at: string }[]> {
+        return (await this.post('GetChannelEditors', [channel], [])).then((d: {data: any}) => {return d.data})
+    }
+
+    public async GetChannelEditors(channel: string): Promise<{ user_id: string, user_name: string, created_at: string }[]> {
         const id = (await this.GetUserByName(channel))[0].id;
-        return (await this.post('GetChannelEditors', [id], []))
+        return (await this.post('GetChannelEditors', [id], [])).then((d:{data:any}) => {return d.data})
     }
 
-    public async GetFollowedChannels(user: string, count?: number): Promise<{broadcaster_id:string, broadcaster_login:string, broadcaster_name:string, followed_at:string}[]>{
-        const _user = (await this.GetUserByName((user? user: this.options.identity.user?.username!)))[0].id;
-        return await this.post('GetFollowedChannels', [_user, count], [])
+    public async GetFollowedChannels(user: string, count?: number): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, followed_at: string }[]> {
+        const _user = (await this.GetUserByName((user ? user : this.options.identity.user?.username!)))[0].id;
+        return await this.post('GetFollowedChannels', [_user, count], []).then(d => {return d.data})
     }
 
-    public async GetChannelFollowers(channel: string,user?:string, count?: number): Promise<{broadcaster_id:string, broadcaster_login:string, broadcaster_name:string, followed_at:string}[]>{
-        let _user:string = '';
-        if(user)
+    public async GetChannelFollowers(channel: string, user?: string, count?: number): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, followed_at: string }[]> {
+        let _user: string = '';
+        if (user)
             _user = (await this.GetUserByName((user)))[0].id;
         const _channel = (await this.GetUserByName(channel))[0].id;
 
-        return await this.post('GetChannelFollowers', [_channel, _user, count], [])
-    }
-    
-    public async GetChannelFollowers_byID(channel: string,user?:string, count?: number): Promise<{broadcaster_id:string, broadcaster_login:string, broadcaster_name:string, followed_at:string}[]>{
-        return await this.post('GetChannelFollowers', [channel, user, count], [])
+        return await this.post('GetChannelFollowers', [_channel, _user, count], []).then(d => {return d.data})
     }
 
-    public async CreateCustomRewards(channel: string, title:string, cost: number, promp?: string, isenabled?: boolean, backgroundColor?: boolean, IsUserInputRequired?:boolean, MaxPerStream?: number, MaxPerUserStream?:number, GlobalCoolDownSeconds?: number, ShouldRedemptionsSkipRequestQueue?: boolean ): Promise<{}[]>{
+    public async GetChannelFollowers_byID(channel: string, user?: string, count?: number): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, followed_at: string }[]> {
+        return await this.post('GetChannelFollowers', [channel, user, count], []).then(d => {return d.data})
+    }
+
+    public async CreateCustomRewards(channel: string, title: string, cost: number, promp?: string, isenabled?: boolean, backgroundColor?: boolean, IsUserInputRequired?: boolean, MaxPerStream?: number, MaxPerUserStream?: number, GlobalCoolDownSeconds?: number, ShouldRedemptionsSkipRequestQueue?: boolean): Promise<{}[]> {
         const _channel = (await this.GetUserByName(channel))[0].id;
-            
-        let _MaxPerStreamEnabled:        boolean = false;
-        let _MaxPerUserStreamEnabled:    boolean = false;
-        let _GlobalCooldownEnabled:    boolean = false;
 
-        if(MaxPerStream || MaxPerStream! > 0) _MaxPerStreamEnabled = true;
-        if(MaxPerUserStream || MaxPerUserStream! > 0) _MaxPerUserStreamEnabled = true;
-        if(GlobalCoolDownSeconds || GlobalCoolDownSeconds! > 0) _GlobalCooldownEnabled = true;
-        
+        let _MaxPerStreamEnabled: boolean = false;
+        let _MaxPerUserStreamEnabled: boolean = false;
+        let _GlobalCooldownEnabled: boolean = false;
+
+        if (MaxPerStream || MaxPerStream! > 0) _MaxPerStreamEnabled = true;
+        if (MaxPerUserStream || MaxPerUserStream! > 0) _MaxPerUserStreamEnabled = true;
+        if (GlobalCoolDownSeconds || GlobalCoolDownSeconds! > 0) _GlobalCooldownEnabled = true;
+
         return await this.post('CreateCustomRewards', [_channel], [title, cost, promp, isenabled, backgroundColor, IsUserInputRequired, _MaxPerStreamEnabled, MaxPerStream, _MaxPerUserStreamEnabled, MaxPerUserStream, _GlobalCooldownEnabled, GlobalCoolDownSeconds, ShouldRedemptionsSkipRequestQueue])
+            .then(d => {
+                return d.data;
+            })
     }
 
-    private async post(action: actionType, query: any[], body: any[], queryLoopType?: string,queryLoop?: string[]): Promise<any> {
+    public async GetChannelChatBadges(channel: string): Promise<[{ set_id: string, versions: [{ id: string, image_url_1x: string, image_url_2x: string, image_url_4x: string, title: string, description: string, click_action: string, click_url: string }] }]> {
+        const _channel = (await this.GetUserByName(channel))[0].id;
+        return await this.post('GetChannelChatBadges', [_channel], []).then(d => {
+            return d.data;
+        });
+    }
+
+    public async GetGlobalChatBadges(): Promise<[{ set_id: string, versions: [{ id: string, image_url_1x: string, image_url_2x: string, image_url_4x: string, title: string, description: string, click_action: string, click_url: string }] }]> {
+        return await this.post('GetGlobalChatBadges', [], []).then(d => {
+            return d.data;
+        });
+    }
+
+    public async GetChatters(channel:string): Promise<[]>{
+
+
+        return await this.post('GetChatters', [],[]);
+    }
+
+    private async post(action: actionType, query: any[], body: any[], queryLoopType?: string, queryLoop?: string[]): Promise<any> {
         return new Promise((resolve, reject) => {
 
             const yellow = this.log.Color.BrightColor.Yellow;
@@ -212,18 +303,18 @@ export class EventSub extends EventSubBase {
             if (query.length > 0 && actionConfig.param.query.length === query.length) {
                 let querystring = '';
 
-                const postQuery = JSON.stringify(query.reduce((obj, val, i)=> {
-                    if(val)
+                const postQuery = JSON.stringify(query.reduce((obj, val, i) => {
+                    if (val)
                         obj[actionConfig.param.query[i]] = val
                     return obj
                 }, {}));
 
-                const parsedQuery:  { [key: string]: string } = JSON.parse(postQuery);
+                const parsedQuery: { [key: string]: string } = JSON.parse(postQuery);
 
                 let first = true;
-                for(const key in parsedQuery){
-                    if(parsedQuery.hasOwnProperty(key))
-                        if(first){
+                for (const key in parsedQuery) {
+                    if (parsedQuery.hasOwnProperty(key))
+                        if (first) {
                             querystring += `?${key}=${parsedQuery[key]}`;
                             first = false;
                         }
@@ -233,13 +324,13 @@ export class EventSub extends EventSubBase {
 
                 fullPath += querystring
             }
-            
-            if(queryLoopType != null && queryLoop != undefined){
+
+            if (queryLoopType != null && queryLoop != undefined) {
                 fullPath += `?${queryLoopType}=${queryLoop.join(`&${queryLoopType}=`)}`;
             }
 
             const postData = JSON.stringify(body.reduce((obj, val, i) => {
-                if(val)
+                if (val)
                     obj[actionConfig.param.body[i]] = val;
                 return obj;
             }, {}));
@@ -267,7 +358,7 @@ export class EventSub extends EventSubBase {
                     switch (res.statusCode) {
                         case 200:
                             this.log.log(`${yellow}${action}${reset} success.`);
-                            resolve(JSON.parse(data).data);
+                            resolve(JSON.parse(data));
                             break;
                         case 204:
                             this.log.log(`${yellow}${action}${reset} success.`);

@@ -211,6 +211,36 @@ export const Actions = [
             ]
         }
     },
+    {
+        action: "GetChannelChatBadges",
+        param: {
+            method: "GET",
+            Subscription: "/helix/chat/badges",
+            scope: [],
+            query: ['broadcaster_id'],
+            body: []
+        }
+    },
+    {
+        action: "GetGlobalChatBadges",
+        param: {
+            method: "GET",
+            Subscription: "/helix/chat/badges/global",
+            scope: [],
+            query: [],
+            body: []
+        }
+    },
+    {
+        action: "GetChatters",
+        param: {
+            method: "GET",
+            Subscription: "/helix/chat/chatters",
+            scope: ['moderator:read:chatters'],
+            query: [],
+            body: []
+        }
+    },
 ] as const
 
 export interface Cheermotes {
