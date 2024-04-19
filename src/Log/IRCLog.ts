@@ -36,7 +36,7 @@ export class IRCLog {
                         break;
                     }
                     else {
-                        this.log(`${color.color.Green}@${message?.source?.nick}${color.Reset} joined to ${color.color.Red}${message?.command?.channel}${color.Reset} chat. ${(message.tags['ban-duration']) ? 'recognized as a bot.' : ''}`)
+                        this.log(`${color.color.Green}@${message?.source?.nick}${color.Reset} joined to ${color.color.Red}#${message?.command?.channel}${color.Reset} chat. ${(message.tags['ban-duration']) ? 'recognized as a bot.' : ''}`)
                     }
                     break;
                 case "396":
@@ -52,7 +52,9 @@ export class IRCLog {
                 case "PING":
                     this.log(`PING`);
                     break;
-                case "USERSTATE": break;
+                case "USERSTATE": 
+                    this.log(`Connected to ${color.color.Red}#${message?.command?.channel}${color.Reset} chat.`)
+                break;
                 case '366': break;
                 case '372': break;
                 case '375': break;

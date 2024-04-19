@@ -89,9 +89,19 @@ export class IrcBase extends EventEmitter {
                     return data.command?.command === 'CLEARCHAT';
                 },
                 parameters: (data: UserState) => [
-                    data.command?.channel
+                    data.command?.channel,
                 ]
             },
+            {
+                type: 'userstate',
+                validate: (data: UserState) => {
+                    return data.command?.command === 'USERSTATE';
+                },
+                parameters: (data: UserState) => [
+                    data.command?.channel,
+                    data.command?.roomstate
+                ]
+            }
         ];
     }
 
@@ -104,6 +114,7 @@ export class IrcBase extends EventEmitter {
     
     on(event: 'reconnect', listener: (server: string) => void | Promise<any>): this;//pending.
     on(event: 'roomstate', listener: (channel: string, roomstate: RoomState) => void | Promise<any>): this;//pending.
+    on(event: 'userstate', listener: (channel: string, roomstate: RoomState) => void | Promise<any>): this;
 
     on(event: EventName, listener: (...args: any[]) => void | Promise<any>, self?: boolean): this {
         return super.on(event, listener);
@@ -140,8 +151,8 @@ export class IrcBase extends EventEmitter {
         });
     }
 
-    async Close(code?: number | undefined, data?: string | Buffer | undefined) {
-        console.log('closing Connection.')
+    public async Close(code?: number | undefined, data?: string | Buffer | undefined) {
+        this.ircLog.log('closing Connection.')
     }
 
     /**
@@ -154,7 +165,6 @@ export class IrcBase extends EventEmitter {
         let message = await parseMessage(data.data.toString());
 
         message.profanity = this.opts.profaneFilter;
-        
         this.ircLog.messageLog(message);
 
         if (message.command?.command === 'PING') {
@@ -257,7 +267,7 @@ export class IrcBase extends EventEmitter {
         }, 2000)
     }
 
-    async LeaveChannel(channel:string){
+    public async LeaveChannel(channel:string){
         this.ircLog.log(`Leaving ${color.color.Red}#${channel}${color.Reset}`);
         setTimeout(() => {
             this.ConnectedChannels = this.ConnectedChannels.filter(d => d != channel);

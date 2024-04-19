@@ -10,6 +10,7 @@ export interface Command {
     command?: string;
     isCapRequestEnabled?: boolean;
     channel?: string;
+    channelId?: string;
     roomstate?: RoomState;
     isBotCommand?: boolean;
     botCommand?: string;

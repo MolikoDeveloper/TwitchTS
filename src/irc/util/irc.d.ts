@@ -8,3 +8,4 @@ export type EventName =
     | 'host'            // pending.
     | 'reconnect'       //
     | 'roomstate'
+    | 'userstate'
