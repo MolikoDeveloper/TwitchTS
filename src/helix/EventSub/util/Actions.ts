@@ -9,8 +9,7 @@ export const Actions = [
                 "user:bot",
                 "channel:bot"
             ],
-            query: [],
-            queryLoop: null,
+            query: null,
             body: [
                 "broadcaster_id",
                 "sender_id",
@@ -28,7 +27,6 @@ export const Actions = [
                 "from_user_id",
                 "to_user_id",
             ],
-            queryLoop: null,
             body: [
                 "message"
             ]
@@ -39,9 +37,9 @@ export const Actions = [
         param: {
             method: "GET",
             Subscription: "/helix/chat/color",
-            scope: [],
-            query: [],
-            body: []
+            scope: null,
+            query: null,
+            body: null
         }
     },
     {
@@ -50,7 +48,7 @@ export const Actions = [
             method: "POST",
             Subscription: "/channels/commercial",
             scope: ["channel:edit:commercial"],
-            query: [],
+            query: null,
             body: [
                 "broadcaster_id",
                 "length"
@@ -64,7 +62,7 @@ export const Actions = [
             Subscription: "/channels/ads",
             scope: ["channel:read:ads"],
             query: ['broadcaster_id'],
-            body: []
+            body: null
         }
     },
     {
@@ -74,7 +72,7 @@ export const Actions = [
             Subscription: "/channels/ads/schedule/snooze",
             scope: ["channel:manage:ads"],
             query: ['broadcaster_id'],
-            body: []
+            body: null
         }
     },
     {
@@ -84,7 +82,7 @@ export const Actions = [
             Subscription: "/analytics/extensions",
             scope: ["channel:manage:ads"],
             query: ['broadcaster_id'],
-            body: []
+            body: null
         }
     },
     {
@@ -93,8 +91,8 @@ export const Actions = [
             method: "GET",
             Subscription: "/helix/analytics/extensions",
             scope: ["analytics:read:extensions"],
-            query: [],
-            body: []
+            query: null,
+            body: null
         }
     },
     {
@@ -103,8 +101,8 @@ export const Actions = [
             method: "GET",
             Subscription: "/helix/analytics/games",
             scope: ["analytics:read:games"],
-            query: ['first'],
-            body: []
+            query: ['game_id', 'type', 'started_at', 'ended_at', 'first', 'after'],
+            body: null
         }
     },
     {
@@ -113,8 +111,8 @@ export const Actions = [
             method: "GET",
             Subscription: "/helix/bits/leaderboard",
             scope: ["bits:read"],
-            query: [],
-            body: []
+            query: ["count","period", "started_at", "user_id"],
+            body: null
         }
     },
     {
@@ -122,9 +120,9 @@ export const Actions = [
         param: {
             method: "GET",
             Subscription: "/helix/bits/cheermotes",
-            scope: [],
+            scope: null,
             query: ["broadcaster_id"],
-            body: []
+            body: null
         }
     },
     {
@@ -132,9 +130,9 @@ export const Actions = [
         param: {
             method: "GET",
             Subscription: "/helix/extensions/transactions",
-            scope: [],
-            query: ["extension_id", "first", "after"],
-            body: []
+            scope: null,
+            query: ["extension_id", "id", "first", "after"],
+            body: null
         }
     },
     {
@@ -142,9 +140,9 @@ export const Actions = [
         param: {
             method: "GET",
             Subscription: "/helix/channels",
-            scope: [],
-            query: [],
-            body: []
+            scope: null,
+            query: ['broadcaster_id'],
+            body: null
         }
     },
     {
@@ -154,7 +152,7 @@ export const Actions = [
             Subscription: "/helix/channels",
             scope: ["channel:manage:broadcast"],
             query: ["broadcaster_id"],
-            body: ["game_id","broadcaster_language","title", "delay", "tags", /*"content_classification_labels",*/ "is_branded_content"]
+            body: ["game_id", "broadcaster_language", "title", "delay", "tags", "content_classification_labels", "is_branded_content"]
         }
     },
     {
@@ -164,7 +162,7 @@ export const Actions = [
             Subscription: "/helix/channels/editors",
             scope: ["channel:read:editors"],
             query: ["broadcaster_id"],
-            body: []
+            body: null
         }
     },
     {
@@ -173,8 +171,8 @@ export const Actions = [
             method: "GET",
             Subscription: "/helix/channels/followed",
             scope: ["user:read:follows"],
-            query: ['user_id','first'],
-            body: []
+            query: ['user_id','broadcaster_id', 'first', 'after'],
+            body: null
         }
     },
     {
@@ -183,8 +181,8 @@ export const Actions = [
             method: "GET",
             Subscription: "/helix/channels/followers",
             scope: ["moderator:read:followers"],
-            query: ['broadcaster_id','user_id','first'],
-            body: []
+            query: ['broadcaster_id', 'user_id', 'first', 'after'],
+            body: null
         }
     },
     {
@@ -216,9 +214,9 @@ export const Actions = [
         param: {
             method: "GET",
             Subscription: "/helix/chat/badges",
-            scope: [],
+            scope: null,
             query: ['broadcaster_id'],
-            body: []
+            body: null
         }
     },
     {
@@ -226,9 +224,9 @@ export const Actions = [
         param: {
             method: "GET",
             Subscription: "/helix/chat/badges/global",
-            scope: [],
-            query: [],
-            body: []
+            scope: null,
+            query: null,
+            body: null
         }
     },
     {
@@ -237,15 +235,45 @@ export const Actions = [
             method: "GET",
             Subscription: "/helix/chat/chatters",
             scope: ['moderator:read:chatters'],
-            query: [],
-            body: []
+            query: ["broadcaster_id", "moderator_id", "first", "after"],
+            body: null
+        }
+    },
+    {
+        action: "GetModerators",
+        param: {
+            method: "GET",
+            Subscription: "/helix/moderation/moderators",
+            scope: ['moderation:read'],
+            query: ["broadcaster_id", "first", "after", "user_id"],
+            body: null
+        }
+    },
+    {
+        action: "GetVips",
+        param: {
+            method: "GET",
+            Subscription: "/helix/channels/vips",
+            scope: ['channel:read:vips'],
+            query: ["broadcaster_id", "user_id", "first", "after"],
+            body: null
+        }
+    },
+    {
+        action: "GetGames",
+        param: {
+            method: "GET",
+            Subscription: "/helix/games",
+            scope: null,
+            query: ["id", "name", "igdb_id"],
+            body: null
         }
     },
 ] as const
 
 export interface Cheermotes {
     prefix: string
-    tiers: Tier[]
+    tiers: Tier[];
     type: string
     order: number
     last_updated: string
@@ -336,18 +364,17 @@ export interface Cost {
     type: string
 }
 
-export interface ChannelInformation{
-    game_id?:string,
-    broadcasterLanguage?:string,
-    title?:string,
-    delay?:number,
-    tags?:string[],
-    //contentClassificationLabels?: contentClassificationLabels[]|'',
-    isBrandedContent?:boolean
+export interface ChannelInformation {
+    game_id?: string,
+    broadcasterLanguage?: string,
+    title?: string,
+    delay?: number,
+    tags?: string[],
+    contentClassificationLabels?: contentClassificationLabels[],
+    isBrandedContent?: boolean
 }
 
-interface contentClassificationLabels
-{
-    ID: "DrugsIntoxication"|"SexualThemes"|"ViolentGraphic"|"Gambling"|"ProfanityVulgarity",
-    isEnabled:boolean;
+interface contentClassificationLabels {
+    id: "DrugsIntoxication" | "SexualThemes" | "ViolentGraphic" | "Gambling" | "ProfanityVulgarity",
+    is_Enabled: boolean;
 }
