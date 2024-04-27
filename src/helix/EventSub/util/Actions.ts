@@ -38,7 +38,7 @@ export const Actions = [
             method: "GET",
             Subscription: "/helix/chat/color",
             scope: null,
-            query: null,
+            query: ['user_id'],
             body: null
         }
     },
@@ -101,7 +101,8 @@ export const Actions = [
             method: "GET",
             Subscription: "/helix/analytics/games",
             scope: ["analytics:read:games"],
-            query: ['game_id', 'type', 'started_at', 'ended_at', 'first', 'after'],
+            query: ['game_id', 'type', 'started_at',
+             'ended_at', 'first', 'after'],
             body: null
         }
     },
