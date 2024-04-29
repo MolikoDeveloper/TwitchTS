@@ -9,7 +9,7 @@ const http = require('http');
  */
 export async function GetRefresh_token(clientid: string|undefined, secret: string|undefined, code: string|undefined, redirect_uri: string|undefined): Promise<{ access_token: string, expires_in: number, refresh_token: string, scope: string[], token_type: string }> {
     return new Promise((resolve, reject) => {
-        const _postData = `client_id=${encodeURIComponent(clientid)}&client_secret=${encodeURIComponent(secret)}&code=${encodeURIComponent(code)}&grant_type=authorization_code&redirect_uri=${redirect_uri}`;
+        const _postData = `client_id=${encodeURIComponent(clientid!)}&client_secret=${encodeURIComponent(secret!)}&code=${encodeURIComponent(code!)}&grant_type=authorization_code&redirect_uri=${redirect_uri}`;
 
         const _options = {
             host: 'id.twitch.tv',
@@ -53,7 +53,7 @@ export async function GetRefresh_token(clientid: string|undefined, secret: strin
  */
 export async function RefreshCurrentToken(clientid: string|undefined, secret: string|undefined, refreshToken: string|undefined): Promise<{ access_token: string, expires_in: number, refresh_token: string, scope: string[], token_type: string }> {
     return new Promise((resolve, reject) => {
-        const _postData = `client_id=${encodeURIComponent(clientid)}&client_secret=${encodeURIComponent(secret)}&refresh_token=${encodeURIComponent(refreshToken)}&grant_type=refresh_token`;
+        const _postData = `client_id=${encodeURIComponent(clientid!)}&client_secret=${encodeURIComponent(secret!)}&refresh_token=${encodeURIComponent(refreshToken!)}&grant_type=refresh_token`;
 
         const _options = {
             host: 'id.twitch.tv',
