@@ -261,7 +261,7 @@ subs.on('ChannelFollow', (event) => {
             - [ ] [Get EventSub Subscriptions](https://dev.twitch.tv/docs/api/reference/#get-eventsub-subscriptions) 
         - [ ] Games
             - [ ] [Get Top Games](https://dev.twitch.tv/docs/api/reference/#get-top-games) 
-            - [ ] [Get Games](https://dev.twitch.tv/docs/api/reference/#get-games) 
+            - [x] [Get Games](https://dev.twitch.tv/docs/api/reference/#get-games) 
         - [ ] Goals
             - [ ] [Get Creator Goals](https://dev.twitch.tv/docs/api/reference/#get-creator-goals) 
         - [ ] Guest Star (beta)
