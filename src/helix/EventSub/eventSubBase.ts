@@ -1,6 +1,6 @@
 import { EventEmitter } from "events"
 import { WebSocketPaths, type UserInfo, RequestHosts } from "./util/Data";
-import type { EventType, Options } from "../../util/session"
+import type { EventType, Options, actionType } from "../../util/session"
 import { MessageTypes, type EventMessage } from "./util/message";
 import { request } from 'http'
 
@@ -46,11 +46,14 @@ export class EventSubBase extends EventEmitter {
         if (!msg) return;
         let message: EventMessage = await JSON.parse(msg.data.toString());
         let SessionID: string = '';
-        let Channels: UserInfo[];
         switch (message.metadata.message_type) {
             case MessageTypes.SessionWelcome:
                 SessionID = message.payload?.session?.id!;
-                Channels = (await this.GetUserByName(this.options.channels!));
+                const Channels: UserInfo[] = await this.post('GetUsers', {
+                    Query: [
+                        { query: 'login', value: this.options.channels }
+                    ]
+                }).then(d => d.data);
 
                 if (this.options.identity.app?.events) {
                     Channels.forEach(channel => {
@@ -171,44 +174,110 @@ export class EventSubBase extends EventEmitter {
         req.end();
     }
 
-    async GetUserByName(username: string | string[]): Promise<UserInfo[]> {
+    //idk what this function do...
+    async post(action: actionType, data?: { Query?: { query: string, value: any[] | any }[], Body?: { body: string, value: any[] | any }[] }): Promise<any> {
         return new Promise((resolve, reject) => {
-            let usernames = typeof username === 'string' ? [username] : username;
-            let _options = {
-                host: 'api.twitch.tv',
-                path: `/helix/users?${usernames.map(data => `login=${data}`).join('&')}`,
+            const actionConfig = Actions.find(a => a.action == action)!;
+            let url = actionConfig?.param.Subscription!;
+            let postData = {};
+
+            if (!actionConfig) {
+                reject(`action ${this.log.Color.BrightColor.Green}${action}${this.log.Color.BrightColor.White} not found`);
+                return;
+            }
+            if (actionConfig.param.scope)
+                if (!this.options.identity.app?.actions?.find(d => d === action)) {
+                    reject(`action ${this.log.Color.BrightColor.Green}${action}${this.log.Color.BrightColor.White} is not listed in Options.identity.app.actions`);
+                    return;
+                }
+
+            if (data) {
+                //generate the URL params
+                if (data.Query) {
+                    url += '?';
+
+                    data.Query.forEach(d => {
+                        if (!actionConfig?.param.query!.find(q => q === d.query))
+                            reject(`Parameter ${this.log.Color.BrightColor.Red}${d.query}${this.log.Color.BrightColor.White} does not exist.`);
+
+                        if (d.value)
+                            if (Array.isArray(d.value)) {
+                                d.value.forEach(data => {
+                                    url += `&${d.query}=${data}`;
+                                })
+                            }
+                            else {
+                                url += `&${d.query}=${d.value}`;
+                            }
+                    });
+
+                    // @ts-ignore
+                    url = url.replace('?&', '?');
+                }
+                //struct Body for request.
+                if (data.Body) {
+                    postData = data.Body.reduce((acc: any, item) => {
+                        if (!actionConfig.param.body!.find(i => i === item.body)) {
+                            reject(`${item.body} does not exist.`);
+                            return;
+                        }
+
+                        acc[item.body] = item.value;
+                        return acc;
+                    }, {});
+                }
+            }
+            //just put this value here...
+            const _options = {
+                hostname: 'api.twitch.tv',
                 port: 443,
-                method: 'GET',
+                path: url,
+                method: actionConfig.param.method,
                 headers: {
-                    'Content-Type': 'application/json',
+                    //some OAuth here...
+                    'Authorization': `Bearer ${this.options.identity.user?.token}`,
                     'Client-Id': this.options.identity.app?.clientId,
-                    'Authorization': `Bearer ${this.options.identity.user?.token}`
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(JSON.stringify(postData)) // why not the data here also...
                 }
             };
-            let req = request(_options, (res) => {
-                let body = '';
 
-                res.setEncoding('utf-8');
+            const req = request(_options, (res) => {
+                let data = ''; //and.. that "data" stuff, what a stupid name for a variable.
                 res.on('data', (chunk) => {
-                    body += chunk;
+                    data += chunk;
                 })
                 res.on('end', () => {
-                    if (res.statusCode === 200) {
-                        try {
-                            //console.log(JSON.parse(body).data)
-                            resolve(JSON.parse(body).data)
-                        }
-                        catch (e) {
-                            reject(e);
-                        }
-                    }
-                    else {
-                        reject(console.error(`${res.statusCode}: ${res.statusMessage}`))
+                    switch (res.statusCode) {
+                        case 200:
+                            //...uh i know what this function do!
+                            this.log.log(`${this.log.Color.color.Yellow}${action}${this.log.Color.Reset} success.`);
+                            resolve(JSON.parse(data));
+                            break;
+                        case 204:
+                            //... me too!
+                            this.log.log(`${this.log.Color.color.Yellow}${action}${this.log.Color.Reset} success.`);
+                            break;
+                        case 401:
+                            //... WTF ARE YOU TWO TALKING ABOUT?!
+                            const err = JSON.parse(data);
+                            reject(err);
+                            this.log.log(`${this.log.Color.color.Yellow}${err.status}${this.log.Color.Reset}(${this.log.Color.color.Red}${err.error}${this.log.Color.Reset}) ${err.message}`);
+                            break;
+                        default:
+                            // man chill, they are always correct, ignore it.
+                            this.log.log(`Request to ${this.log.Color.color.Yellow}${action}${this.log.Color.Reset} failed with ${res.statusCode}: ${res.statusMessage}`);
+                            reject(res.statusCode);
+                            break;
                     }
                 })
             });
-            req.on('error', e => console.error('Error REQ ', e));
-            req.write('');
+
+            req.on('error', (error) => {
+                this.log.log(`Error with request: ${error.message}`);
+            });
+
+            req.write(JSON.stringify(postData));
             req.end();
         })
     }

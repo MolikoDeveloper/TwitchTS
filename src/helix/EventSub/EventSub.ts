@@ -1,7 +1,7 @@
-import type { Options, actionType } from "../../util/session";
+import type { Options } from "../../util/session";
 import { EventSubBase } from "./eventSubBase";
-import { request } from 'http'
-import { Actions, type ChannelInformation, type Cheermotes, type ExtensionTransactions } from "./util/Actions";
+import type { ChannelInformation, Cheermotes, ExtensionTransactions } from "./util/Actions";
+import type { UserInfo } from "./util/Data";
 
 export class EventSub extends EventSubBase {
 
@@ -16,8 +16,8 @@ export class EventSub extends EventSubBase {
      * @returns sended status
      */
     public async SendChatMessage(channel: string, message: string): Promise<{ message_id: string, is_sent: boolean }[] | undefined> {
-        const _channel = (await this.GetUserByName(channel))[0].id;
-        const sender = (await this.GetUserByName(this.options.identity.user?.username!))[0].id;
+        const _channel = (await this.GetUsers(channel))[0].id;
+        const sender = (await this.GetUsers(this.options.identity.user?.username!))[0].id;
 
         return await this.post('SendWhisper', {
             Body: [
@@ -34,8 +34,8 @@ export class EventSub extends EventSubBase {
      * @param message message content.
      */
     public async SendWhisper(to: string, message: string): Promise<undefined> {
-        const from = (await this.GetUserByName(this.options.identity.user?.username!))[0].id;
-        const _to = (await this.GetUserByName(to))[0].id;
+        const from = (await this.GetUsers(this.options.identity.user?.username!))[0].id;
+        const _to = (await this.GetUsers(to))[0].id;
 
         return await this.post('SendWhisper', {
             Query: [
@@ -67,13 +67,13 @@ export class EventSub extends EventSubBase {
      * @returns basic data of the query user.
      */
     public async GetUserChatColor(...UserName: string[]): Promise<{ user_id: string, user_name: string, user_login: string, color: string }[] | undefined> {
-        let _users = (await this.GetUserByName(UserName)).map(d => d.id)
+        let _users = (await this.GetUsers(UserName)).map(d => d.id)
 
         return await this.post('GetUserChatColor', {
             Query: [
                 { query: 'user_id', value: _users },
             ]
-        }).then(d => { return d.data });
+        }).then(d => d.data );
     }
 
     /**
@@ -83,7 +83,7 @@ export class EventSub extends EventSubBase {
      * @returns basic data of the commercial.
      */
     public async StartCommercial(channel: string, length: number = 30): Promise<{ length: number, message: string, retry_after: number }[] | undefined> {
-        let _channel = (await this.GetUserByName(channel))[0].id;
+        let _channel = (await this.GetUsers(channel))[0].id;
 
         return await this.post('StartCommercial', {
             Query: [
@@ -103,7 +103,7 @@ export class EventSub extends EventSubBase {
      * @returns 
      */
     public async GetAdSchedule(channel: string): Promise<{ next_ad_at: string, last_ad_at: string, duration: string, preroll_free_time: string, snooze_count: string, snooze_refresh_at: string }[] | undefined> {
-        let _channel = (await this.GetUserByName(channel))[0].id;
+        let _channel = (await this.GetUsers(channel))[0].id;
 
         return await this.post('GetAdSchedule', { Query: [{ query: 'broadcaster_id', value: _channel }] })
             .then(d => { return d.data });
@@ -115,7 +115,7 @@ export class EventSub extends EventSubBase {
      * [Snooze Next Ad](https://dev.twitch.tv/docs/api/reference/#snooze-next-ad)
      */
     public async SnoozeNextAd(channel: string): Promise<{ snooze_count: string, snooze_refresh_at: string, next_ad_at: string }[]> {
-        let _channel = (await this.GetUserByName(channel))[0].id;
+        let _channel = (await this.GetUsers(channel))[0].id;
 
         return await this.post('SnoozeNextAd', { Query: [{ query: 'broadcaster_id', value: _channel }] })
             .then(d => { return d.data });
@@ -173,7 +173,7 @@ export class EventSub extends EventSubBase {
      * @param channel The UserName of the broadcaster whose custom Cheermotes you want to get. Specify the broadcaster’s ID if you want to include the broadcaster’s Cheermotes in the response (not all broadcasters upload Cheermotes). If not specified, the response contains only global Cheermotes. If the broadcaster uploaded Cheermotes, the type field in the response is set to channel_custom.
      */
     public async GetCheermotes(channel?: string): Promise<Cheermotes[]> {
-        const _channel = channel ? (await this.GetUserByName(channel))[0].id : undefined;
+        const _channel = channel ? (await this.GetUsers(channel))[0].id : undefined;
         return await (this.post('GetCheermotes', { Query: [{ query: 'broadcaster_id', value: _channel }] })).then(d => { return d.data });
     }
 
@@ -218,7 +218,7 @@ export class EventSub extends EventSubBase {
      * @param channels Broadcaster UserName
      */
     public async GetChannelInformation(...channels: string[]): Promise<{ broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, broadcaster_language: string, game_id: string, game_name: string, title: string, delay: number, tags: string[], content_classification_labels: string[], is_branded_content: boolean }> {
-        const _channels = (await this.GetUserByName(channels)).map(d => d.id);
+        const _channels = (await this.GetUsers(channels)).map(d => d.id);
 
         console.log(_channels)
 
@@ -237,7 +237,7 @@ export class EventSub extends EventSubBase {
      * @param info All fields are optional, but you must specify at least one field.
      */
     public async ModifyChannelInformation(channel: string, info: ChannelInformation): Promise<undefined> {
-        const _channel = (await this.GetUserByName(channel))[0].id;
+        const _channel = (await this.GetUsers(channel))[0].id;
 
         return await this.post('ModifyChannelInformation', {
             Query: [{ query: 'broadcaster_id', value: _channel }],
@@ -300,7 +300,7 @@ export class EventSub extends EventSubBase {
      * @returns 
      */
     public async GetChannelEditors(channel: string): Promise<{ user_id: string, user_name: string, created_at: string }[]> {
-        const _channel = (await this.GetUserByName(channel))[0].id;
+        const _channel = (await this.GetUsers(channel))[0].id;
         return (await this.post('GetChannelEditors', {
             Query: [
                 { query: 'broadcaster_id', value: _channel }
@@ -317,8 +317,8 @@ export class EventSub extends EventSubBase {
      * @returns 
      */
     public async GetFollowedChannels(channel?: string, count?: number, page?: string): Promise<{ data: { broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, followed_at: string }[], total: number, pagination: { cursor: string } }> {
-        const _user = (await this.GetUserByName((this.options.identity.user?.username!)))[0].id;
-        const _channel = channel ? (await this.GetUserByName(channel))[0].id : undefined;
+        const _user = (await this.GetUsers((this.options.identity.user?.username!)))[0].id;
+        const _channel = channel ? (await this.GetUsers(channel))[0].id : undefined;
 
         return await this.post('GetFollowedChannels', {
             Query: [
@@ -340,8 +340,8 @@ export class EventSub extends EventSubBase {
      * @param page The cursor used to get the next page of results. The Pagination object in the response contains the cursor’s value. [Read more](https://dev.twitch.tv/docs/api/guide#pagination).
      */
     public async GetChannelFollowers(channel: string, user?: string, count?: number, page?: string): Promise<{ total: number, pagination: { cursor: string }, data: { broadcaster_id: string, broadcaster_login: string, broadcaster_name: string, followed_at: string }[] }> {
-        const _channel = (await this.GetUserByName(channel))[0].id;
-        let _user = user ? (await this.GetUserByName((user)))[0].id : undefined;
+        const _channel = (await this.GetUsers(channel))[0].id;
+        let _user = user ? (await this.GetUsers((user)))[0].id : undefined;
 
         return await this.post('GetChannelFollowers', {
             Query: [
@@ -374,7 +374,7 @@ export class EventSub extends EventSubBase {
     }
 
     public async CreateCustomRewards(channel: string, title: string, cost: number, promp?: string, isenabled?: boolean, backgroundColor?: boolean, IsUserInputRequired?: boolean, MaxPerStream?: number, MaxPerUserStream?: number, GlobalCoolDownSeconds?: number, ShouldRedemptionsSkipRequestQueue?: boolean): Promise<{}[]> {
-        const _channel = (await this.GetUserByName(channel))[0].id;
+        const _channel = (await this.GetUsers(channel))[0].id;
 
         let _MaxPerStreamEnabled: boolean = false;
         let _MaxPerUserStreamEnabled: boolean = false;
@@ -415,7 +415,7 @@ export class EventSub extends EventSubBase {
      * @param channel The Username of the broadcaster whose chat badges you want to get.
      */
     public async GetChannelChatBadges(channel: string): Promise<[{ set_id: string, versions: [{ id: string, image_url_1x: string, image_url_2x: string, image_url_4x: string, title: string, description: string, click_action: string, click_url: string }] }]> {
-        const _channel = (await this.GetUserByName(channel))[0].id;
+        const _channel = (await this.GetUsers(channel))[0].id;
         return await this.post('GetChannelChatBadges', {
             Query: [
                 { query: 'broadcaster_id', value: _channel }
@@ -450,8 +450,8 @@ export class EventSub extends EventSubBase {
      * @param page the cursor used to get the next page of result. this value is responsed in { pagination: { cursor : "" } }
      */
     public async GetChatters(channel: string, count?: number, page?: string): Promise<{ data: { user_id: string, user_login: string, user_name: string }[], pagination: { cursor: string }, total: number }> {
-        const _channel = (await this.GetUserByName(channel))[0].id;
-        const _moderator = (await this.GetUserByName(this.options.identity.user?.username!))[0].id;
+        const _channel = (await this.GetUsers(channel))[0].id;
+        const _moderator = (await this.GetUsers(this.options.identity.user?.username!))[0].id;
 
         return await this.post('GetChatters', {
             Query: [
@@ -476,10 +476,10 @@ export class EventSub extends EventSubBase {
      * @param page the cursor used to get the next page of result. this value is responsed in { pagination: { cursor : "" } }
      */
     public async GetModerators(channel: string, user?: string | string[], count?: number, page?: string): Promise<{ data: { user_id: string, user_login: string, user_name: string }[], pagination: { cursor: string } }> {
-        const _channel = (await this.GetUserByName(channel))[0].id;
+        const _channel = (await this.GetUsers(channel))[0].id;
 
         if (Array.isArray(user)) {
-            const _users = user ? (await this.GetUserByName(user)).map(d => d.id) : undefined;
+            const _users = user ? (await this.GetUsers(user)).map(d => d.id) : undefined;
 
             return await this.post('GetModerators', {
                 Query: [
@@ -491,7 +491,7 @@ export class EventSub extends EventSubBase {
             });
         }
         else {
-            const _user = user ? (await this.GetUserByName(user))[0].id : undefined;
+            const _user = user ? (await this.GetUsers(user))[0].id : undefined;
             return await this.post('GetModerators', {
                 Query: [
                     { query: 'broadcaster_id', value: _channel },
@@ -516,10 +516,10 @@ export class EventSub extends EventSubBase {
     * @param page the cursor used to get the next page of result. this value is responsed in { pagination: { cursor : "" } }
     */
     public async GetVips(channel: string, user?: string | string[], count?: number, page?: string): Promise<{ data: { user_id: string, user_login: string, user_name: string }[], pagination: { cursor: string } }> {
-        const _channel = (await this.GetUserByName(channel))[0].id;
+        const _channel = (await this.GetUsers(channel))[0].id;
 
         if (Array.isArray(user)) {
-            const _users = user ? (await this.GetUserByName(user)).map(d => d.id) : undefined;
+            const _users = user ? (await this.GetUsers(user)).map(d => d.id) : undefined;
             return await this.post('GetVips', {
                 Query: [
                     { query: 'broadcaster_id', value: _channel },
@@ -530,7 +530,7 @@ export class EventSub extends EventSubBase {
             });
         }
         else {
-            const _user = user ? (await this.GetUserByName(user))[0].id : undefined;
+            const _user = user ? (await this.GetUsers(user))[0].id : undefined;
             return await this.post('GetVips', {
                 Query: [
                     { query: 'broadcaster_id', value: _channel },
@@ -550,104 +550,19 @@ export class EventSub extends EventSubBase {
         }).then(d => d.data.length > 0 ? d.data : undefined);
     }
 
-    private async post(action: actionType, data?: { Query?: { query: string, value: any[] | any }[], Body?: { body: string, value: any[] | any }[] }): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const actionConfig = Actions.find(a => a.action == action)!;
-            let url = actionConfig?.param.Subscription!;
-            let postData = {};
+    public async GetUsers(userName: string|string[]): Promise<UserInfo[]> {
+        return await this.post('GetUsers', {
+            Query: [
+                { query: 'login', value: userName }
+            ]
+        }).then(d => d.data);
+    }
 
-            if (!actionConfig) {
-                reject(`action ${this.log.Color.BrightColor.Green}${action}${this.log.Color.BrightColor.White} not found`);
-                return;
-            }
-            if (actionConfig.param.scope)
-                if (!this.options.identity.app?.actions?.find(d => d === action)) {
-                    reject(`action ${this.log.Color.BrightColor.Green}${action}${this.log.Color.BrightColor.White} is not listed in Options.identity.app.actions`);
-                    return;
-                }
-
-            if (data) {
-                if (data.Query) {
-                    url += '?';
-
-                    data.Query.forEach(d => {
-                        if (!actionConfig?.param.query!.find(q => q === d.query))
-                            reject(`Parameter ${this.log.Color.BrightColor.Red}${d.query}${this.log.Color.BrightColor.White} does not exist.`);
-
-                        if (d.value)
-                            if (Array.isArray(d.value)) {
-                                d.value.forEach(data => {
-                                    url += `&${d.query}=${data}`;
-                                })
-                            }
-                            else {
-                                url += `&${d.query}=${d.value}`;
-                            }
-                    });
-
-                    // @ts-ignore
-                    url = url.replace('?&', '?');
-                }
-
-                if (data.Body) {
-                    postData = data.Body.reduce((acc: any, item) => {
-                        if (!actionConfig.param.body!.find(i => i === item.body)) {
-                            reject(`${item.body} does not exist.`);
-                            return;
-                        }
-
-                        acc[item.body] = item.value;
-                        return acc;
-                    }, {});
-                }
-            }
-
-            const _options = {
-                hostname: 'api.twitch.tv',
-                port: 443,
-                path: url,
-                method: actionConfig.param.method,
-                headers: {
-                    'Authorization': `Bearer ${this.options.identity.user?.token}`,
-                    'Client-Id': this.options.identity.app?.clientId,
-                    'Content-Type': 'application/json',
-                    'Content-Length': Buffer.byteLength(JSON.stringify(postData))
-                }
-            };
-
-            const req = request(_options, (res) => {
-                let data = '';
-                res.on('data', (chunk) => {
-                    data += chunk;
-                })
-                res.on('end', () => {
-                    switch (res.statusCode) {
-                        case 200:
-                            this.log.log(`${this.log.Color.color.Yellow}${action}${this.log.Color.Reset} success.`);
-                            resolve(JSON.parse(data));
-                            break;
-                        case 204:
-                            this.log.log(`${this.log.Color.color.Yellow}${action}${this.log.Color.Reset} success.`);
-                            break;
-
-                        case 401:
-                            const err = JSON.parse(data);
-                            this.log.log(`${this.log.Color.color.Yellow}${err.status}${this.log.Color.Reset}(${this.log.Color.color.Red}${err.error}${this.log.Color.Reset}) ${err.message}`);
-                            break;
-                        default:
-                            this.log.log(`Request to ${this.log.Color.color.Yellow}${action}${this.log.Color.Reset} failed with ${res.statusCode}: ${res.statusMessage}`);
-                            reject(res.statusCode);
-                            break;
-                    }
-                })
-            });
-
-            req.on('error', (error) => {
-                this.log.log(`Error with request: ${error.message}`);
-            });
-
-            req.write(JSON.stringify(postData));
-            req.end();
-        })
+    public async GetUsers_ByID(userID: string|string[]): Promise<UserInfo[]> {
+        return await this.post('GetUsers', {
+            Query: [
+                { query: 'id', value: userID }
+            ]
+        }).then(d => d.data);
     }
 }

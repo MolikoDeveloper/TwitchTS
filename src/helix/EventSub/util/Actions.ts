@@ -270,6 +270,16 @@ export const Actions = [
             body: null
         }
     },
+    {
+        action: "GetUsers",
+        param: {
+            method: "GET",
+            Subscription: "/helix/users",
+            scope: null,
+            query: ["id", "login"],
+            body: null
+        }
+    },
 ] as const
 
 export interface Cheermotes {
