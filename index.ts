@@ -6,4 +6,4 @@ export {
     IrcBase as IrcClient,
     EventSub
 };
-export type { Options };
+export type { Options }; 
